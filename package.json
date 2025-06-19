@@ -46,6 +46,7 @@
 		"nanoid": "^5.1.5",
 		"prisma": "^6.10.1",
 		"qrcode": "^1.5.4",
+		"svelte-adapter-bun": "^0.5.2",
 		"zod": "^3.25.67"
 	}
 }
