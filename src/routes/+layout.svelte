@@ -47,7 +47,7 @@
 							<Link class="h-6 w-6 text-white" />
 						</div>
 						<div>
-							<h1 class="text-xl font-bold text-gray-900 dark:text-white">ShortURL</h1>
+							<h1 class="text-xl font-bold text-gray-900 dark:text-white">Nah.pet</h1>
 							<p class="text-xs text-gray-500 dark:text-gray-400">Open Source URL Shortener</p>
 						</div>
 					</a>
