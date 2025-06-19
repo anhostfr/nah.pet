@@ -7,9 +7,8 @@ RUN bun install
 
 COPY . .
 RUN apt-get update -y && apt-get install -y openssl
-RUN bun run build
-RUN bun install --production
 RUN bunx prisma generate
+RUN bun run build
 
 EXPOSE 3000
 
