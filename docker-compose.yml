@@ -12,7 +12,7 @@ services:
     depends_on:
       nahpet-postgres:
         condition: service_healthy
-    command: sh -c "bunx prisma migrate deploy && bun start"
+    command: sh -c "bunx prisma migrate deploy && bun build/index.js"
     networks:
       - dokploy-network
     labels:
