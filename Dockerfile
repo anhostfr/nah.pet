@@ -11,7 +11,6 @@ COPY . .
 RUN apt-get update -y && apt-get install -y openssl
 
 RUN bunx prisma generate
-RUN bunx prisma migrate deploy
 
 RUN bun run build
 
