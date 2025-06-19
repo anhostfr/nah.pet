@@ -16,7 +16,8 @@ services:
     command: sh -c "bunx prisma migrate deploy && bun run build/index.js"
     labels:
       - "dokploy.domain=${NAHPET_HOST}"
-
+    networks:
+      - dokploy-network
   nahpet-postgres:
     image: postgres:16-alpine
     restart: always
@@ -31,11 +32,11 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-
+    networks:
+      - dokploy-network
 networks:
   dokploy-network:
     external: true
-
 volumes:
   nahpet-postgres-data:
   nahpet-uploads:
