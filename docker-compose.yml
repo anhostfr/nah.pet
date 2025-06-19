@@ -1,49 +1,41 @@
+version: "3.8"
 services:
   nahpet-app:
     build: .
     restart: always
     environment:
-      NODE_ENV: production
-      MAIN_URL: https://${NAHPET_HOST}
-      PUBLIC_URL: https://${NAHPET_HOST}
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public
+      NODE_ENV: "production"
+      MAIN_URL: "https://${NAHPET_HOST}"
+      PUBLIC_URL: "https://${NAHPET_HOST}"
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
     volumes:
-      - nahpet-uploads-services-linkshortenermain-noauoo:/uploads/
+      - nahpet-uploads:/uploads/
     depends_on:
       nahpet-postgres:
         condition: service_healthy
     command: sh -c "bunx prisma migrate deploy && bun run build/index.js"
-    networks:
-      - services-linkshortenermain-noauoo
     labels:
-      - traefik.http.routers.services-linkshortenermain-noauoo-web.rule=Host(`${NAHPET_HOST}`)
-      - traefik.http.routers.services-linkshortenermain-noauoo-web.entrypoints=web
-      - traefik.http.services.services-linkshortenermain-noauoo-web.loadbalancer.server.port=3000
-      - traefik.http.routers.services-linkshortenermain-noauoo-web.service=services-linkshortenermain-noauoo-web
-      - traefik.enable=true
+      - "dokploy.domain=${NAHPET_HOST}"
 
   nahpet-postgres:
     image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - nahpet-postgres-data-services-linkshortenermain-noauoo:/var/lib/postgresql/data
+      - nahpet-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${DB_USER} -d ${DB_NAME}
       interval: 10s
       timeout: 3s
       retries: 3
-    networks:
-      - services-linkshortenermain-noauoo
 
 networks:
-  services-linkshortenermain-noauoo:
-    name: services-linkshortenermain-noauoo
+  dokploy-network:
     external: true
 
 volumes:
-  nahpet-postgres-data-services-linkshortenermain-noauoo: null
-  nahpet-uploads-services-linkshortenermain-noauoo: null
+  nahpet-postgres-data:
+  nahpet-uploads:
