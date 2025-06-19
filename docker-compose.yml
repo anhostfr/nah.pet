@@ -1,35 +1,46 @@
-version: '3.9'
+version: "3.8"
 
 services:
-  db:
-    image: postgres:16
-    container_name: nahpet-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nahpet
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  web:
-    container_name: nahpet-app
+  nahpet-app:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
+    image: nahpet/app:latest
+    restart: always
+
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/nahpet?schema=public"
       NODE_ENV: production
-    command: ["bun", "./build/index.js"]
+      MAIN_URL: "https://${NAHPET_HOST}"
+      PUBLIC_URL: "https://${NAHPET_HOST}"
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
     volumes:
-      - .:/app
-      - /app/node_modules
+      - nahpet-uploads:/uploads/
+    depends_on:
+      nahpet-postgres:
+        condition: service_healthy
+
+    labels:
+      - "dokploy.domain=${NAHPET_HOST}"
+
+  nahpet-postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - nahpet-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+networks:
+  dokploy-network:
+    external: true
 
 volumes:
-  db_data:
+  nahpet-postgres-data:
+  nahpet-uploads:
