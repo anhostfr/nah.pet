@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       NODE_ENV: "production"
+      ORIGIN: "https://${NAHPET_HOST}"
       MAIN_URL: "https://${NAHPET_HOST}"
       PUBLIC_URL: "https://${NAHPET_HOST}"
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
