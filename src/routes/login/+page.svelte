@@ -87,6 +87,11 @@
 					<a href="/register" class="text-primary hover:underline"> S'inscrire </a>
 				</p>
 			</div>
+
+			<hr class="my-6 border-t border-gray-200 dark:border-gray-700" />
+			<div class="text-center text-sm text-gray-500 dark:text-gray-400">
+				<p>© {new Date().getFullYear()} Nah.pet — It’s a no from us, dawg.</p>
+			</div>
 		</CardContent>
 	</Card>
 </div>
