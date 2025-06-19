@@ -6,6 +6,7 @@ import { verify } from '@node-rs/argon2';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
+		if (!locals.user.isAuthorized) throw redirect(302, '/pending');
 		throw redirect(302, '/');
 	}
 	return {};

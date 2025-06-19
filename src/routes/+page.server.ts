@@ -7,7 +7,7 @@ import { isValidUrl } from '$lib/utils.js';
 import { hash } from '@node-rs/argon2';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (!locals.user) {
+	if (!locals.user || !locals.user.isAuthorized) {
 		throw redirect(302, '/login');
 	}
 
@@ -81,7 +81,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	create: async ({ request, locals, url }) => {
-		if (!locals.user) {
+		if (!locals.user || !locals.user.isAuthorized) {
 			throw redirect(302, '/login');
 		}
 
@@ -149,7 +149,7 @@ export const actions: Actions = {
 	},
 
 	delete: async ({ request, locals }) => {
-		if (!locals.user) {
+		if (!locals.user || !locals.user.isAuthorized) {
 			throw redirect(302, '/login');
 		}
 

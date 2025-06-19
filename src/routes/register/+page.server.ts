@@ -3,9 +3,11 @@ import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db.js';
 import { lucia } from '$lib/server/auth.js';
 import { hash } from '@node-rs/argon2';
+import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
+		if (!locals.user.isAuthorized) throw redirect(302, '/pending');
 		throw redirect(302, '/');
 	}
 	return {};
@@ -62,7 +64,9 @@ export const actions: Actions = {
 			const user = await db.user.create({
 				data: {
 					email: email.toLowerCase(),
-					password: hashedPassword
+					password: hashedPassword,
+					isAdmin: email === env.ADMIN_EMAIL?.toLowerCase() || false,
+					isActive: email === env.ADMIN_EMAIL?.toLowerCase() || false
 				}
 			});
 

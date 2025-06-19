@@ -14,7 +14,9 @@ export const lucia = new Lucia(adapter, {
 	},
 	getUserAttributes: (attributes) => {
 		return {
-			email: attributes.email
+			email: attributes.email,
+			isAuthorized: attributes.isActive ?? false,
+			isAdmin: attributes.isAdmin ?? false
 		};
 	}
 });
@@ -24,6 +26,8 @@ declare module 'lucia' {
 		Lucia: typeof lucia;
 		DatabaseUserAttributes: {
 			email: string;
+			isActive: boolean;
+			isAdmin: boolean;
 		};
 	}
 }

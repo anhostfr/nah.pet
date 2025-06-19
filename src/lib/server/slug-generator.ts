@@ -8,15 +8,12 @@ async function getReservedSlugs(): Promise<Set<string>> {
 	const routeFiles = Object.keys(await import.meta.glob('/src/routes/**/*.svelte'));
 	reservedSlugsCache = new Set(
 		routeFiles
-			.map(path => path
-				.replace('/src/routes/', '')
-				.replace('.svelte', '')
-				.replace('/index', '')
-				.split('/')
+			.map((path) =>
+				path.replace('/src/routes/', '').replace('.svelte', '').replace('/index', '').split('/')
 			)
 			.flat()
 			.filter(Boolean)
-			.map(segment => segment.toLowerCase())
+			.map((segment) => segment.toLowerCase())
 	);
 	return reservedSlugsCache;
 }
@@ -49,7 +46,7 @@ export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 			where: { slug: { in: candidates } },
 			select: { slug: true }
 		});
-		const usedSlugs = new Set(existingSlugs.map(link => link.slug));
+		const usedSlugs = new Set(existingSlugs.map((link) => link.slug));
 
 		for (const candidate of candidates) {
 			if (!usedSlugs.has(candidate)) {

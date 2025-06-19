@@ -12,6 +12,8 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isAdmin   Boolean  @default(false)
+  isActive  Boolean  @default(true)
   password  String
 
   sessions Session[]

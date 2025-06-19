@@ -5,6 +5,10 @@ const globalPrisma = globalThis as unknown as {
 	prisma: PrismaClient | undefined;
 };
 
-export const db = globalPrisma.prisma ?? new PrismaClient({});
+export const db =
+	globalPrisma.prisma ??
+	new PrismaClient({
+		log: dev ? ['query', 'info', 'warn', 'error'] : ['error']
+	});
 
 if (dev) globalPrisma.prisma = db;

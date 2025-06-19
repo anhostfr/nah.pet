@@ -8,6 +8,6 @@
 <Sonner
 	theme={mode.current}
 	class="toaster group"
-	style="--normal-bg: var(--popover); --normal-text: var(--popover-foreground); --normal-border: var(--border);"
+	style="--normal-bg: var(--primary-foreground); --normal-text: var(--primary); --normal-border: var(--border);"
 	{...restProps}
 />
