@@ -1,6 +1,6 @@
 services:
   nahpet-app:
-    build: .  # Build depuis le répertoire courant
+    build: .
     restart: always
     environment:
       NODE_ENV: production
