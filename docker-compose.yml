@@ -1,13 +1,7 @@
-version: "3.8"
-
 services:
   nahpet-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: nahpet/app:latest
+    build: .  # Build depuis le répertoire courant
     restart: always
-
     environment:
       NODE_ENV: production
       MAIN_URL: "https://${NAHPET_HOST}"
@@ -18,7 +12,9 @@ services:
     depends_on:
       nahpet-postgres:
         condition: service_healthy
-
+    command: sh -c "npx prisma migrate deploy && npm start"
+    networks:
+      - dokploy-network
     labels:
       - "dokploy.domain=${NAHPET_HOST}"
 
@@ -36,6 +32,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+    networks:
+      - dokploy-network
 
 networks:
   dokploy-network:
