@@ -41,11 +41,7 @@
 			<div class="flex justify-between items-center py-4">
 				<div class="flex items-center space-x-4">
 					<a href="/" class="flex items-center space-x-3 group">
-						<div
-							class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center group-hover:shadow-lg transition-shadow"
-						>
-							<Link class="h-6 w-6 text-white" />
-						</div>
+					<img src="/favicon.webp" alt="Nah.pet Logo" class="w-10 h-10 object-contain" />
 						<div>
 							<h1 class="text-xl font-bold text-gray-900 dark:text-white">Nah.pet</h1>
 							<p class="text-xs text-gray-500 dark:text-gray-400">Open Source URL Shortener</p>

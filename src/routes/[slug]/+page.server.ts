@@ -2,6 +2,8 @@ import { error, redirect, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db.js';
 import { verify } from '@node-rs/argon2';
+import { sleep } from '$lib/utils';
+import { isRateLimited } from '$lib/server/rateLimit';
 
 export const load: PageServerLoad = async ({ params, request, getClientAddress }) => {
 	const { slug } = params;
@@ -48,10 +50,6 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const password = formData.get('password') as string;
 
-		if (!password) {
-			return fail(400, { error: 'Mot de passe requis' });
-		}
-
 		const link = await db.link.findUnique({
 			where: { slug }
 		});
@@ -60,14 +58,25 @@ export const actions: Actions = {
 			throw error(404, 'Lien introuvable');
 		}
 
+		const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+		const rateLimitKey = `slug:${ip}:${slug}`;
+		if (isRateLimited(rateLimitKey)) {
+			await sleep(2000);
+			return fail(429, { error: 'Trop de tentatives, réessayez plus tard.' });
+		}
+
+		if (!password) {
+			return fail(400, { error: 'Mot de passe requis' });
+		}
+
 		const isValidPassword = await verify(link.password, password);
 
 		if (!isValidPassword) {
+			sleep(2000);
 			return fail(400, { error: 'Mot de passe incorrect' });
 		}
 
 		const userAgent = request.headers.get('user-agent') || '';
-		const ip = getClientAddress();
 
 		await db.click.create({
 			data: {

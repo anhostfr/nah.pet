@@ -4,6 +4,9 @@ import { db } from '$lib/server/db.js';
 import { lucia } from '$lib/server/auth.js';
 import { hash } from '@node-rs/argon2';
 import { env } from '$env/dynamic/private';
+import { isRateLimited } from '$lib/server/rateLimit';
+import { z } from 'zod';
+import { sleep } from '$lib/utils';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
@@ -16,45 +19,47 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, cookies }) => {
 		const formData = await request.formData();
-		const email = formData.get('email') as string;
-		const password = formData.get('password') as string;
-		const confirmPassword = formData.get('confirmPassword') as string;
+		const email = formData.get('email');
+		const password = formData.get('password');
+		const confirmPassword = formData.get('confirmPassword');
 
-		if (!email || !password || !confirmPassword) {
-			return fail(400, { error: 'Tous les champs sont requis' });
+		const schema = z.object({
+			email: z.string().email({ message: 'Email invalide' }),
+			password: z.string().min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' }),
+			confirmPassword: z.string()
+		});
+
+		const parseResult = schema.safeParse({ email, password, confirmPassword });
+		if (!parseResult.success) {
+			await sleep(2000);
+			return fail(400, { error: parseResult.error.errors[0]?.message || 'Données invalides' });
 		}
 
-		if (
-			typeof email !== 'string' ||
-			typeof password !== 'string' ||
-			typeof confirmPassword !== 'string'
-		) {
-			return fail(400, { error: 'Données invalides' });
-		}
+		const { email: validEmail, password: validPassword, confirmPassword: validConfirmPassword } = parseResult.data;
 
-		if (password !== confirmPassword) {
+		if (validPassword !== validConfirmPassword) {
+			await sleep(2000);
 			return fail(400, { error: 'Les mots de passe ne correspondent pas' });
 		}
 
-		if (password.length < 8) {
-			return fail(400, { error: 'Le mot de passe doit contenir au moins 8 caractères' });
-		}
-
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		if (!emailRegex.test(email)) {
-			return fail(400, { error: 'Email invalide' });
+		const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+		const rateLimitKey = `register:${ip}:${validEmail}`;
+		if (isRateLimited(rateLimitKey)) {
+			await sleep(2000);
+			return fail(429, { error: 'Trop de tentatives, réessayez plus tard.' });
 		}
 
 		try {
 			const existingUser = await db.user.findUnique({
-				where: { email: email.toLowerCase() }
+				where: { email: validEmail.toLowerCase() }
 			});
 
 			if (existingUser) {
-				return fail(400, { error: 'Un compte avec cet email existe déjà' });
+				await sleep(2000);
+				return fail(400, { error: 'Email invalide' });
 			}
 
-			const hashedPassword = await hash(password, {
+			const hashedPassword = await hash(validPassword, {
 				memoryCost: 19456,
 				timeCost: 2,
 				outputLen: 32,
@@ -63,10 +68,10 @@ export const actions: Actions = {
 
 			const user = await db.user.create({
 				data: {
-					email: email.toLowerCase(),
+					email: validEmail.toLowerCase(),
 					password: hashedPassword,
-					isAdmin: email === env.ADMIN_EMAIL?.toLowerCase() || false,
-					isActive: email === env.ADMIN_EMAIL?.toLowerCase() || false
+					isAdmin: validEmail === env.ADMIN_EMAIL?.toLowerCase() || false,
+					isActive: validEmail === env.ADMIN_EMAIL?.toLowerCase() || false
 				}
 			});
 
@@ -85,6 +90,7 @@ export const actions: Actions = {
 			}
 
 			console.error("Erreur lors de l'inscription:", error);
+			await sleep(2000);
 			return fail(500, { error: 'Erreur serveur' });
 		}
 	}

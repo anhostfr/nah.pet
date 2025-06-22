@@ -17,7 +17,7 @@
 	<title>Connexion - ShortURL</title>
 </svelte:head>
 
-<div class="min-h-screen bg-primary-foreground flex items-center justify-center">
+<div class="min-h-full bg-primary-foreground flex items-center justify-center">
 	<Card class="max-w-md w-full">
 		<CardHeader class="text-center">
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
