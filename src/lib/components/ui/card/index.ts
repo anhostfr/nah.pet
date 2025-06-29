@@ -16,10 +16,10 @@ export {
 	Action,
 	//
 	Root as Card,
-	Content as Card.Content,
+	Content as CardContent,
 	Description as CardDescription,
 	Footer as CardFooter,
 	Header as CardHeader,
-	Title as Card.Title,
+	Title as CardTitle,
 	Action as CardAction
 };
