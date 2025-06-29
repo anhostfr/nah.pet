@@ -2,14 +2,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import {
-		Table,
-		Table.Body,
-		Table.Cell,
-		Table.Head,
-		Table.Header,
-		Table.Row
-	} from '$lib/components/ui/table/index.js';
+	import * as Table from '$lib/components/ui/table/index.js';
 	import {
 		Users,
 		UserCheck,
@@ -79,7 +72,7 @@
 	</div>
 
 	<div class="grid gap-6 md:grid-cols-4">
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -96,9 +89,9 @@
 				</div>
 			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -117,9 +110,9 @@
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-green-600 to-green-400"
 			></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -138,9 +131,9 @@
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
 			></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -157,11 +150,11 @@
 				</div>
 			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-red-600 to-red-400"></div>
-		</Card.Root
+		</Card.Root>
 	</div>
 
-	<Card.Root
-		<CardHeader class="border-b border-gray-100 dark:border-gray-700">
+	<Card.Root>
+		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 			<Card.Title class="flex items-center justify-between">
 				<span class="flex items-center space-x-2">
 					<Users class="w-5 h-5" />
@@ -172,7 +165,7 @@
 		</Card.Header>
 		<Card.Content class="p-0">
 			<div class="overflow-x-auto">
-				<Table.Row
+				<Table.Root>
 					<Table.Header>
 						<Table.Row>
 							<Table.Head class="w-[250px]">Utilisateur</Table.Head>
@@ -355,12 +348,12 @@
 							</Table.Row>
 						{/each}
 					</Table.Body>
-				</Table.Row
+				</Table.Root>
 			</div>
 		</Card.Content>
-	</Card.Root
+	</Card.Root>
 
-	<Card class="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+	<Card.Root class="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
 		<Card.Content class="p-6">
 			<div class="flex items-start space-x-3">
 				<AlertTriangle class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
@@ -378,5 +371,5 @@
 				</div>
 			</div>
 		</Card.Content>
-	</Card.Root
+	</Card.Root>
 </div>

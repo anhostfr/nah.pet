@@ -1,14 +1,7 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import {
-		Table,
-		Table.Body,
-		Table.Cell,
-		Table.Head,
-		Table.Header,
-		Table.Row
-	} from '$lib/components/ui/table/index.js';
+	import * as Table from '$lib/components/ui/table/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { BarChart3, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
@@ -35,7 +28,7 @@
 		</div>
 	</div>
 
-	<Card.Root
+	<Card.Root>
 		<Card.Header>
 			<Card.Title class="flex items-center gap-2">
 				<BarChart3 class="h-5 w-5" />
@@ -105,11 +98,11 @@
 				{/if}
 			</div>
 		</Card.Content>
-	</Card.Root
+	</Card.Root>
 
 	<div class="grid gap-4 md:grid-cols-3">
-		<Card.Root
-			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total des clics</Card.Title>
 				<Eye class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
@@ -119,10 +112,10 @@
 					{data.stats.clicksToday > 0 ? `+${data.stats.clicksToday}` : '0'} aujourd'hui
 				</p>
 			</Card.Content>
-		</Card.Root
+		</Card.Root>
 
-		<Card.Root
-			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Cette semaine</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
@@ -130,10 +123,10 @@
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisWeek)}</div>
 				<p class="text-xs text-muted-foreground">7 derniers jours</p>
 			</Card.Content>
-		</Card.Root
+		</Card.Root>
 
-		<Card.Root
-			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Ce mois</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
@@ -141,10 +134,10 @@
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisMonth)}</div>
 				<p class="text-xs text-muted-foreground">30 derniers jours</p>
 			</Card.Content>
-		</Card.Root
+		</Card.Root>
 	</div>
 
-	<Card.Root
+	<Card.Root>
 		<Card.Header>
 			<Card.Title>Historique des clics récents</Card.Title>
 		</Card.Header>
@@ -155,7 +148,7 @@
 				</div>
 			{:else}
 				<div class="rounded-md border">
-					<Table.Row
+					<Table.Root>
 						<Table.Header>
 							<Table.Row>
 								<Table.Head>Date et heure</Table.Head>
@@ -178,7 +171,7 @@
 								</Table.Row>
 							{/each}
 						</Table.Body>
-					</Table.Row
+					</Table.Root>
 				</div>
 
 				{#if data.stats.totalClicks > data.recentClicks.length}
@@ -190,5 +183,5 @@
 				{/if}
 			{/if}
 		</Card.Content>
-	</Card.Root
+	</Card.Root>
 </div>

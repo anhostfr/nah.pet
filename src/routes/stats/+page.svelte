@@ -2,14 +2,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import {
-		Table,
-		Table.Body,
-		Table.Cell,
-		Table.Head,
-		Table.Header,
-		Table.Row
-	} from '$lib/components/ui/table/index.js';
+	import * as Table from '$lib/components/ui/table/index.js';
 	import {
 		BarChart3,
 		TrendingUp,
@@ -92,7 +85,7 @@
 	</div>
 
 	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -121,9 +114,9 @@
 				</div>
 			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -154,9 +147,9 @@
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-green-600 to-green-400"
 			></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -176,9 +169,9 @@
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
 			></div>
-		</Card.Root
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
+		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
@@ -200,12 +193,12 @@
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-orange-600 to-orange-400"
 			></div>
-		</Card.Root
+		</Card.Root>
 	</div>
 
 	<div class="flex flex-col gap-10">
-		<Card.Root
-			<CardHeader class="border-b border-gray-100 dark:border-gray-700">
+		<Card.Root>
+			<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 				<Card.Title class="flex items-center space-x-2">
 					<TrendingUp class="w-5 h-5" />
 					<span>Top liens</span>
@@ -219,7 +212,7 @@
 					</div>
 				{:else}
 					<div class="mx-6">
-						<Table.Row
+						<Table.Root>
 							<Table.Header>
 								<Table.Row>
 									<Table.Head class="w-[50px]">Nom</Table.Head>
@@ -276,14 +269,14 @@
 									</Table.Row>
 								{/each}
 							</Table.Body>
-						</Table.Row
+						</Table.Root>
 					</div>
 				{/if}
 			</Card.Content>
-		</Card.Root
+		</Card.Root>
 
-		<Card.Root
-			<CardHeader class="border-b border-gray-100 dark:border-gray-700">
+		<Card.Root>
+			<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 				<Card.Title class="flex items-center space-x-2">
 					<Activity class="w-5 h-5" />
 					<span>Activité récente</span>
@@ -333,6 +326,6 @@
 					</div>
 				{/if}
 			</Card.Content>
-		</Card.Root
+		</Card.Root>
 	</div>
 </div>

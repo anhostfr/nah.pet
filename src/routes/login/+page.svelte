@@ -5,7 +5,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { enhance } from '$app/forms';
 	import { Link } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 
 	let { form } = $props();
 	let email = $state('');
@@ -33,6 +33,7 @@
 					isLoading = true;
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.redirectTo) {
+							await invalidate('app:auth');
 							goto(result.data.redirectTo as string);
 						} else {
 							await update();

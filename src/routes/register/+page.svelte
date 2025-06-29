@@ -5,7 +5,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { enhance } from '$app/forms';
 	import { UserPlus } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 
 	let { form } = $props();
 	let email = $state('');
@@ -19,8 +19,8 @@
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
-	<Card class="max-w-md w-full">
-		<CardHeader class="text-center">
+	<Card.Root class="max-w-md w-full">
+		<Card.Header class="text-center">
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
 				<UserPlus class="h-8 w-8 text-primary-foreground" />
 			</div>
@@ -34,6 +34,7 @@
 					isLoading = true;
 					return async ({ result, update }) => {
 						if (result.type === 'success' && result.data?.redirectTo) {
+							await invalidate('app:layout');
 							goto(result.data.redirectTo as string);
 						} else {
 							await update();
@@ -110,5 +111,5 @@
 				<p>© {new Date().getFullYear()} Nah.pet -  Links be like: “Nah, I'd redirect.”</p>
 			</div>
 		</Card.Content>
-	</Card.Root
+	</Card.Root>
 </div>

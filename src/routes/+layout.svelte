@@ -9,6 +9,7 @@
 
 	let { children, data } = $props();
 
+	
 	const navItems = [
 		{ href: '/', label: 'Dashboard', icon: ChartBar, active: page.url.pathname === '/' },
 		{
