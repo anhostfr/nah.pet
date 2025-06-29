@@ -2,35 +2,35 @@
 	import '../app.css';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { Link, User, BarChart3, Settings, Globe } from 'lucide-svelte';
-	import { page } from '$app/stores';
+	import { User, Settings, Globe, ChartBar } from 'lucide-svelte';
+	import { page } from '$app/state';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
-	import { ModeWatcher, userPrefersMode } from 'mode-watcher';
+	import { ModeWatcher } from 'mode-watcher';
 
 	let { children, data } = $props();
 
 	const navItems = [
-		{ href: '/', label: 'Dashboard', icon: BarChart3, active: $page.url.pathname === '/' },
+		{ href: '/', label: 'Dashboard', icon: ChartBar, active: page.url.pathname === '/' },
 		{
 			href: '/stats',
 			label: 'Analytics',
-			icon: BarChart3,
-			active: $page.url.pathname.startsWith('/stats')
+			icon: ChartBar,
+			active: page.url.pathname.startsWith('/stats')
 		},
 		{
 			href: '/settings',
 			label: 'Paramètres',
 			icon: Settings,
-			active: $page.url.pathname === '/settings'
+			active: page.url.pathname === '/settings'
 		}
 	];
 </script>
 
 <svelte:head>
-	<title>ShortURL - Raccourcisseur d'URL Open Source</title>
+	<title>Nah.pet - Rewriting path with bad energy</title>
 	<meta
 		name="description"
-		content="Interface moderne pour raccourcir vos URLs avec analytics avancées"
+		content="Nah.pet is an open source URL shortener that allows you to create and manage short links easily."
 	/>
 </svelte:head>
 
