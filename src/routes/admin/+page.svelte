@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import {
 		Table,
-		TableBody,
-		TableCell,
-		TableHead,
-		TableHeader,
-		TableRow
+		Table.Body,
+		Table.Cell,
+		Table.Head,
+		Table.Header,
+		Table.Row
 	} from '$lib/components/ui/table/index.js';
 	import {
 		Users,
@@ -80,7 +80,7 @@
 
 	<div class="grid gap-6 md:grid-cols-4">
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total utilisateurs</p>
@@ -94,12 +94,12 @@
 						<Users class="w-6 h-6 text-blue-600 dark:text-blue-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Utilisateurs actifs</p>
@@ -113,14 +113,14 @@
 						<UserCheck class="w-6 h-6 text-green-600 dark:text-green-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-green-600 to-green-400"
 			></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total liens</p>
@@ -134,14 +134,14 @@
 						<LinkIcon class="w-6 h-6 text-purple-600 dark:text-purple-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
 			></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Administrateurs</p>
@@ -155,39 +155,39 @@
 						<Shield class="w-6 h-6 text-red-600 dark:text-red-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-red-600 to-red-400"></div>
-		</Card>
+		</Card.Root
 	</div>
 
-	<Card>
+	<Card.Root
 		<CardHeader class="border-b border-gray-100 dark:border-gray-700">
-			<CardTitle class="flex items-center justify-between">
+			<Card.Title class="flex items-center justify-between">
 				<span class="flex items-center space-x-2">
 					<Users class="w-5 h-5" />
 					<span>Gestion des utilisateurs</span>
 					<Badge variant="secondary">{data.users.length}</Badge>
 				</span>
-			</CardTitle>
-		</CardHeader>
-		<CardContent class="p-0">
+			</Card.Title>
+		</Card.Header>
+		<Card.Content class="p-0">
 			<div class="overflow-x-auto">
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead class="w-[250px]">Utilisateur</TableHead>
-							<TableHead class="w-[120px] text-center">Statut</TableHead>
-							<TableHead class="w-[100px] text-center">Liens</TableHead>
-							<TableHead class="w-[100px] text-center">Clics</TableHead>
-							<TableHead class="w-[150px]">Inscrit le</TableHead>
-							<TableHead class="w-[250px] text-center">Actions</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
+				<Table.Row
+					<Table.Header>
+						<Table.Row>
+							<Table.Head class="w-[250px]">Utilisateur</Table.Head>
+							<Table.Head class="w-[120px] text-center">Statut</Table.Head>
+							<Table.Head class="w-[100px] text-center">Liens</Table.Head>
+							<Table.Head class="w-[100px] text-center">Clics</Table.Head>
+							<Table.Head class="w-[150px]">Inscrit le</Table.Head>
+							<Table.Head class="w-[250px] text-center">Actions</Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
 						{#each data.users as user (user.id)}
 							{@const status = getUserStatus(user)}
-							<TableRow class="group hover:bg-gray-50 dark:hover:bg-gray-800/50">
-								<TableCell>
+							<Table.Row class="group hover:bg-gray-50 dark:hover:bg-gray-800/50">
+								<Table.Cell>
 									<div class="space-y-1">
 										<p class="font-medium text-gray-900 dark:text-white">
 											{user.email}
@@ -196,30 +196,30 @@
 											{user.id}
 										</p>
 									</div>
-								</TableCell>
+								</Table.Cell>
 
-								<TableCell class="text-center">
+								<Table.Cell class="text-center">
 									<Badge variant={status.variant} class="text-xs">
 										<status.icon class="w-3 h-3 mr-1" />
 										{status.label}
 									</Badge>
-								</TableCell>
+								</Table.Cell>
 
-								<TableCell class="text-center">
+								<Table.Cell class="text-center">
 									<div class="flex items-center justify-center space-x-1">
 										<LinkIcon class="w-4 h-4 text-gray-400" />
 										<span class="font-medium">{formatNumber(user._count.links)}</span>
 									</div>
-								</TableCell>
+								</Table.Cell>
 
-								<TableCell class="text-center">
+								<Table.Cell class="text-center">
 									<div class="flex items-center justify-center space-x-1">
 										<Eye class="w-4 h-4 text-gray-400" />
 										<span class="font-medium">{formatNumber(user.totalClicks)}</span>
 									</div>
-								</TableCell>
+								</Table.Cell>
 
-								<TableCell>
+								<Table.Cell>
 									<div class="space-y-1">
 										<p class="text-sm text-gray-900 dark:text-white">
 											{formatDate(user.createdAt)}
@@ -228,9 +228,9 @@
 											{formatRelativeTime(user.createdAt)}
 										</p>
 									</div>
-								</TableCell>
+								</Table.Cell>
 
-								<TableCell>
+								<Table.Cell>
 									<div class="flex items-center justify-center space-x-2">
 										<form
 											method="POST"
@@ -351,17 +351,17 @@
 											</Button>
 										</form>
 									</div>
-								</TableCell>
-							</TableRow>
+								</Table.Cell>
+							</Table.Row>
 						{/each}
-					</TableBody>
-				</Table>
+					</Table.Body>
+				</Table.Row
 			</div>
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root
 
 	<Card class="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
-		<CardContent class="p-6">
+		<Card.Content class="p-6">
 			<div class="flex items-start space-x-3">
 				<AlertTriangle class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
 				<div>
@@ -377,6 +377,6 @@
 					</div>
 				</div>
 			</div>
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root
 </div>

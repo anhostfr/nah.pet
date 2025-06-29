@@ -5,23 +5,37 @@ let reservedSlugsCache: Set<string> | null = null;
 
 async function getReservedSlugs(): Promise<Set<string>> {
 	if (reservedSlugsCache) return reservedSlugsCache;
-	const routeFiles = Object.keys(await import.meta.glob('/src/routes/**/*.svelte'));
+	const svelteFiles = await import.meta.glob('/src/routes/**/*.svelte');
+	const tsFiles = await import.meta.glob('/src/routes/**/*.ts');
+	const routeFiles = Object.keys({ ...svelteFiles, ...tsFiles });
 	reservedSlugsCache = new Set(
 		routeFiles
 			.map((path) =>
 				path.replace('/src/routes/', '').replace('.svelte', '').replace('/index', '').split('/')
+				.map((segment) => segment.replace(/^\+/, '').replace(/\.ts$/, ''))
+				.filter((segment) => segment && !segment.startsWith('_') && !segment.startsWith('[') && !segment.endsWith(']'))
 			)
 			.flat()
 			.filter(Boolean)
 			.map((segment) => segment.toLowerCase())
 	);
+	console.log(`Réservé ${reservedSlugsCache.size} slugs`, reservedSlugsCache);
 	return reservedSlugsCache;
 }
 
 export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 	const RESERVED_SLUGS = await getReservedSlugs();
 
+	function isValidSlug(slug: string): boolean {
+		const forbiddenChars = ['/', '.', '\\', ':', '*', '?', '"', '<', '>', '|', '&', '%', '#', '@', '!', '=', '+', ';', ',', '(', ')', '[', ']', '{', '}', '~', '`', '^', ' ', '\t', '\n', '\r'];
+		return !forbiddenChars.some(char => slug.includes(char));
+	}
+
 	if (customSlug) {
+		if (!isValidSlug(customSlug)) {
+			throw new Error('Le slug contient des caractères non autorisés (/, ., \\, :, *, ?, etc.)');
+		}
+		
 		if (RESERVED_SLUGS.has(customSlug.toLowerCase())) {
 			throw new Error('Ce slug est réservé');
 		}
@@ -37,7 +51,7 @@ export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 		const candidates: string[] = [];
 		while (candidates.length < 10) {
 			const slug = nanoid(length);
-			if (!RESERVED_SLUGS.has(slug.toLowerCase())) {
+			if (!RESERVED_SLUGS.has(slug.toLowerCase()) && isValidSlug(slug)) {
 				candidates.push(slug);
 			}
 		}
@@ -55,5 +69,7 @@ export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 		}
 	}
 
-	return `${Date.now().toString(36)}-${nanoid(4)}`;
+	const timestamp = Date.now().toString(36);
+	const randomPart = nanoid(4);
+	return `${timestamp}-${randomPart}`;
 }

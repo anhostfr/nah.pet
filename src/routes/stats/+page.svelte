@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import {
 		Table,
-		TableBody,
-		TableCell,
-		TableHead,
-		TableHeader,
-		TableRow
+		Table.Body,
+		Table.Cell,
+		Table.Head,
+		Table.Header,
+		Table.Row
 	} from '$lib/components/ui/table/index.js';
 	import {
 		BarChart3,
@@ -93,7 +93,7 @@
 
 	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics aujourd'hui</p>
@@ -119,12 +119,12 @@
 						<Eye class="w-6 h-6 text-blue-600 dark:text-blue-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Cette semaine</p>
@@ -150,14 +150,14 @@
 						<Calendar class="w-6 h-6 text-green-600 dark:text-green-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-green-600 to-green-400"
 			></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total clics</p>
@@ -172,14 +172,14 @@
 						<BarChart3 class="w-6 h-6 text-purple-600 dark:text-purple-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
 			></div>
-		</Card>
+		</Card.Root
 
 		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Moy. par lien</p>
@@ -196,49 +196,49 @@
 						<TrendingUp class="w-6 h-6 text-orange-600 dark:text-orange-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-orange-600 to-orange-400"
 			></div>
-		</Card>
+		</Card.Root
 	</div>
 
 	<div class="flex flex-col gap-10">
-		<Card>
+		<Card.Root
 			<CardHeader class="border-b border-gray-100 dark:border-gray-700">
-				<CardTitle class="flex items-center space-x-2">
+				<Card.Title class="flex items-center space-x-2">
 					<TrendingUp class="w-5 h-5" />
 					<span>Top liens</span>
 					<Badge variant="secondary" class="ml-2">Plus cliqués</Badge>
-				</CardTitle>
-			</CardHeader>
-			<CardContent class="p-0">
+				</Card.Title>
+			</Card.Header>
+			<Card.Content class="p-0">
 				{#if data.topLinks.length === 0}
 					<div class="text-center py-8">
 						<p class="text-gray-500 dark:text-gray-400">Aucun lien pour l'instant</p>
 					</div>
 				{:else}
 					<div class="mx-6">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead class="w-[50px]">Nom</TableHead>
-									<TableHead>Lien</TableHead>
-									<TableHead class="text-center w-[80px]">Clics</TableHead>
-									<TableHead class="w-[80px]">Action</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
+						<Table.Row
+							<Table.Header>
+								<Table.Row>
+									<Table.Head class="w-[50px]">Nom</Table.Head>
+									<Table.Head>Lien</Table.Head>
+									<Table.Head class="text-center w-[80px]">Clics</Table.Head>
+									<Table.Head class="w-[80px]">Action</Table.Head>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
 								{#each data.topLinks as link, index (link.id)}
-									<TableRow class="group">
-										<TableCell class="font-mono text-sm text-secondary-foreground">
+									<Table.Row class="group">
+										<Table.Cell class="font-mono text-sm text-secondary-foreground">
 											{#if link.title}
 												{link.title}
 											{:else}
 												-
 											{/if}
-										</TableCell>
-										<TableCell>
+										</Table.Cell>
+										<Table.Cell>
 											<div class="space-y-1">
 												<div class="flex items-center space-x-2">
 													<code class="text-sm bg-secondary px-2 py-1 rounded font-mono">
@@ -246,13 +246,13 @@
 													</code>
 												</div>
 											</div>
-										</TableCell>
-										<TableCell class="text-center">
+										</Table.Cell>
+										<Table.Cell class="text-center">
 											<Badge variant="outline" class="font-mono">
 												{formatNumber(link._count.clicks)}
 											</Badge>
-										</TableCell>
-										<TableCell>
+										</Table.Cell>
+										<Table.Cell>
 											<div class="flex items-center space-x-1">
 												<Button
 													href="/stats/{link.slug}"
@@ -272,25 +272,25 @@
 													<Copy class="w-4 h-4" />
 												</Button>
 											</div>
-										</TableCell>
-									</TableRow>
+										</Table.Cell>
+									</Table.Row>
 								{/each}
-							</TableBody>
-						</Table>
+							</Table.Body>
+						</Table.Row
 					</div>
 				{/if}
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root
 
-		<Card>
+		<Card.Root
 			<CardHeader class="border-b border-gray-100 dark:border-gray-700">
-				<CardTitle class="flex items-center space-x-2">
+				<Card.Title class="flex items-center space-x-2">
 					<Activity class="w-5 h-5" />
 					<span>Activité récente</span>
 					<Badge variant="secondary" class="ml-2">Derniers clics</Badge>
-				</CardTitle>
-			</CardHeader>
-			<CardContent class="p-6">
+				</Card.Title>
+			</Card.Header>
+			<Card.Content class="p-6">
 				{#if data.recentClicks.length === 0}
 					<div class="text-center py-8">
 						<p class="text-gray-500 dark:text-gray-400">Aucun clic récent</p>
@@ -332,7 +332,7 @@
 						{/each}
 					</div>
 				{/if}
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import {
@@ -40,19 +40,19 @@
 
 <div class="min-h-screen flex items-center justify-center p-4">
 	<div class="max-w-2xl w-full space-y-8">
-		<Card class="shadow-2xl border-0 backdrop-blur-xl">
-			<CardHeader class="text-center border-b border-gray-100 dark:border-gray-700 pb-6">
+		<Card.Root class="shadow-2xl border-0 backdrop-blur-xl">
+			<Card.Header class="text-center border-b border-gray-100 dark:border-gray-700 pb-6">
 				<div
 					class="w-20 h-20 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
 				>
 					<Clock class="w-10 h-10 text-yellow-600 dark:text-yellow-400" />
 				</div>
-				<CardTitle class="text-xl text-gray-900 dark:text-white">
+				<Card.Title class="text-xl text-gray-900 dark:text-white">
 					Votre compte n'est pas encore activé
-				</CardTitle>
-			</CardHeader>
+				</Card.Title>
+			</Card.Header>
 
-			<CardContent class="p-8 space-y-6">
+			<Card.Content class="p-8 space-y-6">
 				<div class="space-y-4 border-border border-[1px] rounded-lg">
 					<div class="flex items-center justify-between p-4 rounded-lg">
 						<div class="flex items-center space-x-3">
@@ -83,7 +83,7 @@
 							<span class="text-sm text-secondary-foreground">Inscrit le :</span>
 						</div>
 						<span class="font-medium text-gray-900 dark:text-white">
-							{formatDate(data.user?.createdAt)}
+							{formatDate(data.user?.createdAt || new Date())}
 						</span>
 					</div>
 				</div>
@@ -155,8 +155,8 @@
 						</Button>
 					</form>
 				</div>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root>
 
 		<div class="text-center text-sm text-gray-500 dark:text-gray-400">
 			<p>© {new Date().getFullYear()} Nah.pet — Pet-redirect-as-a-Service since forever.</p>

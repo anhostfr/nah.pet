@@ -3,7 +3,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import { Card, CardContent } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { enhance } from '$app/forms';
 	import {
@@ -54,10 +54,10 @@
 
 <div class="space-y-6">
 	{#if form?.success && form?.link}
-		<Card
+		<Card.Root
 			class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800"
 		>
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-start space-x-4">
 					<div
 						class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -115,8 +115,8 @@
 						{/if}
 					</div>
 				</div>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root>
 	{/if}
 
 	<form

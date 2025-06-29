@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import {
 		Table,
-		TableBody,
-		TableCell,
-		TableHead,
-		TableHeader,
-		TableRow
+		Table.Body,
+		Table.Cell,
+		Table.Head,
+		Table.Header,
+		Table.Row
 	} from '$lib/components/ui/table/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { BarChart3, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
@@ -35,14 +35,14 @@
 		</div>
 	</div>
 
-	<Card>
-		<CardHeader>
-			<CardTitle class="flex items-center gap-2">
+	<Card.Root
+		<Card.Header>
+			<Card.Title class="flex items-center gap-2">
 				<BarChart3 class="h-5 w-5" />
 				Informations du lien
-			</CardTitle>
-		</CardHeader>
-		<CardContent class="space-y-4">
+			</Card.Title>
+		</Card.Header>
+		<Card.Content class="space-y-4">
 			<div class="grid gap-4 md:grid-cols-2">
 				<div>
 					<p class="text-sm font-medium text-muted-foreground">Lien raccourci</p>
@@ -104,81 +104,81 @@
 					<Badge variant="default">Permanent</Badge>
 				{/if}
 			</div>
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root
 
 	<div class="grid gap-4 md:grid-cols-3">
-		<Card>
+		<Card.Root
 			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle class="text-sm font-medium">Total des clics</CardTitle>
+				<Card.Title class="text-sm font-medium">Total des clics</Card.Title>
 				<Eye class="h-4 w-4 text-muted-foreground" />
-			</CardHeader>
-			<CardContent>
+			</Card.Header>
+			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.totalClicks)}</div>
 				<p class="text-xs text-muted-foreground">
 					{data.stats.clicksToday > 0 ? `+${data.stats.clicksToday}` : '0'} aujourd'hui
 				</p>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root
 
-		<Card>
+		<Card.Root
 			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle class="text-sm font-medium">Cette semaine</CardTitle>
+				<Card.Title class="text-sm font-medium">Cette semaine</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
-			</CardHeader>
-			<CardContent>
+			</Card.Header>
+			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisWeek)}</div>
 				<p class="text-xs text-muted-foreground">7 derniers jours</p>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root
 
-		<Card>
+		<Card.Root
 			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle class="text-sm font-medium">Ce mois</CardTitle>
+				<Card.Title class="text-sm font-medium">Ce mois</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
-			</CardHeader>
-			<CardContent>
+			</Card.Header>
+			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisMonth)}</div>
 				<p class="text-xs text-muted-foreground">30 derniers jours</p>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root
 	</div>
 
-	<Card>
-		<CardHeader>
-			<CardTitle>Historique des clics récents</CardTitle>
-		</CardHeader>
-		<CardContent>
+	<Card.Root
+		<Card.Header>
+			<Card.Title>Historique des clics récents</Card.Title>
+		</Card.Header>
+		<Card.Content>
 			{#if data.recentClicks.length === 0}
 				<div class="text-center py-8 text-muted-foreground">
 					<p>Aucun clic enregistré pour ce lien.</p>
 				</div>
 			{:else}
 				<div class="rounded-md border">
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Date et heure</TableHead>
-								<TableHead>IP</TableHead>
-								<TableHead>Navigateur</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
+					<Table.Row
+						<Table.Header>
+							<Table.Row>
+								<Table.Head>Date et heure</Table.Head>
+								<Table.Head>IP</Table.Head>
+								<Table.Head>Navigateur</Table.Head>
+							</Table.Row>
+						</Table.Header>
+						<Table.Body>
 							{#each data.recentClicks as click (click.id)}
-								<TableRow>
-									<TableCell class="font-medium">
+								<Table.Row>
+									<Table.Cell class="font-medium">
 										{formatDate(new Date(click.createdAt))}
-									</TableCell>
-									<TableCell class="font-mono text-sm">
+									</Table.Cell>
+									<Table.Cell class="font-mono text-sm">
 										{click.ip || 'Non disponible'}
-									</TableCell>
-									<TableCell class="text-sm text-muted-foreground max-w-xs truncate">
+									</Table.Cell>
+									<Table.Cell class="text-sm text-muted-foreground max-w-xs truncate">
 										{click.userAgent || 'Non disponible'}
-									</TableCell>
-								</TableRow>
+									</Table.Cell>
+								</Table.Row>
 							{/each}
-						</TableBody>
-					</Table>
+						</Table.Body>
+					</Table.Row
 				</div>
 
 				{#if data.stats.totalClicks > data.recentClicks.length}
@@ -189,6 +189,6 @@
 					</p>
 				{/if}
 			{/if}
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root
 </div>

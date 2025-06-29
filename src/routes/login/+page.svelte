@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { enhance } from '$app/forms';
 	import { Link } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
@@ -18,15 +18,15 @@
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
-	<Card class="max-w-md w-full">
-		<CardHeader class="text-center">
+	<Card.Root class="max-w-md w-full">
+		<Card.Header class="text-center">
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
 				<Link class="h-8 w-8 text-primary-foreground" />
 			</div>
-			<CardTitle>Connexion</CardTitle>
+			<Card.Title>Connexion</Card.Title>
 			<p class="text-sm text-muted-foreground">Connectez-vous à votre compte ShortURL</p>
-		</CardHeader>
-		<CardContent>
+		</Card.Header>
+		<Card.Content>
 			<form
 				method="POST"
 				use:enhance={() => {
@@ -92,6 +92,6 @@
 			<div class="text-center text-sm text-gray-500 dark:text-gray-400">
 				<p>© {new Date().getFullYear()} Nah.pet — It’s a no from us, dawg.</p>
 			</div>
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root>
 </div>

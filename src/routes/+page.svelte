@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import LinksTable from '$lib/components/links-table.svelte';
@@ -62,8 +62,8 @@
 	</div>
 
 	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-		<Card class="relative overflow-hidden">
-			<CardContent class="py-3">
+		<Card.Root class="relative overflow-hidden">
+			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2 max-w-7/12">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des liens</p>
@@ -88,12 +88,12 @@
 						<Link class="w-6 h-6 text-blue-600 dark:text-blue-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-		</Card>
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
-			<CardContent class="py-3">
+		<Card.Root class="relative overflow-hidden">
+			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2 max-w-7/12">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des clics</p>
@@ -118,14 +118,14 @@
 						<Eye class="w-6 h-6 text-green-600 dark:text-green-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-green-600 to-green-400"
 			></div>
-		</Card>
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+		<Card.Root class="relative overflow-hidden">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics moyens</p>
@@ -142,14 +142,14 @@
 						<BarChart3 class="w-6 h-6 text-purple-600 dark:text-purple-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
 			></div>
-		</Card>
+		</Card.Root>
 
-		<Card class="relative overflow-hidden">
-			<CardContent class="p-6">
+		<Card.Root class="relative overflow-hidden">
+			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Liens actifs</p>
@@ -179,33 +179,33 @@
 						<Calendar class="w-6 h-6 text-orange-600 dark:text-orange-400" />
 					</div>
 				</div>
-			</CardContent>
+			</Card.Content>
 			<div
 				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-orange-600 to-orange-400"
 			></div>
-		</Card>
+		</Card.Root>
 	</div>
 
-	<Card>
-		<CardHeader class="border-b border-gray-100 dark:border-gray-700">
-			<CardTitle class="flex items-center space-x-2">
+	<Card.Root>
+		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
+			<Card.Title class="flex items-center space-x-2">
 				<div
 					class="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
 				>
 					<Link class="w-4 h-4 text-blue-600 dark:text-blue-400" />
 				</div>
 				<span>Créer un nouveau lien</span>
-			</CardTitle>
-		</CardHeader>
-		<CardContent class="p-6">
+			</Card.Title>
+		</Card.Header>
+		<Card.Content class="p-6">
 			<UrlShortenerForm {form} />
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root>
 
-	<Card>
-		<CardHeader class="border-b border-gray-100 dark:border-gray-700">
+	<Card.Root>
+		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 			<div class="flex items-center justify-between">
-				<CardTitle class="flex items-center space-x-2">
+				<Card.Title class="flex items-center space-x-2">
 					<div
 						class="w-6 h-6 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
 					>
@@ -215,23 +215,23 @@
 					<Badge variant="secondary" class="ml-2">
 						{data.links.length}
 					</Badge>
-				</CardTitle>
+				</Card.Title>
 				<Button href="/stats" variant="outline" size="sm">
 					<Eye class="w-4 h-4 mr-2" />
 					Voir tout
 				</Button>
 			</div>
-		</CardHeader>
-		<CardContent class="p-0">
+		</Card.Header>
+		<Card.Content class="p-0">
 			<LinksTable links={data.links} />
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root>
 
 	<div class="grid gap-6 md:grid-cols-2">
-		<Card
+		<Card.Root
 			class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800"
 		>
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-start space-x-3">
 					<div
 						class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -246,13 +246,13 @@
 						</p>
 					</div>
 				</div>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root>
 
-		<Card
+		<Card.Root
 			class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800"
 		>
-			<CardContent class="p-6">
+			<Card.Content class="p-6">
 				<div class="flex items-start space-x-3">
 					<div
 						class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -268,7 +268,7 @@
 						</p>
 					</div>
 				</div>
-			</CardContent>
-		</Card>
+			</Card.Content>
+		</Card.Root>
 	</div>
 </div>

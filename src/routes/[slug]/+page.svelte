@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { enhance } from '$app/forms';
 	import { Lock } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
@@ -17,18 +17,18 @@
 </svelte:head>
 
 <div class="max-w-md mx-auto mt-16">
-	<Card>
-		<CardHeader class="text-center">
+	<Card.Root>
+		<Card.Header class="text-center">
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
 				<Lock class="h-8 w-8" />
 			</div>
-			<CardTitle>Lien protégé</CardTitle>
+			<Card.Title>Lien protégé</Card.Title>
 			<p class="text-sm text-muted-foreground">Ce lien est protégé par un mot de passe</p>
 			{#if data.link.title}
 				<p class="text-sm font-medium">{data.link.title}</p>
 			{/if}
-		</CardHeader>
-		<CardContent>
+		</Card.Header>
+		<Card.Content>
 			<form
 				method="POST"
 				action="?/verify"
@@ -71,6 +71,6 @@
 					</Button>
 				</div>
 			</form>
-		</CardContent>
-	</Card>
+		</Card.Content>
+	</Card.Root>
 </div>
