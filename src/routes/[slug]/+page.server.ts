@@ -4,13 +4,37 @@ import { db } from '$lib/server/db.js';
 import { verify } from '@node-rs/argon2';
 import { sleep } from '$lib/utils';
 import { isRateLimited } from '$lib/server/rateLimit';
+import { isSlugReserved } from '$lib/server/domain-verification';
 
-export const load: PageServerLoad = async ({ params, request, getClientAddress }) => {
+export const load: PageServerLoad = async ({ params, request, getClientAddress, locals }) => {
 	const { slug } = params;
 
-	const link = await db.link.findUnique({
-		where: { slug }
-	});
+	
+	let link;
+	
+	if (locals.isCustomDomain && locals.customDomain?.verified) {
+		
+		if (isSlugReserved(slug)) {
+			throw error(404, 'Lien introuvable');
+		}
+		
+		
+		link = await db.link.findFirst({
+			where: {
+				slug,
+				customDomainId: locals.customDomain.id,
+				userId: locals.customDomain.userId 
+			}
+		});
+	} else {
+		
+		link = await db.link.findFirst({
+			where: {
+				slug,
+				customDomainId: null
+			}
+		});
+	}
 
 	if (!link) {
 		throw error(404, 'Lien introuvable');
@@ -45,14 +69,34 @@ export const load: PageServerLoad = async ({ params, request, getClientAddress }
 };
 
 export const actions: Actions = {
-	verify: async ({ request, params, getClientAddress }) => {
+	verify: async ({ request, params, getClientAddress, locals }) => {
 		const { slug } = params;
 		const formData = await request.formData();
 		const password = formData.get('password') as string;
 
-		const link = await db.link.findUnique({
-			where: { slug }
-		});
+		
+		let link;
+		
+		if (locals.isCustomDomain && locals.customDomain?.verified) {
+			if (isSlugReserved(slug!)) {
+				throw error(404, 'Lien introuvable');
+			}
+			
+			link = await db.link.findFirst({
+				where: {
+					slug,
+					customDomainId: locals.customDomain.id,
+					userId: locals.customDomain.userId
+				}
+			});
+		} else {
+			link = await db.link.findFirst({
+				where: {
+					slug,
+					customDomainId: null
+				}
+			});
+		}
 
 		if (!link || !link.password) {
 			throw error(404, 'Lien introuvable');

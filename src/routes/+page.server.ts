@@ -5,6 +5,7 @@ import { generateUniqueSlug } from '$lib/server/slug-generator.js';
 import { generateQRCode } from '$lib/server/qr-generator.js';
 import { isValidUrl } from '$lib/utils.js';
 import { hash } from '@node-rs/argon2';
+import { isSlugReserved } from '$lib/server/domain-verification';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || !locals.user.isAuthorized) {
@@ -14,13 +15,14 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const currentDate = new Date();
 	const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
-	const [links, stats] = await Promise.all([
+	const [links, stats, customDomains] = await Promise.all([
 		db.link.findMany({
 			where: { userId: locals.user.id },
 			include: {
 				_count: {
 					select: { clicks: true }
-				}
+				},
+				customDomain: true
 			},
 			orderBy: { createdAt: 'desc' }
 		}),
@@ -29,6 +31,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 			_count: {
 				id: true
 			}
+		}),
+		db.customDomain.findMany({
+			where: { 
+				userId: locals.user.id,
+				verified: true
+			},
+			orderBy: { domain: 'asc' }
 		})
 	]);
 
@@ -68,6 +77,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return {
 		links,
+		customDomains,
 		stats: {
 			totalLinks: links.length,
 			totalClicks,
@@ -91,6 +101,7 @@ export const actions: Actions = {
 		const title = formData.get('title') as string;
 		const password = formData.get('password') as string;
 		const expiresAt = formData.get('expiresAt') as string;
+		const customDomainId = formData.get('customDomainId') as string;
 
 		if (!originalUrl) {
 			return fail(400, { error: 'URL requise' });
@@ -100,8 +111,31 @@ export const actions: Actions = {
 			return fail(400, { error: 'URL invalide' });
 		}
 
+		
+		let verifiedCustomDomain = null;
+		if (customDomainId && customDomainId !== '') {
+			verifiedCustomDomain = await db.customDomain.findFirst({
+				where: {
+					id: customDomainId,
+					userId: locals.user.id,
+					verified: true
+				}
+			});
+
+			if (!verifiedCustomDomain) {
+				return fail(400, { error: 'Domaine personnalisé invalide ou non vérifié' });
+			}
+
+			
+			if (customSlug && isSlugReserved(customSlug)) {
+				return fail(400, { 
+					error: `Le slug "${customSlug}" est réservé et ne peut pas être utilisé sur un domaine personnalisé` 
+				});
+			}
+		}
+
 		try {
-			const slug = await generateUniqueSlug(customSlug || undefined);
+			const slug = await generateUniqueSlug(customSlug || undefined, verifiedCustomDomain?.id);
 
 			const hashedPassword = password
 				? await hash(password, {
@@ -120,11 +154,14 @@ export const actions: Actions = {
 					title: title || null,
 					password: hashedPassword,
 					expiresAt: expirationDate,
-					userId: locals.user.id
+					userId: locals.user.id,
+					customDomainId: verifiedCustomDomain?.id || null
 				}
 			});
 
-			const shortUrl = `${url.origin}/${slug}`;
+			const shortUrl = verifiedCustomDomain 
+				? `https://${verifiedCustomDomain.domain}/${slug}`
+				: `${url.origin}/${slug}`;
 			const qrCode = await generateQRCode(shortUrl);
 
 			return {
@@ -135,6 +172,7 @@ export const actions: Actions = {
 					originalUrl: link.originalUrl,
 					title: link.title
 				},
+				shortUrl,
 				qrCode
 			};
 		} catch (error) {

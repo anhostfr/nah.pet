@@ -16,8 +16,9 @@ model User {
   isActive  Boolean  @default(true)
   password  String
 
-  sessions Session[]
-  links    Link[]
+  sessions      Session[]
+  links         Link[]
+  customDomains CustomDomain[]
 
   @@map("users")
 }
@@ -35,7 +36,7 @@ model Session {
 model Link {
   id          String   @id @default(cuid())
   originalUrl String
-  slug        String   @unique
+  slug        String
   title       String?
   password    String?
   expiresAt   DateTime?
@@ -45,8 +46,12 @@ model Link {
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  customDomainId String?
+  customDomain   CustomDomain? @relation(fields: [customDomainId], references: [id], onDelete: Cascade)
+
   clicks Click[]
 
+  @@unique([slug, customDomainId])
   @@map("links")
 }
 
@@ -62,4 +67,20 @@ model Click {
   link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
 
   @@map("clicks")
+}
+
+model CustomDomain {
+  id                 String   @id @default(cuid())
+  domain             String   @unique
+  userId             String
+  verified           Boolean  @default(false)
+  verificationToken  String   @unique
+  verificationMethod String   
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links Link[]
+
+  @@map("custom_domains")
 }

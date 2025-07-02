@@ -198,7 +198,7 @@
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="p-6">
-			<UrlShortenerForm {form} />
+			<UrlShortenerForm {form} customDomains={data.customDomains} />
 		</Card.Content>
 	</Card.Root>
 

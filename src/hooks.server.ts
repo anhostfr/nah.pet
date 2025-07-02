@@ -1,33 +1,90 @@
 import { lucia } from '$lib/server/auth';
-import { redirect, type Handle } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import { type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	
+	const host = event.request.headers.get('host');
+	const customDomain = await detectCustomDomain(host);
+	
+	
+	event.locals.customDomain = customDomain;
+	event.locals.isCustomDomain = !!customDomain;
+
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
 	if (!sessionId) {
 		event.locals.user = null;
 		event.locals.session = null;
-		return resolve(event);
+	} else {
+		const { session, user } = await lucia.validateSession(sessionId);
+		if (session && session.fresh) {
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			event.cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+		}
+
+		if (!session) {
+			const sessionCookie = lucia.createBlankSessionCookie();
+			event.cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes
+			});
+		}
+
+		event.locals.user = user;
+		event.locals.session = session;
 	}
 
-	const { session, user } = await lucia.validateSession(sessionId);
-	if (session && session.fresh) {
-		const sessionCookie = lucia.createSessionCookie(session.id);
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
-			...sessionCookie.attributes
-		});
+	
+	if (customDomain && customDomain.verified) {
+		const pathname = event.url.pathname;
+		
+		
+		const systemRoutes = [
+			'/login', '/register', '/logout', '/admin', '/stats', 
+			'/domains', '/pending', '/settings', '/profile', '/account', '/api'
+		];
+		
+		const isSystemRoute = systemRoutes.some(route => 
+			pathname === route || pathname.startsWith(route + '/')
+		);
+		
+		if (isSystemRoute) {
+			
+			return new Response('Not Found', { status: 404 });
+		}
+		
+		
 	}
-
-	if (!session) {
-		const sessionCookie = lucia.createBlankSessionCookie();
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
-			...sessionCookie.attributes
-		});
-	}
-
-	event.locals.user = user;
-	event.locals.session = session;
 
 	return resolve(event);
 };
+
+async function detectCustomDomain(host: string | null) {
+	if (!host) return null;
+	
+	
+	if (host.includes('localhost') || host.includes('127.0.0.1') || host.includes('0.0.0.0')) {
+		return null;
+	}
+	
+	
+	if (host === 'nah.pet' || host.startsWith('nah.pet:')) {
+		return null;
+	}
+	
+	
+	try {
+		const customDomain = await db.customDomain.findUnique({
+			where: { domain: host },
+			include: { user: true }
+		});
+		
+		return customDomain;
+	} catch (error) {
+		console.error('Error detecting custom domain:', error);
+		return null;
+	}
+}

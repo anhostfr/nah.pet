@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const { slug } = params;
 
-	const link = await db.link.findUnique({
+	const link = await db.link.findFirst({
 		where: {
 			slug,
 			userId: locals.user.id

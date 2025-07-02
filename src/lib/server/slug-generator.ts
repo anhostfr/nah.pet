@@ -23,7 +23,7 @@ async function getReservedSlugs(): Promise<Set<string>> {
 	return reservedSlugsCache;
 }
 
-export async function generateUniqueSlug(customSlug?: string): Promise<string> {
+export async function generateUniqueSlug(customSlug?: string, customDomainId?: string): Promise<string> {
 	const RESERVED_SLUGS = await getReservedSlugs();
 
 	function isValidSlug(slug: string): boolean {
@@ -39,9 +39,16 @@ export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 		if (RESERVED_SLUGS.has(customSlug.toLowerCase())) {
 			throw new Error('Ce slug est réservé');
 		}
-		const exists = await db.link.count({ where: { slug: customSlug } });
+		
+		
+		const exists = await db.link.count({ 
+			where: { 
+				slug: customSlug,
+				customDomainId: customDomainId || null
+			} 
+		});
 		if (exists > 0) {
-			throw new Error('Ce slug existe déjà');
+			throw new Error('Ce slug personnalisé existe déjà');
 		}
 		return customSlug;
 	}
@@ -57,7 +64,10 @@ export async function generateUniqueSlug(customSlug?: string): Promise<string> {
 		}
 
 		const existingSlugs = await db.link.findMany({
-			where: { slug: { in: candidates } },
+			where: { 
+				slug: { in: candidates },
+				customDomainId: customDomainId || null
+			},
 			select: { slug: true }
 		});
 		const usedSlugs = new Set(existingSlugs.map((link) => link.slug));

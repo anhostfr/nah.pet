@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { User, Settings, Globe, ChartBar } from 'lucide-svelte';
+	import { User, Settings, Globe, ChartBar, ExternalLink } from 'lucide-svelte';
 	import { page } from '$app/state';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
@@ -17,6 +17,12 @@
 			label: 'Analytics',
 			icon: ChartBar,
 			active: page.url.pathname.startsWith('/stats')
+		},
+		{
+			href: '/domains',
+			label: 'Domaines',
+			icon: ExternalLink,
+			active: page.url.pathname.startsWith('/domains')
 		},
 		{
 			href: '/settings',

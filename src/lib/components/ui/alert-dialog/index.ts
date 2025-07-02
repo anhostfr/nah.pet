@@ -24,7 +24,7 @@ export {
 	Overlay,
 	Content,
 	Description,
-	//
+	
 	Root as AlertDialog,
 	Title as AlertDialogTitle,
 	Action as AlertDialogAction,

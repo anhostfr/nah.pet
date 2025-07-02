@@ -4,6 +4,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import * as Select from '$lib/components/ui/select/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { enhance } from '$app/forms';
 	import {
@@ -15,21 +16,32 @@
 		Lock,
 		Calendar,
 		Sparkles,
-		ExternalLink
+		ExternalLink,
+		Globe
 	} from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
 
-	let { form } = $props();
+	let { form, customDomains } = $props();
 
 	let originalUrl = $state('');
 	let customSlug = $state('');
 	let title = $state('');
 	let password = $state('');
 	let expiresAt = $state('');
+	let selectedDomainValue = $state('');
 	let showAdvanced = $state(false);
 	let isLoading = $state(false);
 	let copied = $state(false);
+
+	
+	const domainOptions = $derived([
+		{ value: '', label: 'nah.pet (domaine principal)' },
+		...customDomains.map((domain: any) => ({
+			value: domain.id,
+			label: domain.domain
+		}))
+	]);
 
 	const copyToClipboard = async (text: string) => {
 		try {
@@ -81,12 +93,12 @@
 						>
 							<Link class="w-4 h-4 text-green-600" />
 							<code class="flex-1 text-sm font-mono text-gray-900 dark:text-white">
-								{new URL(window.location.origin).origin}/{form.link.slug}
+								{form.shortUrl || `${window.location.origin}/${form.link.slug}`}
 							</code>
 							<Button
 								size="sm"
 								variant="ghost"
-								onclick={() => copyToClipboard(`${window.location.origin}/${form.link.slug}`)}
+								onclick={() => copyToClipboard(form.shortUrl || `${window.location.origin}/${form.link.slug}`)}
 								class="h-8 w-8 p-0"
 							>
 								{#if copied}
@@ -96,7 +108,7 @@
 								{/if}
 							</Button>
 							<Button
-								href="/{form.link.slug}"
+								href={form.shortUrl || `/${form.link.slug}`}
 								target="_blank"
 								size="sm"
 								variant="ghost"
@@ -134,12 +146,16 @@
 					title = '';
 					password = '';
 					expiresAt = '';
+					selectedDomainValue = '';
 					showAdvanced = false;
 				}
 			};
 		}}
 		class="space-y-6"
 	>
+
+		<input type="hidden" name="customDomainId" value={selectedDomainValue} />
+
 		<div class="space-y-2">
 			<Label for="originalUrl" class="text-base font-medium">URL à raccourcir</Label>
 			<div class="relative">
@@ -156,6 +172,31 @@
 				<Link class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
 			</div>
 		</div>
+
+		{#if customDomains.length > 0}
+			<div class="space-y-2">
+				<Label class="text-base font-medium flex items-center gap-2">
+					<Globe class="w-4 h-4" />
+					Domaine pour le lien court
+				</Label>
+				<Select.Root type="single" value={selectedDomainValue} onValueChange={(v: any) => selectedDomainValue = v?.[0] || ''}>
+					<Select.Trigger class="h-12">
+						<span>{selectedDomainValue === '' ? 'nah.pet (domaine principal)' : customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}</span>
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Item value="" label="nah.pet (domaine principal)">
+							nah.pet (domaine principal)
+							<Badge variant="outline" class="ml-2 text-xs">Par défaut</Badge>
+						</Select.Item>
+						{#each customDomains as domain}
+							<Select.Item value={domain.id} label={domain.domain}>
+								{domain.domain}
+							</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</div>
+		{/if}
 
 		<div class="flex items-center justify-between">
 			<Button
@@ -196,7 +237,10 @@
 							</Button>
 						</div>
 						<p class="text-xs text-gray-500">
-							URL finale : {window.location.origin}/{customSlug || 'votre-slug'}
+							URL finale : {selectedDomainValue ? 
+								`https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}` :
+								`${window.location.origin}/${customSlug || 'votre-slug'}`
+							}
 						</p>
 					</div>
 
