@@ -34,9 +34,10 @@ export async function verifyDomainOwnership(
 
 async function verifyDNSRecord(domain: string, verificationToken: string): Promise<DomainVerificationResult> {
 	try {
+		console.log(domain)
 		const txtRecords = await resolveTxt(domain);
 		const flatRecords = txtRecords.flat();
-
+		console.log(txtRecords)
 		const hasVerificationRecord = flatRecords.some((record: string) => 
 			record === verificationToken
 		);
