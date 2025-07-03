@@ -113,6 +113,39 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const weekGrowth =
 		weekGrowthPrevious > 0 ? ((clicksThisWeek - weekGrowthPrevious) / weekGrowthPrevious) * 100 : 0;
 
+	const customDomains = await db.customDomain.findMany({
+		where: { userId: locals.user.id, verified: true },
+		orderBy: { domain: 'asc' }
+	});
+
+	const mainDomainLinks = await db.link.count({
+		where: { userId: locals.user.id, customDomainId: null }
+	});
+	const mainDomainClicks = await db.click.count({
+		where: { link: { userId: locals.user.id, customDomainId: null } }
+	});
+
+	const customDomainsStats = await Promise.all(
+		customDomains.map(async (domain) => {
+			const totalLinks = await db.link.count({
+				where: { userId: locals.user?.id, customDomainId: domain.id }
+			});
+			const totalClicks = await db.click.count({
+				where: { link: { userId: locals.user?.id, customDomainId: domain.id } }
+			});
+			return {
+				domain: domain.domain,
+				totalLinks,
+				totalClicks
+			};
+		})
+	);
+
+	const domainsStats = [
+		{ domain: 'nah.pet', totalLinks: mainDomainLinks, totalClicks: mainDomainClicks },
+		...customDomainsStats
+	];
+
 	return {
 		stats: {
 			totalLinks,
@@ -126,6 +159,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			avgClicksPerLink: totalLinks > 0 ? Math.round(totalClicks / totalLinks) : 0
 		},
 		topLinks,
-		recentClicks
+		recentClicks,
+		domainsStats
 	};
 };

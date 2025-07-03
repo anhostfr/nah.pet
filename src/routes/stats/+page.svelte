@@ -196,6 +196,36 @@
 		</Card.Root>
 	</div>
 
+	<Card.Root class="overflow-x-auto">
+		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
+			<Card.Title class="flex items-center space-x-2">
+				<Globe class="w-5 h-5" />
+				<span>Stats par domaine</span>
+				<Badge variant="secondary" class="ml-2">Principal & Custom</Badge>
+			</Card.Title>
+		</Card.Header>
+		<Card.Content class="p-6">
+			<Table.Root>
+				<Table.Header>
+					<Table.Row>
+						<Table.Head>Domaine</Table.Head>
+						<Table.Head class="text-center">Liens</Table.Head>
+						<Table.Head class="text-center">Clics</Table.Head>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{#each data.domainsStats as domainStat}
+						<Table.Row>
+							<Table.Cell class="font-mono text-sm">{domainStat.domain}</Table.Cell>
+							<Table.Cell class="text-center">{formatNumber(domainStat.totalLinks)}</Table.Cell>
+							<Table.Cell class="text-center">{formatNumber(domainStat.totalClicks)}</Table.Cell>
+						</Table.Row>
+					{/each}
+				</Table.Body>
+			</Table.Root>
+		</Card.Content>
+	</Card.Root>
+
 	<div class="flex flex-col gap-10">
 		<Card.Root>
 			<Card.Header class="border-b border-gray-100 dark:border-gray-700">
