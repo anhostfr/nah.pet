@@ -34,6 +34,7 @@ export async function verifyDomainOwnership(
 
 async function verifyDNSRecord(domain: string, verificationToken: string): Promise<DomainVerificationResult> {
 	try {
+		// gonna keep the console.log for now, because idk if it was a bug before rebuilding the app or not
 		console.log(domain)
 		const txtRecords = await resolveTxt(domain);
 		const flatRecords = txtRecords.flat();

@@ -179,9 +179,13 @@
 					<Globe class="w-4 h-4" />
 					Domaine pour le lien court
 				</Label>
-				<Select.Root type="single" value={selectedDomainValue} onValueChange={(v: any) => selectedDomainValue = v?.[0] || ''}>
+				<Select.Root type="single" bind:value={selectedDomainValue}>
 					<Select.Trigger class="h-12">
-						<span>{selectedDomainValue === '' ? 'nah.pet (domaine principal)' : customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}</span>
+						<span>
+							{selectedDomainValue === '' 
+								? 'nah.pet (domaine principal)' 
+								: customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}
+						</span>
 					</Select.Trigger>
 					<Select.Content>
 						<Select.Item value="" label="nah.pet (domaine principal)">
