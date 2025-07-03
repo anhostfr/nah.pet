@@ -19,7 +19,7 @@ async function getReservedSlugs(): Promise<Set<string>> {
 			.filter(Boolean)
 			.map((segment) => segment.toLowerCase())
 	);
-	console.log(`Réservé ${reservedSlugsCache.size} slugs`, reservedSlugsCache);
+
 	return reservedSlugsCache;
 }
 

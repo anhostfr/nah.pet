@@ -36,7 +36,7 @@ async function verifyDNSRecord(domain: string, verificationToken: string): Promi
 	try {
 		const txtRecords = await resolveTxt(domain);
 		const flatRecords = txtRecords.flat();
-		console.log(txtRecords);
+
 		const hasVerificationRecord = flatRecords.some((record: string) => 
 			record === verificationToken
 		);
