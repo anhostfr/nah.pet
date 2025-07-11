@@ -42,40 +42,41 @@
 </svelte:head>
 
 <div class="space-y-8">
-	<div class="flex items-center justify-between">
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
 			<p class="text-gray-600 dark:text-gray-400 mt-1">
 				Vue d'ensemble de vos liens raccourcis et performances
 			</p>
 		</div>
-		<div class="flex items-center space-x-3">
+		<div class="flex items-center space-x-3 flex-wrap gap-2">
 			<Badge variant="outline" class="text-xs">
 				<Activity class="w-3 h-3 mr-1" />
 				En temps réel
 			</Badge>
 			<Button href="/stats" variant="outline" size="sm">
 				<BarChart3 class="w-4 h-4 mr-2" />
-				Analytics détaillées
+				<span class="hidden sm:inline">Analytics détaillées</span>
+				<span class="sm:hidden">Analytics</span>
 			</Button>
 		</div>
 	</div>
 
-	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
-					<div class="space-y-2 max-w-7/12">
+					<div class="space-y-2 flex-1">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des liens</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalLinks)}
 						</p>
-						<div class="flex flex-wrap items-center space-x-1 space-y-3">
+						<div class="flex flex-wrap items-center gap-2">
 							<Badge variant="secondary" class="text-xs">
 								+{data.stats.linksThisMonth} ce mois
 							</Badge>
 							{#if Number(growthRate) > 0}
-								<div class="flex gap-1">
+								<div class="flex items-center gap-1">
 									<TrendingUp class="w-3 h-3 text-green-500" />
 									<span class="text-xs text-green-600 font-medium">+{growthRate}%</span>
 								</div>
@@ -95,17 +96,17 @@
 		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
-					<div class="space-y-2 max-w-7/12">
+					<div class="space-y-2 flex-1">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des clics</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalClicks)}
 						</p>
-						<div class="flex flex-wrap items-center space-x-1 space-y-3">
+						<div class="flex flex-wrap items-center gap-2">
 							<Badge variant="secondary" class="text-xs">
 								+{data.stats.clicksThisMonth} ce mois
 							</Badge>
 							{#if Number(clickGrowthRate) > 0}
-								<div class="flex gap-1">
+								<div class="flex items-center gap-1">
 									<TrendingUp class="w-3 h-3 text-green-500" />
 									<span class="text-xs text-green-600 font-medium">+{clickGrowthRate}%</span>
 								</div>
@@ -129,7 +130,7 @@
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics moyens</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{data.stats.totalLinks > 0
 								? Math.round(data.stats.totalClicks / data.stats.totalLinks)
 								: 0}
@@ -153,10 +154,10 @@
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Liens actifs</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.activeLinks)}
 						</p>
-						<div class="flex items-center space-x-2">
+						<div class="flex flex-wrap items-center gap-2">
 							<Badge
 								variant="outline"
 								class="text-xs border-green-200 text-green-700 dark:border-green-800 dark:text-green-300"
@@ -204,7 +205,7 @@
 
 	<Card.Root>
 		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
-			<div class="flex items-center justify-between">
+			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<Card.Title class="flex items-center space-x-2">
 					<div
 						class="w-6 h-6 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
@@ -218,7 +219,8 @@
 				</Card.Title>
 				<Button href="/stats" variant="outline" size="sm">
 					<Eye class="w-4 h-4 mr-2" />
-					Voir tout
+					<span class="hidden sm:inline">Voir tout</span>
+					<span class="sm:hidden">Tout</span>
 				</Button>
 			</div>
 		</Card.Header>
@@ -227,7 +229,7 @@
 		</Card.Content>
 	</Card.Root>
 
-	<div class="grid gap-6 md:grid-cols-2">
+	<div class="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
 		<Card.Root
 			class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-800"
 		>

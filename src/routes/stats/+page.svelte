@@ -65,32 +65,34 @@
 </svelte:head>
 
 <div class="space-y-8">
-	<div class="flex items-center justify-between">
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
 			<p class="text-gray-600 dark:text-gray-400 mt-1">
 				Analysez les performances de vos liens raccourcis
 			</p>
 		</div>
-		<div class="flex items-center space-x-3">
+		<div class="flex items-center space-x-3 flex-wrap gap-2">
 			<Badge variant="outline" class="text-xs">
 				<Activity class="w-3 h-3 mr-1" />
-				Données en temps réel
+				<span class="hidden sm:inline">Données en temps réel</span>
+				<span class="sm:hidden">Temps réel</span>
 			</Badge>
 			<Button href="/" variant="outline" size="sm">
 				<Link class="w-4 h-4 mr-2" />
-				Retour au Dashboard
+				<span class="hidden sm:inline">Retour au Dashboard</span>
+				<span class="sm:hidden">Retour</span>
 			</Button>
 		</div>
 	</div>
 
-	<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 		<Card.Root class="relative overflow-hidden">
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics aujourd'hui</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.clicksToday)}
 						</p>
 						<div class="flex items-center space-x-2">
@@ -121,7 +123,7 @@
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Cette semaine</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.clicksThisWeek)}
 						</p>
 						<div class="flex items-center space-x-2">
@@ -154,7 +156,7 @@
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total clics</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalClicks)}
 						</p>
 						<Badge variant="secondary" class="text-xs">Tous vos liens</Badge>
@@ -176,7 +178,7 @@
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Moy. par lien</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white">
+						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.avgClicksPerLink)}
 						</p>
 						<Badge variant="secondary" class="text-xs">
@@ -204,7 +206,7 @@
 				<Badge variant="secondary" class="ml-2">Principal & Custom</Badge>
 			</Card.Title>
 		</Card.Header>
-		<Card.Content class="p-6">
+		<Card.Content class="p-6 overflow-x-auto">
 			<Table.Root>
 				<Table.Header>
 					<Table.Row>
@@ -241,11 +243,11 @@
 						<p class="text-gray-500 dark:text-gray-400">Aucun lien pour l'instant</p>
 					</div>
 				{:else}
-					<div class="mx-6">
+					<div class="mx-6 overflow-x-auto">
 						<Table.Root>
 							<Table.Header>
 								<Table.Row>
-									<Table.Head class="w-[50px]">Nom</Table.Head>
+									<Table.Head class="w-[50px] hidden sm:table-cell">Nom</Table.Head>
 									<Table.Head>Lien</Table.Head>
 									<Table.Head class="text-center w-[80px]">Clics</Table.Head>
 									<Table.Head class="w-[80px]">Action</Table.Head>
@@ -254,7 +256,7 @@
 							<Table.Body>
 								{#each data.topLinks as link, index (link.id)}
 									<Table.Row class="group">
-										<Table.Cell class="font-mono text-sm text-secondary-foreground">
+										<Table.Cell class="font-mono text-sm text-secondary-foreground hidden sm:table-cell">
 											{#if link.title}
 												{link.title}
 											{:else}
@@ -264,10 +266,13 @@
 										<Table.Cell>
 											<div class="space-y-1">
 												<div class="flex items-center space-x-2">
-													<code class="text-sm bg-secondary px-2 py-1 rounded font-mono">
-														/{link.slug}
+													<code class="text-sm bg-secondary px-2 py-1 rounded font-mono break-all">
+														{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
 													</code>
 												</div>
+												{#if link.title}
+													<p class="text-xs text-muted-foreground sm:hidden">{link.title}</p>
+												{/if}
 											</div>
 										</Table.Cell>
 										<Table.Cell class="text-center">
@@ -288,8 +293,12 @@
 												<Button
 													size="sm"
 													variant="ghost"
-													onclick={() =>
-														copyToClipboard(`${window.location.origin}/${link.slug}`, link.slug)}
+													onclick={() => {
+														const url = link.customDomain 
+															? `https://${link.customDomain.domain}/${link.slug}`
+															: `${window.location.origin}/${link.slug}`;
+														copyToClipboard(url, link.slug);
+													}}
 													class="h-8 w-8 p-0"
 												>
 													<Copy class="w-4 h-4" />
@@ -333,7 +342,7 @@
 									<div>
 										<div class="flex items-center space-x-2">
 											<code class="text-sm font-mono bg-secondary px-2 py-1 rounded">
-												/{click.link.slug}
+												{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click.link.slug}
 											</code>
 											{#if click.link.title}
 												<span class="text-sm text-secondary-foreground">

@@ -19,14 +19,21 @@
 		_count: {
 			clicks: number;
 		};
+		customDomain?: {
+			id: string;
+			domain: string;
+		} | null;
 	};
 
 	let { links }: { links: Link[] } = $props();
 	let deletingLinkId = $state<string | null>(null);
 
-	async function copyToClipboard(slug: string) {
+	async function copyToClipboard(link: Link) {
 		try {
-			await navigator.clipboard.writeText(`${$page.url.origin}/${slug}`);
+			const url = link.customDomain 
+				? `https://${link.customDomain.domain}/${link.slug}`
+				: `${$page.url.origin}/${link.slug}`;
+			await navigator.clipboard.writeText(url);
 			toast.success('Lien copié !');
 		} catch (err) {
 			toast.error('Impossible de copier le lien');
@@ -45,15 +52,15 @@
 		<p class="text-sm">Commencez par raccourcir votre première URL !</p>
 	</div>
 {:else}
-	<div class="rounded-md border mx-2">
+	<div class="rounded-md border mx-2 overflow-x-auto">
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>
 					<Table.Head>Lien</Table.Head>
-					<Table.Head>URL originale</Table.Head>
+					<Table.Head class="hidden sm:table-cell">URL originale</Table.Head>
 					<Table.Head>Clics</Table.Head>
-					<Table.Head>Créé le</Table.Head>
-					<Table.Head>Status</Table.Head>
+					<Table.Head class="hidden md:table-cell">Créé le</Table.Head>
+					<Table.Head class="hidden lg:table-cell">Status</Table.Head>
 					<Table.Head class="text-right">Actions</Table.Head>
 				</Table.Row>
 			</Table.Header>
@@ -62,9 +69,9 @@
 					<Table.Row>
 						<Table.Cell>
 							<div class="space-y-1">
-								<div class="flex items-center gap-2">
-									<code class="text-sm bg-muted px-2 py-1 rounded">
-										/{link.slug}
+								<div class="flex items-center gap-2 flex-wrap">
+									<code class="text-sm bg-muted px-2 py-1 rounded break-all">
+										{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
 									</code>
 									{#if link.password}
 										<Lock class="h-3 w-3 text-muted-foreground" />
@@ -74,11 +81,31 @@
 									{/if}
 								</div>
 								{#if link.title}
-									<p class="text-sm text-muted-foreground">{link.title}</p>
+									<p class="text-sm text-muted-foreground truncate">{link.title}</p>
 								{/if}
+								<div class="sm:hidden space-y-1 mt-2">
+									<a
+										href={link.originalUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-blue-600 hover:underline text-xs truncate block"
+									>
+										{link.originalUrl}
+									</a>
+									<div class="flex items-center gap-2 text-xs text-muted-foreground">
+										<span>{formatDate(new Date(link.createdAt))}</span>
+										{#if isExpired(link.expiresAt)}
+											<span class="text-red-600">• Expiré</span>
+										{:else if link.expiresAt}
+											<span>• Expire le {formatDate(new Date(link.expiresAt))}</span>
+										{:else}
+											<span class="text-green-600">• Actif</span>
+										{/if}
+									</div>
+								</div>
 							</div>
 						</Table.Cell>
-						<Table.Cell>
+						<Table.Cell class="hidden sm:table-cell">
 							<a
 								href={link.originalUrl}
 								target="_blank"
@@ -96,10 +123,10 @@
 								</Button>
 							</div>
 						</Table.Cell>
-						<Table.Cell class="text-sm text-muted-foreground">
+						<Table.Cell class="text-sm text-muted-foreground hidden md:table-cell">
 							{formatDate(new Date(link.createdAt))}
 						</Table.Cell>
-						<Table.Cell>
+						<Table.Cell class="hidden lg:table-cell">
 							{#if isExpired(link.expiresAt)}
 								<Badge variant="destructive">Expiré</Badge>
 							{:else if link.expiresAt}
@@ -111,12 +138,15 @@
 							{/if}
 						</Table.Cell>
 						<Table.Cell class="text-right">
-							<div class="flex items-center justify-end gap-2">
-								<Button variant="ghost" size="sm" onclick={() => copyToClipboard(link.slug)}>
+							<div class="flex items-center justify-end gap-1">
+								<Button variant="ghost" size="sm" onclick={() => copyToClipboard(link)}>
 									<Copy class="h-3 w-3" />
 								</Button>
-								<Button variant="ghost" size="sm" href="/{link.slug}" target="_blank">
+								<Button variant="ghost" size="sm" href={link.customDomain ? `https://${link.customDomain.domain}/${link.slug}` : `/${link.slug}`} target="_blank">
 									<ExternalLink class="h-3 w-3" />
+								</Button>
+								<Button variant="ghost" size="sm" href="/stats/{link.slug}" class="hidden sm:inline-flex">
+									<BarChart3 class="h-3 w-3" />
 								</Button>
 								<form 
 									method="POST" 

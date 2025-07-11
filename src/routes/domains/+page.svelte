@@ -9,6 +9,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Trash2, ExternalLink, CheckCircle, Clock, AlertTriangle } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
+	import { isMobile } from '$lib/utils';
 	
 	const SYSTEM_RESERVED_SLUGS = [
 		'admin', 'api', 'app', 'auth', 'blog', 'cdn', 'dashboard', 'dev', 'docs', 
@@ -213,8 +214,7 @@
 									size="sm"
 									onclick={() => window.open(`https://${domain.domain}`, '_blank')}
 								>
-									<ExternalLink class="h-4 w-4 mr-1" />
-									Visiter
+									<ExternalLink class="h-4 w-4 md:mr-1" />{isMobile() ? '' : 'Visiter'}
 								</Button>
 							{/if}
 							<form 

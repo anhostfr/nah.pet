@@ -15,15 +15,15 @@
 </svelte:head>
 
 <div class="space-y-6">
-	<div class="flex items-center gap-4">
+	<div class="flex flex-col sm:flex-row sm:items-center gap-4">
 		<Button href="/" variant="ghost" size="sm">
 			<ArrowLeft class="h-4 w-4 mr-2" />
 			Retour
 		</Button>
 		<div>
-			<h1 class="text-3xl font-bold">Statistiques détaillées</h1>
-			<p class="text-muted-foreground">
-				Analyse des performances pour /{data.link.slug}
+			<h1 class="text-2xl sm:text-3xl font-bold">Statistiques détaillées</h1>
+			<p class="text-muted-foreground break-all">
+				Analyse des performances pour {data.link.customDomain ? `${data.link.customDomain.domain}/` : '/'}{data.link.slug}
 			</p>
 		</div>
 	</div>
@@ -36,14 +36,14 @@
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="space-y-4">
-			<div class="grid gap-4 md:grid-cols-2">
+			<div class="grid gap-4 grid-cols-1 lg:grid-cols-2">
 				<div>
 					<p class="text-sm font-medium text-muted-foreground">Lien raccourci</p>
-					<div class="flex items-center gap-2">
-						<code class="text-sm bg-muted px-2 py-1 rounded">
-							{$page.url.origin}/{data.link.slug}
+					<div class="flex items-center gap-2 flex-wrap">
+						<code class="text-sm bg-muted px-2 py-1 rounded break-all">
+							{data.link.customDomain ? `https://${data.link.customDomain.domain}/${data.link.slug}` : `${$page.url.origin}/${data.link.slug}`}
 						</code>
-						<Button variant="ghost" size="sm" href="/{data.link.slug}" target="_blank">
+						<Button variant="ghost" size="sm" href={data.link.customDomain ? `https://${data.link.customDomain.domain}/${data.link.slug}` : `/${data.link.slug}`} target="_blank">
 							<ExternalLink class="h-3 w-3" />
 						</Button>
 					</div>
@@ -100,7 +100,7 @@
 		</Card.Content>
 	</Card.Root>
 
-	<div class="grid gap-4 md:grid-cols-3">
+	<div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total des clics</Card.Title>
@@ -147,25 +147,35 @@
 					<p>Aucun clic enregistré pour ce lien.</p>
 				</div>
 			{:else}
-				<div class="rounded-md border">
+				<div class="rounded-md border overflow-x-auto">
 					<Table.Root>
 						<Table.Header>
 							<Table.Row>
 								<Table.Head>Date et heure</Table.Head>
-								<Table.Head>IP</Table.Head>
-								<Table.Head>Navigateur</Table.Head>
+								<Table.Head class="hidden sm:table-cell">IP</Table.Head>
+								<Table.Head class="hidden md:table-cell">Navigateur</Table.Head>
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
 							{#each data.recentClicks as click (click.id)}
 								<Table.Row>
 									<Table.Cell class="font-medium">
-										{formatDate(new Date(click.createdAt))}
+										<div>
+											{formatDate(new Date(click.createdAt))}
+										</div>
+										<div class="sm:hidden mt-1 space-y-1">
+											<div class="text-xs text-muted-foreground font-mono">
+												IP: {click.ip || 'Non disponible'}
+											</div>
+											<div class="text-xs text-muted-foreground truncate max-w-xs md:hidden">
+												{click.userAgent || 'Non disponible'}
+											</div>
+										</div>
 									</Table.Cell>
-									<Table.Cell class="font-mono text-sm">
+									<Table.Cell class="font-mono text-sm hidden sm:table-cell">
 										{click.ip || 'Non disponible'}
 									</Table.Cell>
-									<Table.Cell class="text-sm text-muted-foreground max-w-xs truncate">
+									<Table.Cell class="text-sm text-muted-foreground max-w-xs truncate hidden md:table-cell">
 										{click.userAgent || 'Non disponible'}
 									</Table.Cell>
 								</Table.Row>
