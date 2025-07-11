@@ -13,6 +13,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		where: {
 			slug,
 			userId: locals.user.id
+		},
+		include: {
+			customDomain: true
 		}
 	});
 

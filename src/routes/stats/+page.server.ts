@@ -69,7 +69,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 			include: {
 				_count: {
 					select: { clicks: true }
-				}
+				},
+				customDomain: true
 			},
 			orderBy: {
 				clicks: {
@@ -88,7 +89,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 					select: {
 						slug: true,
 						title: true,
-						originalUrl: true
+						originalUrl: true,
+						customDomain: true
 					}
 				}
 			},
