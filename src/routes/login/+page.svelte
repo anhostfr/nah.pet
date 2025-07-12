@@ -6,7 +6,7 @@
 	import { enhance } from '$app/forms';
 	import { Link } from 'lucide-svelte';
 	import { goto, invalidate } from '$app/navigation';
-	import { authClient } from '$lib/server/auth/auth-client.js';
+	import { authClient } from '$lib/auth-client.js';
 
 	let { form } = $props();
 	let email = $state('');
