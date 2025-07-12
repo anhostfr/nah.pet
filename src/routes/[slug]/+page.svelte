@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>Lien protégé - ShortURL</title>
+	<title>Lien protégé - Nah.pet</title>
 </svelte:head>
 
 <div class="max-w-md mx-auto mt-16">

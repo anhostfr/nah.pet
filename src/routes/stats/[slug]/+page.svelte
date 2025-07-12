@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>Statistiques - /{data.link.slug} - ShortURL</title>
+	<title>Statistiques - /{data.link.slug} - Nah.pet</title>
 </svelte:head>
 
 <div class="space-y-6">

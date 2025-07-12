@@ -61,7 +61,7 @@
 </script>
 
 <svelte:head>
-	<title>Analytics - ShortURL</title>
+	<title>Analytics - Nah.pet</title>
 </svelte:head>
 
 <div class="space-y-8">

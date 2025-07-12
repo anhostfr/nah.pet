@@ -50,7 +50,7 @@
 </script>
 
 <svelte:head>
-	<title>Administration - ShortURL</title>
+	<title>Administration - Nah.pet</title>
 </svelte:head>
 
 <div class="space-y-8">

@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-	<title>Inscription - ShortURL</title>
+	<title>Inscription - Nah.pet</title>
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
@@ -25,7 +25,7 @@
 				<UserPlus class="h-8 w-8 text-primary-foreground" />
 			</div>
 			<Card.Title>Inscription</Card.Title>
-			<p class="text-sm text-muted-foreground">Créez votre compte ShortURL gratuit</p>
+			<p class="text-sm text-muted-foreground">Créez votre compte Nah.pet gratuit</p>
 		</Card.Header>
 		<Card.Content>
 			<form

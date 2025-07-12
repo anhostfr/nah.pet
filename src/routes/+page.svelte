@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard - ShortURL</title>
+	<title>Dashboard - Nah.pet</title>
 </svelte:head>
 
 <div class="space-y-8">

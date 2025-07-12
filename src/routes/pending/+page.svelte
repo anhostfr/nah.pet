@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<title>Compte en attente - ShortURL</title>
+	<title>Compte en attente - Nah.pet</title>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center p-4">

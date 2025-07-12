@@ -6,15 +6,27 @@
 	import { enhance } from '$app/forms';
 	import { Link } from 'lucide-svelte';
 	import { goto, invalidate } from '$app/navigation';
+	import { authClient } from '$lib/server/auth/auth-client.js';
 
 	let { form } = $props();
 	let email = $state('');
 	let password = $state('');
 	let isLoading = $state(false);
+	let oauthLoading = $state(false);
+
+	async function handleOAuthLogin() {
+		try {
+			oauthLoading = true;
+			await authClient.redirectToAuth();
+		} catch (err) {
+			console.error('Erreur OAuth:', err);
+			oauthLoading = false;
+		}
+	}
 </script>
 
 <svelte:head>
-	<title>Connexion - ShortURL</title>
+	<title>Connexion - Nah.pet</title>
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
@@ -24,7 +36,7 @@
 				<Link class="h-8 w-8 text-primary-foreground" />
 			</div>
 			<Card.Title>Connexion</Card.Title>
-			<p class="text-sm text-muted-foreground">Connectez-vous à votre compte ShortURL</p>
+			<p class="text-sm text-muted-foreground">Connectez-vous à votre compte Nah.pet</p>
 		</Card.Header>
 		<Card.Content>
 			<form
@@ -81,6 +93,33 @@
 					</Button>
 				</div>
 			</form>
+
+			<div class="relative mt-6">
+				<div class="absolute inset-0 flex items-center">
+					<div class="w-full border-t border-gray-300"></div>
+				</div>
+				<div class="relative flex justify-center text-sm">
+					<span class="px-2 bg-card text-muted-foreground">ou</span>
+				</div>
+			</div>
+
+			<div class="mt-6">
+				<Button
+					variant="outline"
+					class="w-full"
+					onclick={handleOAuthLogin}
+					disabled={oauthLoading}
+				>
+					{#if oauthLoading}
+						<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+					{:else}
+						<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+						</svg>
+					{/if}
+					Se connecter avec OAuth
+				</Button>
+			</div>
 
 			<div class="mt-6 text-center text-sm">
 				<p class="text-muted-foreground">
