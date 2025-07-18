@@ -41,12 +41,14 @@
 		"@node-rs/argon2": "^2.0.2",
 		"@prisma/client": "^6.10.1",
 		"@types/qrcode": "^1.5.5",
+		"isomorphic-dompurify": "^2.26.0",
 		"lucia": "^3.2.2",
 		"lucide-svelte": "^0.518.0",
 		"nanoid": "^5.1.5",
 		"prisma": "^6.10.1",
 		"qrcode": "^1.5.4",
 		"svelte-adapter-bun": "^0.5.2",
+		"sveltekit-api": "^0.6.1",
 		"zod": "^3.25.67"
 	}
 }

@@ -53,3 +53,7 @@ export function getRateLimitKey(prefix: string, ip: string, userId?: string): st
 	const cleanIp = ip.replace(/[^0-9a-f:.]/gi, ''); 
 	return userId ? `${prefix}:${userId}:${cleanIp}` : `${prefix}:${cleanIp}`;
 }
+
+export function isApiKeyRateLimited(apiKey: string): boolean {
+	return isRateLimited(`api:${apiKey}`, 100, 60 * 1000); // 100 requests per minute
+}

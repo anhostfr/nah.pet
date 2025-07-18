@@ -1,0 +1,199 @@
+import { redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db.js';
+import { generateApiKey } from '$lib/server/api-auth.js';
+import { randomBytes } from 'crypto';
+import type { PageServerLoad, Actions } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.user) {
+		throw redirect(302, '/login');
+	}
+
+	const apiKeys = await db.apiKey.findMany({
+		where: { userId: locals.user.id },
+		orderBy: { createdAt: 'desc' },
+		select: {
+			id: true,
+			name: true,
+			permissions: true,
+			createdAt: true,
+			lastUsedAt: true,
+			expiresAt: true
+		}
+	});
+
+	const customDomains = await db.customDomain.findMany({
+		where: { userId: locals.user.id },
+		orderBy: { createdAt: 'desc' },
+		include: {
+			_count: {
+				select: { links: true }
+			}
+		}
+	});
+
+	return {
+		user: locals.user,
+		apiKeys,
+		customDomains
+	};
+};
+
+export const actions: Actions = {
+	createApiKey: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const name = data.get('name') as string;
+		const permissions = data.getAll('permissions') as string[];
+
+		if (!name || name.length < 3) {
+			return { error: 'Le nom doit contenir au moins 3 caractères' };
+		}
+
+		const key = generateApiKey();
+
+		await db.apiKey.create({
+			data: {
+				name,
+				key,
+				permissions,
+				userId: locals.user.id
+			}
+		});
+
+		return { success: true, key };
+	},
+
+	deleteApiKey: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const keyId = data.get('keyId') as string;
+
+		await db.apiKey.delete({
+			where: {
+				id: keyId,
+				userId: locals.user.id
+			}
+		});
+
+		return { success: true };
+	},
+
+	updateProfile: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const email = data.get('email') as string;
+
+		if (!email) {
+			return { error: 'Email requis' };
+		}
+
+		await db.user.update({
+			where: { id: locals.user.id },
+			data: { email }
+		});
+
+		return { success: true };
+	},
+
+	addDomain: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const domain = data.get('domain') as string;
+		const method = data.get('method') as 'dns' | 'file';
+
+		if (!domain || !method) {
+			return { error: 'Domaine et méthode requis' };
+		}
+
+		// Validation du domaine
+		const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+		if (!domainRegex.test(domain)) {
+			return { error: 'Format de domaine invalide' };
+		}
+
+		// Vérifier si le domaine existe déjà
+		const existingDomain = await db.customDomain.findFirst({
+			where: { domain }
+		});
+
+		if (existingDomain) {
+			return { error: 'Ce domaine est déjà utilisé' };
+		}
+
+		const verificationToken = randomBytes(32).toString('hex');
+
+		await db.customDomain.create({
+			data: {
+				domain,
+				userId: locals.user.id,
+				verificationToken,
+				verificationMethod: method,
+				verified: false
+			}
+		});
+
+		return { success: true };
+	},
+
+	verifyDomain: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const domainId = data.get('domainId') as string;
+
+		if (!domainId) {
+			return { error: 'ID de domaine requis' };
+		}
+
+		const domain = await db.customDomain.findFirst({
+			where: { id: domainId, userId: locals.user.id }
+		});
+
+		if (!domain) {
+			return { error: 'Domaine non trouvé' };
+		}
+
+		// Simulation de la vérification
+		// Dans un vrai projet, il faudrait implémenter la vérification DNS/fichier
+		await db.customDomain.update({
+			where: { id: domainId },
+			data: { verified: true }
+		});
+
+		return { success: true, message: 'Domaine vérifié avec succès' };
+	},
+
+	deleteDomain: async ({ locals, request }) => {
+		if (!locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const data = await request.formData();
+		const domainId = data.get('domainId') as string;
+
+		if (!domainId) {
+			return { error: 'ID de domaine requis' };
+		}
+
+		await db.customDomain.delete({
+			where: { id: domainId, userId: locals.user.id }
+		});
+
+		return { success: true };
+	}
+};

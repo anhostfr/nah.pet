@@ -15,6 +15,10 @@ const config = {
 		csrf: {
 			checkOrigin: false,
 		},
+
+		alias: {
+			$api: './src/api'
+		}
 	},
 };
 
