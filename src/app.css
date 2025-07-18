@@ -158,4 +158,39 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: var(--primary-foreground);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--secondary);
+		border-radius: 4px;
+	}
+
+	.dark ::-webkit-scrollbar-thumb {
+		background: var(--secondary);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--secondary);
+	}
+
+	.dark ::-webkit-scrollbar-thumb:hover {
+		background: var(--primary);
+	}
+
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--secondary) var(--primary-foreground);
+	}
+
+	.dark * {
+		scrollbar-color: var(--secondary) var(--primary-foreground);
+	}
 }
