@@ -10,7 +10,6 @@
 	let { children, data } = $props();
 	let mobileMenuOpen = $state(false);
 
-	
 	const navItems = [
 		{ href: '/', label: 'Dashboard', icon: ChartBar, active: page.url.pathname === '/' },
 		{
