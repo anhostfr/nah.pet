@@ -21,12 +21,19 @@ services:
     command: sh -c "bunx prisma migrate deploy && HOST=0.0.0.0 PORT=3000 bun run build/index.js"
     labels:
       - traefik.enable=true
+      # Router HTTPS
       - traefik.http.routers.nahpet-catchall.rule=HostRegexp(`{host:.+}`)
       - traefik.http.routers.nahpet-catchall.entrypoints=websecure
       - traefik.http.routers.nahpet-catchall.tls.certresolver=letsencrypt
       - traefik.http.routers.nahpet-catchall.service=nahpet-service
       - traefik.http.routers.nahpet-catchall.priority=1
-      - traefik.http.services.linkshortener.loadbalancer.server.port=3000
+      # Router HTTP
+      - traefik.http.routers.nahpet-catchall-http.rule=HostRegexp(`{host:.+}`)
+      - traefik.http.routers.nahpet-catchall-http.entrypoints=web
+      - traefik.http.routers.nahpet-catchall-http.service=nahpet-service
+      - traefik.http.routers.nahpet-catchall-http.priority=1
+      # Service
+      - traefik.http.services.nahpet-service.loadbalancer.server.port=3000
       - traefik.docker.network=dokploy-network
     networks:
       - dokploy-network
