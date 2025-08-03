@@ -1,47 +1,53 @@
 version: "3.8"
 services:
- nahpet-app:
-   build: .
-   restart: always
-   environment:
-     NODE_ENV: "production"
-     ORIGIN: "https://${NAHPET_HOST}"
-     HOST: "0.0.0.0"
-     PORT: "3000"
-     PROTOCOL_HEADER: "x-forwarded-proto"
-     HOST_HEADER: "x-forwarded-host"
-     MAIN_URL: "https://${NAHPET_HOST}"
-     PUBLIC_URL: "https://${NAHPET_HOST}"
-     DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
-   volumes:
-     - nahpet-uploads:/uploads/
-   depends_on:
-     nahpet-postgres:
-       condition: service_healthy
-   command: sh -c "bunx prisma migrate deploy && HOST=0.0.0.0 PORT=3000 bun run build/index.js"
-   labels:
-     - "dokploy.domain=${NAHPET_HOST}"
-   networks:
-     - dokploy-network
- nahpet-postgres:
-   image: postgres:16-alpine
-   restart: always
-   environment:
-     POSTGRES_PASSWORD: ${DB_PASSWORD}
-     POSTGRES_USER: ${DB_USER}
-     POSTGRES_DB: ${DB_NAME}
-   volumes:
-     - nahpet-postgres-data:/var/lib/postgresql/data
-   healthcheck:
-     test: pg_isready -U ${DB_USER} -d ${DB_NAME}
-     interval: 10s
-     timeout: 3s
-     retries: 3
-   networks:
-     - dokploy-network
+  nahpet-app:
+    build: .
+    restart: always
+    environment:
+      NODE_ENV: "production"
+      ORIGIN: "https://${NAHPET_HOST}"
+      HOST: "0.0.0.0"
+      PORT: "3000"
+      PROTOCOL_HEADER: "x-forwarded-proto"
+      HOST_HEADER: "x-forwarded-host"
+      MAIN_URL: "https://${NAHPET_HOST}"
+      PUBLIC_URL: "https://${NAHPET_HOST}"
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
+    volumes:
+      - nahpet-uploads:/uploads/
+    depends_on:
+      nahpet-postgres:
+        condition: service_healthy
+    command: sh -c "bunx prisma migrate deploy && HOST=0.0.0.0 PORT=3000 bun run build/index.js"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.linkshortener.rule=HostRegexp(`{host:.+}`)
+      - traefik.http.routers.linkshortener.entrypoints=websecure
+      - traefik.http.routers.linkshortener.tls.certresolver=letsencrypt
+      - traefik.http.routers.linkshortener.service=linkshortener
+      - traefik.http.services.linkshortener.loadbalancer.server.port=3000
+      - traefik.docker.network=dokploy-network
+    networks:
+      - dokploy-network
+  nahpet-postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - nahpet-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${DB_USER} -d ${DB_NAME}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - dokploy-network
 networks:
- dokploy-network:
-   external: true
+  dokploy-network:
+    external: true
 volumes:
- nahpet-postgres-data:
- nahpet-uploads:
+  nahpet-postgres-data:
+  nahpet-uploads:
