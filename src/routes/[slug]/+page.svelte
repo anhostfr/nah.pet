@@ -24,7 +24,7 @@
 			</div>
 			<Card.Title>Lien protégé</Card.Title>
 			<p class="text-sm text-muted-foreground">Ce lien est protégé par un mot de passe</p>
-			{#if data.link.title}
+			{#if data?.link?.title}
 				<p class="text-sm font-medium">{data.link.title}</p>
 			{/if}
 		</Card.Header>
