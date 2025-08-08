@@ -20,7 +20,7 @@
 				<AlertTriangle class="w-8 h-8 text-destructive" />
 			</div>
 			<h1 class="text-2xl font-bold text-white mb-2 text-center">Domaine non reconnu</h1>
-			<p class="text-gray-400">
+			<p class="text-gray-400 text-center">
 				Le domaine <strong class="text-destructive">{domain}</strong> n'est pas configuré
 				sur notre service.
 			</p>
