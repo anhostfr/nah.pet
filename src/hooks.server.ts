@@ -1,13 +1,25 @@
 import { lucia } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { type Handle } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	
 	const host = event.request.headers.get('host');
 	const customDomain = await detectCustomDomain(host);
-	
-	
+
+	const isUnknownDomain =
+		host &&
+		!host.includes('localhost') &&
+		!host.includes('127.0.0.1') &&
+		!host.includes('0.0.0.0') &&
+		host !== 'nah.pet' &&
+		!host.startsWith('nah.pet:') &&
+		!customDomain;
+
+	if (isUnknownDomain) {
+		throw redirect(302, `https://nah.pet/domain-not-found?domain=${encodeURIComponent(host)}`);
+	}
+
 	event.locals.customDomain = customDomain;
 	event.locals.isCustomDomain = !!customDomain;
 
@@ -24,7 +36,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				...sessionCookie.attributes
 			});
 		}
-
 		if (!session) {
 			const sessionCookie = lucia.createBlankSessionCookie();
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
@@ -32,31 +43,31 @@ export const handle: Handle = async ({ event, resolve }) => {
 				...sessionCookie.attributes
 			});
 		}
-
 		event.locals.user = user;
 		event.locals.session = session;
 	}
 
-	
 	if (customDomain && customDomain.verified) {
 		const pathname = event.url.pathname;
-		
-		
 		const systemRoutes = [
-			'/login', '/register', '/logout', '/admin', '/stats', 
-			'/domains', '/pending', '/settings', '/profile', '/account', '/api'
+			'/login',
+			'/register',
+			'/logout',
+			'/admin',
+			'/stats',
+			'/domains',
+			'/pending',
+			'/settings',
+			'/profile',
+			'/account',
+			'/api'
 		];
-		
-		const isSystemRoute = systemRoutes.some(route => 
-			pathname === route || pathname.startsWith(route + '/')
+		const isSystemRoute = systemRoutes.some(
+			(route) => pathname === route || pathname.startsWith(route + '/')
 		);
-		
 		if (isSystemRoute) {
-			
 			return new Response('Not Found', { status: 404 });
 		}
-		
-		
 	}
 
 	return resolve(event);
@@ -64,24 +75,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 async function detectCustomDomain(host: string | null) {
 	if (!host) return null;
-	
-	
 	if (host.includes('localhost') || host.includes('127.0.0.1') || host.includes('0.0.0.0')) {
 		return null;
 	}
-	
-	
 	if (host === 'nah.pet' || host.startsWith('nah.pet:')) {
 		return null;
 	}
-	
-	
 	try {
 		const customDomain = await db.customDomain.findUnique({
 			where: { domain: host },
 			include: { user: true }
 		});
-		
 		return customDomain;
 	} catch (error) {
 		console.error('Error detecting custom domain:', error);
