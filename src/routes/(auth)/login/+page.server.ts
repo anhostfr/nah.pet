@@ -34,7 +34,8 @@ export const actions: Actions = {
 
 		const { email: validEmail, password: validPasswordInput } = parseResult.data;
 
-		const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+		const ip =
+			request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 		const rateLimitKey = `login:${ip}:${validEmail}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);

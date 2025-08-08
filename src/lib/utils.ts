@@ -42,4 +42,3 @@ export function sleep(ms: number): Promise<void> {
 export function isMobile() {
 	return new MediaQuery('max-width: 768px').current;
 }
-

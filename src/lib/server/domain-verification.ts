@@ -32,15 +32,18 @@ export async function verifyDomainOwnership(
 	}
 }
 
-async function verifyDNSRecord(domain: string, verificationToken: string): Promise<DomainVerificationResult> {
+async function verifyDNSRecord(
+	domain: string,
+	verificationToken: string
+): Promise<DomainVerificationResult> {
 	try {
 		// gonna keep the console.log for now, because idk if it was a bug before rebuilding the app or not
-		console.log(domain)
+		console.log(domain);
 		const txtRecords = await resolveTxt(domain);
 		const flatRecords = txtRecords.flat();
-		console.log(txtRecords)
-		const hasVerificationRecord = flatRecords.some((record: string) => 
-			record === verificationToken
+		console.log(txtRecords);
+		const hasVerificationRecord = flatRecords.some(
+			(record: string) => record === verificationToken
 		);
 
 		if (hasVerificationRecord) {
@@ -59,14 +62,16 @@ async function verifyDNSRecord(domain: string, verificationToken: string): Promi
 	}
 }
 
-async function verifyFileMethod(domain: string, verificationToken: string): Promise<DomainVerificationResult> {
+async function verifyFileMethod(
+	domain: string,
+	verificationToken: string
+): Promise<DomainVerificationResult> {
 	try {
-		
 		const verificationUrl = `https://${domain}/.well-known/nah-pet-verification.txt`;
-		
+
 		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 5000); 
-		
+		const timeoutId = setTimeout(() => controller.abort(), 5000);
+
 		try {
 			const response = await fetch(verificationUrl, {
 				method: 'GET',
@@ -75,7 +80,7 @@ async function verifyFileMethod(domain: string, verificationToken: string): Prom
 				},
 				signal: controller.signal
 			});
-			
+
 			clearTimeout(timeoutId);
 
 			if (!response.ok) {
@@ -85,7 +90,6 @@ async function verifyFileMethod(domain: string, verificationToken: string): Prom
 				};
 			}
 
-			
 			const reader = response.body?.getReader();
 			if (!reader) {
 				return {
@@ -96,7 +100,7 @@ async function verifyFileMethod(domain: string, verificationToken: string): Prom
 
 			let content = '';
 			let totalLength = 0;
-			const maxLength = 1024; 
+			const maxLength = 1024;
 
 			while (true) {
 				const { done, value } = await reader.read();
@@ -135,62 +139,56 @@ async function verifyFileMethod(domain: string, verificationToken: string): Prom
 }
 
 export function validateDomainFormat(domain: string): boolean {
-	
 	if (domain.length > 253) return false;
-	
-	
+
 	const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)*[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,11}$/;
 	if (!domainRegex.test(domain)) return false;
-	
-	
+
 	const labels = domain.split('.');
-	return labels.every(label => label.length <= 63 && label.length > 0);
+	return labels.every((label) => label.length <= 63 && label.length > 0);
 }
 
 export function isDomainAllowed(domain: string): boolean {
-	const blockedDomains = [
-		'localhost',
-		'nah.pet' 
-	];
-	
+	const blockedDomains = ['localhost', 'nah.pet'];
+
 	const lowercaseDomain = domain.toLowerCase();
-	
-	
+
 	if (blockedDomains.includes(lowercaseDomain)) {
 		return false;
 	}
-	
-	
+
 	if (lowercaseDomain.endsWith('.nah.pet')) {
 		return false;
 	}
-	
-	
+
 	if (isIPv4(lowercaseDomain)) {
 		return false;
 	}
-	
-	
+
 	const privateDomains = [
-		'.local', '.localhost', '.internal', '.private',
-		'.test', '.invalid', '.example'
+		'.local',
+		'.localhost',
+		'.internal',
+		'.private',
+		'.test',
+		'.invalid',
+		'.example'
 	];
-	if (privateDomains.some(suffix => lowercaseDomain.endsWith(suffix))) {
+	if (privateDomains.some((suffix) => lowercaseDomain.endsWith(suffix))) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 function isIPv4(domain: string): boolean {
 	const ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
 	const match = domain.match(ipRegex);
-	
+
 	if (!match) return false;
-	
-	
+
 	const octets = match.slice(1).map(Number);
-	return octets.every(octet => octet >= 0 && octet <= 255);
+	return octets.every((octet) => octet >= 0 && octet <= 255);
 }
 
 export const SYSTEM_RESERVED_SLUGS = [

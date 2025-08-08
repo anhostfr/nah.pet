@@ -23,7 +23,9 @@
 		<div>
 			<h1 class="text-2xl sm:text-3xl font-bold">Statistiques détaillées</h1>
 			<p class="text-muted-foreground break-all">
-				Analyse des performances pour {data.link.customDomain ? `${data.link.customDomain.domain}/` : '/'}{data.link.slug}
+				Analyse des performances pour {data.link.customDomain
+					? `${data.link.customDomain.domain}/`
+					: '/'}{data.link.slug}
 			</p>
 		</div>
 	</div>
@@ -41,9 +43,18 @@
 					<p class="text-sm font-medium text-muted-foreground">Lien raccourci</p>
 					<div class="flex items-center gap-2 flex-wrap">
 						<code class="text-sm bg-muted px-2 py-1 rounded break-all">
-							{data.link.customDomain ? `https://${data.link.customDomain.domain}/${data.link.slug}` : `${$page.url.origin}/${data.link.slug}`}
+							{data.link.customDomain
+								? `https://${data.link.customDomain.domain}/${data.link.slug}`
+								: `${$page.url.origin}/${data.link.slug}`}
 						</code>
-						<Button variant="ghost" size="sm" href={data.link.customDomain ? `https://${data.link.customDomain.domain}/${data.link.slug}` : `/${data.link.slug}`} target="_blank">
+						<Button
+							variant="ghost"
+							size="sm"
+							href={data.link.customDomain
+								? `https://${data.link.customDomain.domain}/${data.link.slug}`
+								: `/${data.link.slug}`}
+							target="_blank"
+						>
 							<ExternalLink class="h-3 w-3" />
 						</Button>
 					</div>
@@ -175,7 +186,9 @@
 									<Table.Cell class="font-mono text-sm hidden sm:table-cell">
 										{click.ip || 'Non disponible'}
 									</Table.Cell>
-									<Table.Cell class="text-sm text-muted-foreground max-w-xs truncate hidden md:table-cell">
+									<Table.Cell
+										class="text-sm text-muted-foreground max-w-xs truncate hidden md:table-cell"
+									>
 										{click.userAgent || 'Non disponible'}
 									</Table.Cell>
 								</Table.Row>

@@ -104,17 +104,14 @@
 			</div>
 
 			<div class="mt-6">
-				<Button
-					variant="outline"
-					class="w-full"
-					onclick={handleOAuthLogin}
-					disabled={oauthLoading}
-				>
+				<Button variant="outline" class="w-full" onclick={handleOAuthLogin} disabled={oauthLoading}>
 					{#if oauthLoading}
 						<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
 					{:else}
 						<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-							<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+							<path
+								d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
+							/>
 						</svg>
 					{/if}
 					Se connecter avec Anhost

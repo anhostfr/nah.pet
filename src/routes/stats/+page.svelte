@@ -256,7 +256,9 @@
 							<Table.Body>
 								{#each data.topLinks as link, index (link.id)}
 									<Table.Row class="group">
-										<Table.Cell class="font-mono text-sm text-secondary-foreground hidden sm:table-cell">
+										<Table.Cell
+											class="font-mono text-sm text-secondary-foreground hidden sm:table-cell"
+										>
 											{#if link.title}
 												{link.title}
 											{:else}
@@ -294,7 +296,7 @@
 													size="sm"
 													variant="ghost"
 													onclick={() => {
-														const url = link.customDomain 
+														const url = link.customDomain
 															? `https://${link.customDomain.domain}/${link.slug}`
 															: `${window.location.origin}/${link.slug}`;
 														copyToClipboard(url, link.slug);
@@ -342,7 +344,8 @@
 									<div>
 										<div class="flex items-center space-x-2">
 											<code class="text-sm font-mono bg-secondary px-2 py-1 rounded">
-												{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click.link.slug}
+												{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click
+													.link.slug}
 											</code>
 											{#if click.link.title}
 												<span class="text-sm text-secondary-foreground">

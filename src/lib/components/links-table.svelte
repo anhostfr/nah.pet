@@ -30,7 +30,7 @@
 
 	async function copyToClipboard(link: Link) {
 		try {
-			const url = link.customDomain 
+			const url = link.customDomain
 				? `https://${link.customDomain.domain}/${link.slug}`
 				: `${$page.url.origin}/${link.slug}`;
 			await navigator.clipboard.writeText(url);
@@ -142,18 +142,34 @@
 								<Button variant="ghost" size="sm" onclick={() => copyToClipboard(link)}>
 									<Copy class="h-3 w-3" />
 								</Button>
-								<Button variant="ghost" size="sm" href={link.customDomain ? `https://${link.customDomain.domain}/${link.slug}` : `/${link.slug}`} target="_blank">
+								<Button
+									variant="ghost"
+									size="sm"
+									href={link.customDomain
+										? `https://${link.customDomain.domain}/${link.slug}`
+										: `/${link.slug}`}
+									target="_blank"
+								>
 									<ExternalLink class="h-3 w-3" />
 								</Button>
-								<Button variant="ghost" size="sm" href="/stats/{link.slug}" class="hidden sm:inline-flex">
+								<Button
+									variant="ghost"
+									size="sm"
+									href="/stats/{link.slug}"
+									class="hidden sm:inline-flex"
+								>
 									<BarChart3 class="h-3 w-3" />
 								</Button>
-								<form 
-									method="POST" 
-									action="?/delete" 
+								<form
+									method="POST"
+									action="?/delete"
 									class="inline"
 									use:enhance={() => {
-										if (!confirm('Êtes-vous sûr de vouloir supprimer ce lien ? Cette action est irréversible.')) {
+										if (
+											!confirm(
+												'Êtes-vous sûr de vouloir supprimer ce lien ? Cette action est irréversible.'
+											)
+										) {
 											return () => {};
 										}
 										deletingLinkId = link.id;
@@ -177,7 +193,9 @@
 										class="text-destructive hover:text-destructive"
 									>
 										{#if deletingLinkId === link.id}
-											<div class="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin"></div>
+											<div
+												class="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin"
+											></div>
 										{:else}
 											<Trash2 class="h-3 w-3" />
 										{/if}

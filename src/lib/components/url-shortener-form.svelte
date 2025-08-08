@@ -32,7 +32,6 @@
 	let isLoading = $state(false);
 	let copied = $state(false);
 
-	
 	const domainOptions = $derived([
 		{ value: '', label: 'nah.pet (domaine principal)' },
 		...customDomains.map((domain: any) => ({
@@ -96,7 +95,8 @@
 							<Button
 								size="sm"
 								variant="ghost"
-								onclick={() => copyToClipboard(form.shortUrl || `${window.location.origin}/${form.link.slug}`)}
+								onclick={() =>
+									copyToClipboard(form.shortUrl || `${window.location.origin}/${form.link.slug}`)}
 								class="h-8 w-8 p-0"
 							>
 								{#if copied}
@@ -151,7 +151,6 @@
 		}}
 		class="space-y-6"
 	>
-
 		<input type="hidden" name="customDomainId" value={selectedDomainValue} />
 
 		<div class="space-y-2">
@@ -180,8 +179,8 @@
 				<Select.Root type="single" bind:value={selectedDomainValue}>
 					<Select.Trigger class="h-12">
 						<span>
-							{selectedDomainValue === '' 
-								? 'nah.pet (domaine principal)' 
+							{selectedDomainValue === ''
+								? 'nah.pet (domaine principal)'
 								: customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}
 						</span>
 					</Select.Trigger>
@@ -239,10 +238,9 @@
 							</Button>
 						</div>
 						<p class="text-xs text-gray-500">
-							URL finale : {selectedDomainValue ? 
-								`https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}` :
-								`${window.location.origin}/${customSlug || 'votre-slug'}`
-							}
+							URL finale : {selectedDomainValue
+								? `https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}`
+								: `${window.location.origin}/${customSlug || 'votre-slug'}`}
 						</p>
 					</div>
 

@@ -9,25 +9,21 @@ import { isSlugReserved } from '$lib/server/domain-verification';
 export const load: PageServerLoad = async ({ params, request, getClientAddress, locals }) => {
 	const { slug } = params;
 
-	
 	let link;
-	
+
 	if (locals.isCustomDomain && locals.customDomain?.verified) {
-		
 		if (isSlugReserved(slug)) {
 			throw error(404, 'Lien introuvable');
 		}
-		
-		
+
 		link = await db.link.findFirst({
 			where: {
 				slug,
 				customDomainId: locals.customDomain.id,
-				userId: locals.customDomain.userId 
+				userId: locals.customDomain.userId
 			}
 		});
 	} else {
-		
 		link = await db.link.findFirst({
 			where: {
 				slug,
@@ -74,14 +70,13 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const password = formData.get('password') as string;
 
-		
 		let link;
-		
+
 		if (locals.isCustomDomain && locals.customDomain?.verified) {
 			if (isSlugReserved(slug!)) {
 				throw error(404, 'Lien introuvable');
 			}
-			
+
 			link = await db.link.findFirst({
 				where: {
 					slug,
@@ -102,7 +97,8 @@ export const actions: Actions = {
 			throw error(404, 'Lien introuvable');
 		}
 
-		const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+		const ip =
+			request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 		const rateLimitKey = `slug:${ip}:${slug}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);

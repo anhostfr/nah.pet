@@ -11,9 +11,19 @@ async function getReservedSlugs(): Promise<Set<string>> {
 	reservedSlugsCache = new Set(
 		routeFiles
 			.map((path) =>
-				path.replace('/src/routes/', '').replace('.svelte', '').replace('/index', '').split('/')
-				.map((segment) => segment.replace(/^\+/, '').replace(/\.ts$/, ''))
-				.filter((segment) => segment && !segment.startsWith('_') && !segment.startsWith('[') && !segment.endsWith(']'))
+				path
+					.replace('/src/routes/', '')
+					.replace('.svelte', '')
+					.replace('/index', '')
+					.split('/')
+					.map((segment) => segment.replace(/^\+/, '').replace(/\.ts$/, ''))
+					.filter(
+						(segment) =>
+							segment &&
+							!segment.startsWith('_') &&
+							!segment.startsWith('[') &&
+							!segment.endsWith(']')
+					)
 			)
 			.flat()
 			.filter(Boolean)
@@ -23,29 +33,64 @@ async function getReservedSlugs(): Promise<Set<string>> {
 	return reservedSlugsCache;
 }
 
-export async function generateUniqueSlug(customSlug?: string, customDomainId?: string): Promise<string> {
+export async function generateUniqueSlug(
+	customSlug?: string,
+	customDomainId?: string
+): Promise<string> {
 	const RESERVED_SLUGS = await getReservedSlugs();
 
 	function isValidSlug(slug: string): boolean {
-		const forbiddenChars = ['/', '.', '\\', ':', '*', '?', '"', '<', '>', '|', '&', '%', '#', '@', '!', '=', '+', ';', ',', '(', ')', '[', ']', '{', '}', '~', '`', '^', ' ', '\t', '\n', '\r'];
-		return !forbiddenChars.some(char => slug.includes(char));
+		const forbiddenChars = [
+			'/',
+			'.',
+			'\\',
+			':',
+			'*',
+			'?',
+			'"',
+			'<',
+			'>',
+			'|',
+			'&',
+			'%',
+			'#',
+			'@',
+			'!',
+			'=',
+			'+',
+			';',
+			',',
+			'(',
+			')',
+			'[',
+			']',
+			'{',
+			'}',
+			'~',
+			'`',
+			'^',
+			' ',
+			'\t',
+			'\n',
+			'\r'
+		];
+		return !forbiddenChars.some((char) => slug.includes(char));
 	}
 
 	if (customSlug) {
 		if (!isValidSlug(customSlug)) {
 			throw new Error('Le slug contient des caractères non autorisés (/, ., \\, :, *, ?, etc.)');
 		}
-		
+
 		if (RESERVED_SLUGS.has(customSlug.toLowerCase())) {
 			throw new Error('Ce slug est réservé');
 		}
-		
-		
-		const exists = await db.link.count({ 
-			where: { 
+
+		const exists = await db.link.count({
+			where: {
 				slug: customSlug,
 				customDomainId: customDomainId || null
-			} 
+			}
 		});
 		if (exists > 0) {
 			throw new Error('Ce slug personnalisé existe déjà');
@@ -64,7 +109,7 @@ export async function generateUniqueSlug(customSlug?: string, customDomainId?: s
 		}
 
 		const existingSlugs = await db.link.findMany({
-			where: { 
+			where: {
 				slug: { in: candidates },
 				customDomainId: customDomainId || null
 			},

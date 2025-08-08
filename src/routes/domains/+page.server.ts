@@ -1,15 +1,15 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { 
-	generateVerificationToken, 
-	verifyDomainOwnership, 
-	validateDomainFormat, 
-	isDomainAllowed 
+import {
+	generateVerificationToken,
+	verifyDomainOwnership,
+	validateDomainFormat,
+	isDomainAllowed
 } from '$lib/server/domain-verification';
 import { isRateLimited } from '$lib/server/rateLimit';
 
-const MAX_DOMAINS_PER_USER = 3; 
+const MAX_DOMAINS_PER_USER = 3;
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -37,12 +37,11 @@ export const actions: Actions = {
 			throw redirect(302, '/login');
 		}
 
-		
 		const ip = getClientAddress();
 		const rateLimitKey = `add_domain:${ip}:${locals.user.id}`;
-		if (isRateLimited(rateLimitKey, 5, 300)) { 
-			return fail(429, { 
-				error: 'Trop de tentatives. Veuillez attendre avant de réessayer.' 
+		if (isRateLimited(rateLimitKey, 5, 300)) {
+			return fail(429, {
+				error: 'Trop de tentatives. Veuillez attendre avant de réessayer.'
 			});
 		}
 
@@ -59,8 +58,8 @@ export const actions: Actions = {
 		}
 
 		if (!isDomainAllowed(domain)) {
-			return fail(400, { 
-				error: 'Ce domaine n\'est pas autorisé (domaine principal, localhost, IP, etc.)' 
+			return fail(400, {
+				error: "Ce domaine n'est pas autorisé (domaine principal, localhost, IP, etc.)"
 			});
 		}
 
@@ -68,25 +67,23 @@ export const actions: Actions = {
 			return fail(400, { error: 'Méthode de vérification invalide' });
 		}
 
-		
 		const domainCount = await db.customDomain.count({
 			where: { userId: locals.user.id }
 		});
 
 		if (domainCount >= MAX_DOMAINS_PER_USER) {
-			return fail(400, { 
-				error: `Limite de ${MAX_DOMAINS_PER_USER} domaines atteinte` 
+			return fail(400, {
+				error: `Limite de ${MAX_DOMAINS_PER_USER} domaines atteinte`
 			});
 		}
 
-		
 		const existingDomain = await db.customDomain.findUnique({
 			where: { domain }
 		});
 
 		if (existingDomain) {
-			return fail(400, { 
-				error: 'Ce domaine est déjà enregistré' 
+			return fail(400, {
+				error: 'Ce domaine est déjà enregistré'
 			});
 		}
 
@@ -103,8 +100,8 @@ export const actions: Actions = {
 				}
 			});
 
-			return { 
-				success: true, 
+			return {
+				success: true,
 				message: 'Domaine ajouté avec succès. Procédez à la vérification.',
 				verificationToken,
 				verificationMethod,
@@ -112,7 +109,7 @@ export const actions: Actions = {
 			};
 		} catch (error) {
 			console.error('Error adding domain:', error);
-			return fail(500, { error: 'Erreur lors de l\'ajout du domaine' });
+			return fail(500, { error: "Erreur lors de l'ajout du domaine" });
 		}
 	},
 
@@ -121,12 +118,11 @@ export const actions: Actions = {
 			throw redirect(302, '/login');
 		}
 
-		
 		const ip = request.headers.get('x-forwarded-for') || 'unknown';
 		const rateLimitKey = `verify_domain:${ip}:${locals.user.id}`;
 		if (isRateLimited(rateLimitKey, 10, 300)) {
-			return fail(429, { 
-				error: 'Trop de tentatives de vérification. Veuillez attendre.' 
+			return fail(429, {
+				error: 'Trop de tentatives de vérification. Veuillez attendre.'
 			});
 		}
 
@@ -146,8 +142,8 @@ export const actions: Actions = {
 		});
 
 		if (!customDomain) {
-			return fail(404, { 
-				error: 'Domaine introuvable ou déjà vérifié' 
+			return fail(404, {
+				error: 'Domaine introuvable ou déjà vérifié'
 			});
 		}
 
@@ -175,8 +171,8 @@ export const actions: Actions = {
 			}
 		} catch (error) {
 			console.error('Error verifying domain:', error);
-			return fail(500, { 
-				error: 'Erreur lors de la vérification du domaine' 
+			return fail(500, {
+				error: 'Erreur lors de la vérification du domaine'
 			});
 		}
 	},
@@ -209,14 +205,15 @@ export const actions: Actions = {
 
 		try {
 			const linkCount = customDomain._count.links;
-			
+
 			await db.customDomain.delete({
 				where: { id: domainId }
 			});
 
-			const message = linkCount > 0 
-				? `Domaine supprimé avec succès (${linkCount} lien${linkCount > 1 ? 's' : ''} supprimé${linkCount > 1 ? 's' : ''})`
-				: 'Domaine supprimé avec succès';
+			const message =
+				linkCount > 0
+					? `Domaine supprimé avec succès (${linkCount} lien${linkCount > 1 ? 's' : ''} supprimé${linkCount > 1 ? 's' : ''})`
+					: 'Domaine supprimé avec succès';
 
 			return {
 				success: true,
@@ -224,8 +221,8 @@ export const actions: Actions = {
 			};
 		} catch (error) {
 			console.error('Error deleting domain:', error);
-			return fail(500, { 
-				error: 'Erreur lors de la suppression du domaine' 
+			return fail(500, {
+				error: 'Erreur lors de la suppression du domaine'
 			});
 		}
 	}

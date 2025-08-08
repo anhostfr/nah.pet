@@ -25,7 +25,9 @@ export const actions: Actions = {
 
 		const schema = z.object({
 			email: z.string().email({ message: 'Email invalide' }),
-			password: z.string().min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' }),
+			password: z
+				.string()
+				.min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' }),
 			confirmPassword: z.string()
 		});
 
@@ -35,14 +37,19 @@ export const actions: Actions = {
 			return fail(400, { error: parseResult.error.errors[0]?.message || 'Données invalides' });
 		}
 
-		const { email: validEmail, password: validPassword, confirmPassword: validConfirmPassword } = parseResult.data;
+		const {
+			email: validEmail,
+			password: validPassword,
+			confirmPassword: validConfirmPassword
+		} = parseResult.data;
 
 		if (validPassword !== validConfirmPassword) {
 			await sleep(2000);
 			return fail(400, { error: 'Les mots de passe ne correspondent pas' });
 		}
 
-		const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+		const ip =
+			request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 		const rateLimitKey = `register:${ip}:${validEmail}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);

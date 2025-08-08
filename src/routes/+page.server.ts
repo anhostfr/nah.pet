@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			}
 		}),
 		db.customDomain.findMany({
-			where: { 
+			where: {
 				userId: locals.user.id,
 				verified: true
 			},
@@ -111,7 +111,6 @@ export const actions: Actions = {
 			return fail(400, { error: 'URL invalide' });
 		}
 
-		
 		let verifiedCustomDomain = null;
 		if (customDomainId && customDomainId !== '') {
 			verifiedCustomDomain = await db.customDomain.findFirst({
@@ -126,10 +125,9 @@ export const actions: Actions = {
 				return fail(400, { error: 'Domaine personnalisé invalide ou non vérifié' });
 			}
 
-			
 			if (customSlug && isSlugReserved(customSlug)) {
-				return fail(400, { 
-					error: `Le slug "${customSlug}" est réservé et ne peut pas être utilisé sur un domaine personnalisé` 
+				return fail(400, {
+					error: `Le slug "${customSlug}" est réservé et ne peut pas être utilisé sur un domaine personnalisé`
 				});
 			}
 		}
@@ -159,7 +157,7 @@ export const actions: Actions = {
 				}
 			});
 
-			const shortUrl = verifiedCustomDomain 
+			const shortUrl = verifiedCustomDomain
 				? `https://${verifiedCustomDomain.domain}/${slug}`
 				: `${url.origin}/${slug}`;
 			const qrCode = await generateQRCode(shortUrl);

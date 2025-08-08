@@ -6,7 +6,7 @@
 	import DomainsSection from '$lib/components/settings/DomainsSection.svelte';
 
 	let { data, form } = $props();
-	
+
 	let activeTab = $state('account');
 	let showNewApiKey = $state(false);
 	let newApiKeyValue = $state('');
@@ -36,10 +36,14 @@
 
 	function getPermissionLabel(permission: string) {
 		switch (permission) {
-			case 'links:read': return 'Lecture liens';
-			case 'links:write': return 'Écriture liens';
-			case 'stats:read': return 'Lecture stats';
-			default: return permission;
+			case 'links:read':
+				return 'Lecture liens';
+			case 'links:write':
+				return 'Écriture liens';
+			case 'stats:read':
+				return 'Lecture stats';
+			default:
+				return permission;
 		}
 	}
 
@@ -62,7 +66,7 @@
 			<Settings class="w-6 h-6" />
 			<h1 class="text-2xl font-bold">Paramètres</h1>
 		</div>
-		
+
 		<nav class="space-y-1">
 			{#each tabs as tab}
 				<button
@@ -70,7 +74,7 @@
 					class:bg-muted={activeTab === tab.id}
 					class:text-primary={activeTab === tab.id}
 					class:hover:bg-muted={activeTab !== tab.id}
-					onclick={() => activeTab = tab.id}
+					onclick={() => (activeTab = tab.id)}
 				>
 					<tab.icon class="w-5 h-5" />
 					<span class="font-medium">{tab.label}</span>
@@ -83,8 +87,8 @@
 		{#if activeTab === 'account'}
 			<AccountSection {data} {formatDate} />
 		{:else if activeTab === 'api-keys'}
-			<ApiKeysSection 
-				{data} 
+			<ApiKeysSection
+				{data}
 				bind:showCreateApiKey
 				bind:showNewApiKey
 				bind:newApiKeyValue
@@ -93,11 +97,7 @@
 				{copyToClipboard}
 			/>
 		{:else if activeTab === 'domains'}
-			<DomainsSection 
-				{data} 
-				bind:showAddDomain
-				{formatDate}
-			/>
+			<DomainsSection {data} bind:showAddDomain {formatDate} />
 		{/if}
 	</div>
 </div>

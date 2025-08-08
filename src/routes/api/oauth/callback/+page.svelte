@@ -31,12 +31,7 @@
 				<div>
 					<h2 class="text-xl font-medium">Erreur de connexion</h2>
 					<p class="my-1 text-sm">{error}</p>
-					<Button 
-						onclick={() => goto('/login')}
-						class=""
-					>
-						Retourner à la page de connexion
-					</Button>
+					<Button onclick={() => goto('/login')} class="">Retourner à la page de connexion</Button>
 				</div>
 			{:else}
 				<div>

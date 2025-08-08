@@ -10,12 +10,37 @@
 	import { Trash2, ExternalLink, CheckCircle, Clock, AlertTriangle } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { isMobile } from '$lib/utils';
-	
+
 	const SYSTEM_RESERVED_SLUGS = [
-		'admin', 'api', 'app', 'auth', 'blog', 'cdn', 'dashboard', 'dev', 'docs', 
-		'ftp', 'help', 'login', 'logout', 'mail', 'news', 'register', 'root', 
-		'shop', 'ssl', 'staging', 'stats', 'support', 'test', 'www', 'domains', 
-		'pending', 'settings', 'profile', 'account'
+		'admin',
+		'api',
+		'app',
+		'auth',
+		'blog',
+		'cdn',
+		'dashboard',
+		'dev',
+		'docs',
+		'ftp',
+		'help',
+		'login',
+		'logout',
+		'mail',
+		'news',
+		'register',
+		'root',
+		'shop',
+		'ssl',
+		'staging',
+		'stats',
+		'support',
+		'test',
+		'www',
+		'domains',
+		'pending',
+		'settings',
+		'profile',
+		'account'
 	];
 
 	export let data: PageData;
@@ -92,13 +117,16 @@
 		</Card.Header>
 		<Card.Content class="text-red-600">
 			<p class="mb-2">
-				<strong>Isolation totale :</strong> Chaque domaine personnalisé fonctionne comme un espace complètement séparé.
+				<strong>Isolation totale :</strong> Chaque domaine personnalisé fonctionne comme un espace complètement
+				séparé.
 			</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
 				<li>Un domaine custom ne peut accéder qu'à ses propres liens</li>
 				<li>Aucun accès aux liens du domaine principal (nah.pet)</li>
 				<li>Aucun accès aux pages système (login, register, admin, etc.)</li>
-				<li>Slugs interdits sur domaines custom: {SYSTEM_RESERVED_SLUGS.slice(0, 8).join(', ')}, ...</li>
+				<li>
+					Slugs interdits sur domaines custom: {SYSTEM_RESERVED_SLUGS.slice(0, 8).join(', ')}, ...
+				</li>
 			</ul>
 		</Card.Content>
 	</Card.Root>
@@ -116,11 +144,12 @@
 			</p>
 			<div class="bg-blue-900/20 p-3 rounded-lg mb-3">
 				<p class="font-mono text-sm">
-					• Créez un enregistrement CNAME : votre-domaine.com → nah.pet<br/>
+					• Créez un enregistrement CNAME : votre-domaine.com → nah.pet<br />
 				</p>
 			</div>
 			<p class="text-sm">
-				Une fois configuré, votre-domaine.com/abc123 redirigera automatiquement vers vos liens raccourcis.
+				Une fois configuré, votre-domaine.com/abc123 redirigera automatiquement vers vos liens
+				raccourcis.
 			</p>
 		</Card.Content>
 	</Card.Root>
@@ -129,13 +158,14 @@
 		<Card.Header>
 			<Card.Title>Ajouter un nouveau domaine</Card.Title>
 			<Card.Description>
-				Ajoutez votre domaine (ex: monsite.com) pour créer des liens courts comme monsite.com/abc123.
-				Une fois vérifié, votre domaine fonctionnera comme un raccourcisseur indépendant.
+				Ajoutez votre domaine (ex: monsite.com) pour créer des liens courts comme
+				monsite.com/abc123. Une fois vérifié, votre domaine fonctionnera comme un raccourcisseur
+				indépendant.
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
-			<form 
-				method="POST" 
+			<form
+				method="POST"
 				action="?/addDomain"
 				use:enhance={() => {
 					isAdding = true;
@@ -165,23 +195,11 @@
 					<Label>Méthode de vérification</Label>
 					<div class="flex gap-4 mt-2">
 						<label class="flex items-center gap-2">
-							<input
-								type="radio"
-								name="method"
-								value="dns"
-								bind:group={selectedMethod}
-								required
-							/>
+							<input type="radio" name="method" value="dns" bind:group={selectedMethod} required />
 							DNS (Recommandé)
 						</label>
 						<label class="flex items-center gap-2">
-							<input
-								type="radio"
-								name="method"
-								value="file"
-								bind:group={selectedMethod}
-								required
-							/>
+							<input type="radio" name="method" value="file" bind:group={selectedMethod} required />
 							Fichier
 						</label>
 					</div>
@@ -209,16 +227,16 @@
 						</div>
 						<div class="flex items-center gap-2">
 							{#if domain.verified}
-								<Button 
-									variant="outline" 
+								<Button
+									variant="outline"
 									size="sm"
 									onclick={() => window.open(`https://${domain.domain}`, '_blank')}
 								>
 									<ExternalLink class="h-4 w-4 md:mr-1" />{isMobile() ? '' : 'Visiter'}
 								</Button>
 							{/if}
-							<form 
-								method="POST" 
+							<form
+								method="POST"
 								action="?/deleteDomain"
 								use:enhance={() => {
 									isDeleting = true;
@@ -229,12 +247,14 @@
 								}}
 							>
 								<input type="hidden" name="domainId" value={domain.id} />
-								<Button 
-									type="submit" 
-									variant="destructive" 
+								<Button
+									type="submit"
+									variant="destructive"
 									size="sm"
 									disabled={isDeleting}
-									title={domain._count.links > 0 ? `Supprimer le domaine et ses ${domain._count.links} lien(s)` : 'Supprimer le domaine'}
+									title={domain._count.links > 0
+										? `Supprimer le domaine et ses ${domain._count.links} lien(s)`
+										: 'Supprimer le domaine'}
 								>
 									<Trash2 class="h-4 w-4" />
 								</Button>
@@ -242,15 +262,19 @@
 						</div>
 					</div>
 					<Card.Description>
-						Créé le {new Date(domain.createdAt).toLocaleDateString('fr-FR')} • 
+						Créé le {new Date(domain.createdAt).toLocaleDateString('fr-FR')} •
 						{domain._count.links} lien{domain._count.links !== 1 ? 's' : ''}
 					</Card.Description>
 				</Card.Header>
 
 				{#if !domain.verified}
 					<Card.Content>
-						{@const instructions = getVerificationInstructions(domain.domain, domain.verificationToken, domain.verificationMethod as 'dns' | 'file')}
-						
+						{@const instructions = getVerificationInstructions(
+							domain.domain,
+							domain.verificationToken,
+							domain.verificationMethod as 'dns' | 'file'
+						)}
+
 						<div class="mb-4 p-4 bg-muted rounded-lg">
 							<h4 class="font-semibold mb-2">{instructions.title}</h4>
 							<ol class="list-decimal list-inside space-y-1 text-sm">
@@ -260,8 +284,8 @@
 							</ol>
 						</div>
 
-						<form 
-							method="POST" 
+						<form
+							method="POST"
 							action="?/verifyDomain"
 							use:enhance={() => {
 								isVerifying = true;
@@ -284,9 +308,7 @@
 		{#if data.customDomains.length === 0}
 			<Card.Root>
 				<Card.Content class="text-center py-8">
-					<p class="text-muted-foreground">
-						Aucun domaine personnalisé configuré.
-					</p>
+					<p class="text-muted-foreground">Aucun domaine personnalisé configuré.</p>
 					<p class="text-sm text-muted-foreground mt-1">
 						Ajoutez votre premier domaine pour commencer à créer des liens personnalisés.
 					</p>
