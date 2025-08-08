@@ -19,16 +19,16 @@
 			>
 				<AlertTriangle class="w-8 h-8 text-destructive" />
 			</div>
-			<h1 class="text-2xl font-bold dark:text-white mb-2 text-center">Domaine non reconnu</h1>
+			<h1 class="text-2xl font-bold text-white mb-2 text-center">Domaine non reconnu</h1>
 			<p class="text-gray-400">
 				Le domaine <strong class="text-destructive">{domain}</strong> n'est pas configuré
 				sur notre service.
 			</p>
 		</div>
 
-		<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
-			<h3 class="font-semibold text-gray-900 dark:text-white mb-2">Que faire ?</h3>
-			<ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-left">
+		<div class="bg-gray-800 rounded-lg p-4 mb-6">
+			<h3 class="font-semibold text-white mb-2">Que faire ?</h3>
+			<ul class="text-sm text-gray-400 space-y-1 text-left">
 				<li>• Vérifiez que le domaine est correctement configuré</li>
 				<li>• Contactez l'administrateur du domaine</li>
 				<li>• Utilisez directement nah.pet</li>
