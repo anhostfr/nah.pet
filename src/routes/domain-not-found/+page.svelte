@@ -15,13 +15,13 @@
 	<div class="flex flex-col items-center justify-center max-w-md w-full rounded-lg shadow-lg p-6">
 		<div class="mb-6">
 			<div
-				class="w-16 h-16 bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
+				class="w-16 h-16 bg-rose-400/30 rounded-full flex items-center justify-center mx-auto mb-4"
 			>
-				<AlertTriangle class="w-8 h-8 text-red-600 dark:text-red-400" />
+				<AlertTriangle class="w-8 h-8 text-destructive" />
 			</div>
 			<h1 class="text-2xl font-bold dark:text-white mb-2 text-center">Domaine non reconnu</h1>
 			<p class="text-gray-400">
-				Le domaine <strong class="text-red-600 dark:text-red-400">{domain}</strong> n'est pas configuré
+				Le domaine <strong class="text-destructive">{domain}</strong> n'est pas configuré
 				sur notre service.
 			</p>
 		</div>
