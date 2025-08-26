@@ -47,8 +47,15 @@
   },
   "trustedDependencies": [
     "@tailwindcss/oxide",
-    "@tree-sitter-grammars/tree-sitter-yaml",
+    "esbuild",
+    "tree-sitter-json",
+    "@prisma/engines",
+    "@prisma/client",
+    "@scarf/scarf",
     "core-js-pure",
+    "tree-sitter",
+    "@tree-sitter-grammars/tree-sitter-yaml",
+    "prisma",
   ],
   "packages": {
     "@asamuzakjp/css-color": ["@asamuzakjp/css-color@3.2.0", "", { "dependencies": { "@csstools/css-calc": "^2.1.3", "@csstools/css-color-parser": "^3.0.9", "@csstools/css-parser-algorithms": "^3.0.4", "@csstools/css-tokenizer": "^3.0.3", "lru-cache": "^10.4.3" } }, "sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw=="],
