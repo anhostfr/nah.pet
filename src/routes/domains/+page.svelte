@@ -144,7 +144,7 @@
 			</p>
 			<div class="bg-blue-900/20 p-3 rounded-lg mb-3">
 				<p class="font-mono text-sm">
-					• Créez un enregistrement CNAME : votre-domaine.com → nah.pet<br />
+					• Créez un enregistrement CNAME : votre-domaine.com → cat.nah.pet<br />
 				</p>
 			</div>
 			<p class="text-sm">
