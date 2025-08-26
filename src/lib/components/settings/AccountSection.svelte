@@ -9,7 +9,7 @@
 	let { data, formatDate } = $props();
 </script>
 
-<div in:slide={{ duration: 200, delay: 400 }} out:slide={{ duration: 400, delay: 0 }}>
+<div in:slide={{ duration: 200, delay: 400 }} out:slide={{ duration: 400, delay: 0 }} class="space-y-5">
 	<Card.Root>
 		<Card.Header>
 			<Card.Title class="flex items-center space-x-2">

@@ -60,8 +60,8 @@
 	});
 </script>
 
-<div class="flex gap-6">
-	<div class="w-64 space-y-2">
+<div class="flex gap-6 flex-wrap">
+	<div class="w-full md:w-64 space-y-2">
 		<div class="flex items-center space-x-2 mb-6">
 			<Settings class="w-6 h-6" />
 			<h1 class="text-2xl font-bold">Paramètres</h1>
