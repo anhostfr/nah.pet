@@ -10,6 +10,7 @@
 	import { Trash2, ExternalLink, CheckCircle, Clock, AlertTriangle } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { isMobile } from '$lib/utils';
+	import * as m from '$lib/paraglide/messages';
 
 	const SYSTEM_RESERVED_SLUGS = [
 		'admin',
@@ -43,53 +44,50 @@
 		'account'
 	];
 
-	export let data: PageData;
-	export let form;
+	let { data, form }: { data: PageData; form: any } = $props();
 
-	let isAdding = false;
-	let isVerifying = false;
-	let isDeleting = false;
-	let selectedMethod: 'dns' | 'file' = 'dns';
+	let isAdding = $state(false);
+	let isVerifying = $state(false);
+	let isDeleting = $state(false);
+	let selectedMethod: 'dns' | 'file' = $state('dns');
 
-	$: if (form?.success) {
+	$effect(() => {
+		if (form?.success) {
 		toast.success(form.message);
 		invalidateAll();
 	} else if (form?.error) {
 		toast.error(form.error);
 	}
+	});
 
 	function getStatusBadge(verified: boolean) {
 		if (verified) {
-			return { variant: 'default' as const, icon: CheckCircle, text: 'Vérifié' };
+			return { variant: 'default' as const, icon: CheckCircle, text: m.verified() };
 		} else {
-			return { variant: 'secondary' as const, icon: Clock, text: 'En attente' };
+			return { variant: 'secondary' as const, icon: Clock, text: m.pending() };
 		}
 	}
 
 	function getVerificationInstructions(domain: string, token: string, method: 'dns' | 'file') {
 		if (method === 'dns') {
 			return {
-				title: 'Vérification DNS (Recommandé)',
+				title: m.dns_verification() + ' (' + m.dns_recommended() + ')',
 				steps: [
-					'Connectez-vous à votre fournisseur DNS (Cloudflare, Namecheap, OVH, etc.)',
-					'Ajoutez un nouvel enregistrement TXT :',
-					`• Type: TXT`,
-					`• Nom/Host: ${domain} (ou @ si c'est le domaine racine)`,
-					`• Valeur: ${token}`,
-					'Attendez la propagation DNS (5 minutes à 24h selon le fournisseur)',
-					'Revenez ici et cliquez sur "Vérifier le domaine"'
+					m.connect_dns_provider(),
+					m.add_txt_record(),
+					m.txt_type(),
+					m.txt_name({ domain }),
+					m.txt_value({ token }),
+					m.wait_dns_propagation(),
 				]
 			};
 		} else {
 			return {
-				title: 'Vérification par fichier',
+				title: m.file_verification(),
 				steps: [
-					'Créez le répertoire /.well-known/ à la racine de votre site web',
-					'Créez le fichier : /.well-known/nah-pet-verification.txt',
-					`Contenu exact du fichier : ${token}`,
-					`Vérifiez que le fichier est accessible via :`,
-					`https://${domain}/.well-known/nah-pet-verification.txt`,
-					'Revenez ici et cliquez sur "Vérifier le domaine"'
+					m.create_wellknown_file(),
+					m.file_content({ token }),
+					m.make_accessible({ domain }),
 				]
 			};
 		}
@@ -97,14 +95,14 @@
 </script>
 
 <svelte:head>
-	<title>Domaines personnalisés - Nah Pet</title>
+	<title>{m.custom_domains_title()}</title>
 </svelte:head>
 
 <div class="container mx-auto py-8 px-4">
 	<div class="mb-8">
-		<h1 class="text-3xl font-bold mb-2">Domaines personnalisés</h1>
+		<h1 class="text-3xl font-bold mb-2">{m.custom_domains()}</h1>
 		<p class="text-muted-foreground">
-			Configurez vos propres domaines pour créer des liens courts personnalisés.
+			{m.custom_domains_desc()}
 		</p>
 	</div>
 
@@ -112,20 +110,19 @@
 		<Card.Header>
 			<div class="flex items-center gap-2">
 				<AlertTriangle class="h-5 w-5 text-red-600" />
-				<Card.Title class="text-red-600">Important - Isolation des domaines</Card.Title>
+				<Card.Title class="text-red-600">{m.domain_isolation_title()}</Card.Title>
 			</div>
 		</Card.Header>
 		<Card.Content class="text-red-600">
 			<p class="mb-2">
-				<strong>Isolation totale :</strong> Chaque domaine personnalisé fonctionne comme un espace complètement
-				séparé.
+				{m.total_isolation()}
 			</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
-				<li>Un domaine custom ne peut accéder qu'à ses propres liens</li>
-				<li>Aucun accès aux liens du domaine principal (nah.pet)</li>
-				<li>Aucun accès aux pages système (login, register, admin, etc.)</li>
+				<li>{m.custom_domain_access()}</li>
+				<li>{m.no_main_domain_access()}</li>
+				<li>{m.no_system_pages_access()}</li>
 				<li>
-					Slugs interdits sur domaines custom: {SYSTEM_RESERVED_SLUGS.slice(0, 8).join(', ')}, ...
+					{m.forbidden_slugs({ slugs: SYSTEM_RESERVED_SLUGS.slice(0, 8).join(', ') })}
 				</li>
 			</ul>
 		</Card.Content>
@@ -135,32 +132,29 @@
 		<Card.Header>
 			<div class="flex items-center gap-2">
 				<AlertTriangle class="h-5 w-5 text-blue-600" />
-				<Card.Title class="text-blue-600">Configuration DNS requise</Card.Title>
+				<Card.Title class="text-blue-600">{m.dns_config_required()}</Card.Title>
 			</div>
 		</Card.Header>
 		<Card.Content class="text-blue-600">
 			<p class="mb-3">
-				<strong>Après vérification, configurez votre domaine pour rediriger vers nah.pet :</strong>
+				{m.after_verification_config()}
 			</p>
 			<div class="bg-blue-900/20 p-3 rounded-lg mb-3">
 				<p class="font-mono text-sm">
-					• Créez un enregistrement CNAME : votre-domaine.com → cat.nah.pet<br />
+					{m.cname_record_info()}<br />
 				</p>
 			</div>
 			<p class="text-sm">
-				Une fois configuré, votre-domaine.com/abc123 redirigera automatiquement vers vos liens
-				raccourcis.
+				{m.redirect_info()}
 			</p>
 		</Card.Content>
 	</Card.Root>
 
 	<Card.Root class="mb-8">
 		<Card.Header>
-			<Card.Title>Ajouter un nouveau domaine</Card.Title>
+			<Card.Title>{m.add_new_domain_title()}</Card.Title>
 			<Card.Description>
-				Ajoutez votre domaine (ex: monsite.com) pour créer des liens courts comme
-				monsite.com/abc123. Une fois vérifié, votre domaine fonctionnera comme un raccourcisseur
-				indépendant.
+				{m.add_domain_description()}
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
@@ -177,36 +171,36 @@
 				class="space-y-4"
 			>
 				<div>
-					<Label for="domain">Domaine</Label>
+					<Label for="domain">{m.domain_column()}</Label>
 					<Input
 						id="domain"
 						name="domain"
 						type="text"
-						placeholder="exemple.com"
+						placeholder={m.domain_placeholder()}
 						required
 						class="mt-1"
 					/>
 					<p class="text-sm text-muted-foreground mt-1">
-						Format: monsite.com (sans https:// ni www)
+						{m.domain_format()}
 					</p>
 				</div>
 
 				<div>
-					<Label>Méthode de vérification</Label>
+					<Label>{m.verification_method()}</Label>
 					<div class="flex gap-4 mt-2">
 						<label class="flex items-center gap-2">
 							<input type="radio" name="method" value="dns" bind:group={selectedMethod} required />
-							DNS (Recommandé)
+							{m.dns_recommended()}
 						</label>
 						<label class="flex items-center gap-2">
 							<input type="radio" name="method" value="file" bind:group={selectedMethod} required />
-							Fichier
+							{m.file_method()}
 						</label>
 					</div>
 				</div>
 
 				<Button type="submit" disabled={isAdding}>
-					{isAdding ? 'Ajout en cours...' : 'Ajouter le domaine'}
+					{isAdding ? m.adding_progress() : m.add_domain()}
 				</Button>
 			</form>
 		</Card.Content>
@@ -221,7 +215,7 @@
 						<div class="flex items-center gap-3">
 							<Card.Title class="text-xl">{domain.domain}</Card.Title>
 							<Badge variant={status.variant} class="flex items-center gap-1">
-								<svelte:component this={status.icon} class="h-3 w-3" />
+								<status.icon class="h-3 w-3" />
 								{status.text}
 							</Badge>
 						</div>
@@ -232,7 +226,7 @@
 									size="sm"
 									onclick={() => window.open(`https://${domain.domain}`, '_blank')}
 								>
-									<ExternalLink class="h-4 w-4 md:mr-1" />{isMobile() ? '' : 'Visiter'}
+									<ExternalLink class="h-4 w-4 md:mr-1" />{isMobile() ? '' : m.visit()}
 								</Button>
 							{/if}
 							<form
@@ -253,7 +247,7 @@
 									size="sm"
 									disabled={isDeleting}
 									title={domain._count.links > 0
-										? `Supprimer le domaine et ses ${domain._count.links} lien(s)`
+										? m.delete_domain_confirm({ count: domain._count.links })
 										: 'Supprimer le domaine'}
 								>
 									<Trash2 class="h-4 w-4" />
@@ -262,7 +256,7 @@
 						</div>
 					</div>
 					<Card.Description>
-						Créé le {new Date(domain.createdAt).toLocaleDateString('fr-FR')} •
+						{m.created_on_date({ date: new Date(domain.createdAt).toLocaleDateString('fr-FR') })} •
 						{domain._count.links} lien{domain._count.links !== 1 ? 's' : ''}
 					</Card.Description>
 				</Card.Header>
@@ -297,7 +291,7 @@
 						>
 							<input type="hidden" name="domainId" value={domain.id} />
 							<Button type="submit" disabled={isVerifying}>
-								{isVerifying ? 'Vérification...' : 'Vérifier le domaine'}
+								{isVerifying ? m.verification_progress() : m.verify_domain_button()}
 							</Button>
 						</form>
 					</Card.Content>
@@ -308,9 +302,9 @@
 		{#if data.customDomains.length === 0}
 			<Card.Root>
 				<Card.Content class="text-center py-8">
-					<p class="text-muted-foreground">Aucun domaine personnalisé configuré.</p>
+					<p class="text-muted-foreground">{m.no_custom_domains_message()}</p>
 					<p class="text-sm text-muted-foreground mt-1">
-						Ajoutez votre premier domaine pour commencer à créer des liens personnalisés.
+						{m.add_first_domain()}
 					</p>
 				</Card.Content>
 			</Card.Root>

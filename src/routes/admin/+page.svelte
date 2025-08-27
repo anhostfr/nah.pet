@@ -18,6 +18,7 @@
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
 	import { formatDate, formatNumber } from '$lib/utils.js';
+	import * as m from '$lib/paraglide/messages.js';
 	import type { SvelteComponent } from 'svelte';
 
 	let { data } = $props();
@@ -30,26 +31,26 @@
 			(now.getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24)
 		);
 
-		if (diffInDays === 0) return "Aujourd'hui";
-		if (diffInDays === 1) return 'Hier';
-		if (diffInDays < 7) return `Il y a ${diffInDays}j`;
-		if (diffInDays < 30) return `Il y a ${Math.floor(diffInDays / 7)} sem.`;
+		if (diffInDays === 0) return m.today();
+		if (diffInDays === 1) return m.yesterday();
+		if (diffInDays < 7) return m.days_ago({ days: diffInDays });
+		if (diffInDays < 30) return m.weeks_ago({ weeks: Math.floor(diffInDays / 7) });
 		return formatDate(date);
 	};
 
 	const getUserStatus = (user: any): { label: string; variant: BadgeVariant; icon: typeof SvelteComponent<any> } => {
 		if (!user.isActive) {
-			return { label: 'Désactivé', variant: 'destructive', icon: XCircle };
+			return { label: m.disabled_status(), variant: 'destructive', icon: XCircle };
 		}
 		if (user.isAdmin) {
-			return { label: 'Admin', variant: 'default', icon: Shield };
+			return { label: m.admin_status(), variant: 'default', icon: Shield };
 		}
-		return { label: 'Actif', variant: 'secondary', icon: CheckCircle };
+		return { label: m.active_status(), variant: 'secondary', icon: CheckCircle };
 	};
 </script>
 
 <svelte:head>
-	<title>Administration - Nah.pet</title>
+	<title>{m.admin_title()}</title>
 </svelte:head>
 
 <div class="space-y-8">
@@ -57,16 +58,16 @@
 		<div>
 			<h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center space-x-2">
 				<Shield class="w-6 h-6 text-red-600" />
-				<span>Administration</span>
+				<span>{m.administration()}</span>
 			</h1>
-			<p class="text-gray-600 dark:text-gray-400 mt-1">Gestion des utilisateurs et autorisations</p>
+			<p class="text-gray-600 dark:text-gray-400 mt-1">{m.user_management_desc()}</p>
 		</div>
 		<Badge
 			variant="outline"
 			class="bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"
 		>
 			<Shield class="w-3 h-3 mr-1" />
-			Zone Admin
+			{m.admin_zone()}
 		</Badge>
 	</div>
 
@@ -75,7 +76,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total utilisateurs</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_users()}</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalUsers)}
 						</p>
@@ -94,7 +95,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Utilisateurs actifs</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.active_users()}</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.activeUsers)}
 						</p>
@@ -115,7 +116,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total liens</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_links()}</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalLinks)}
 						</p>
@@ -136,7 +137,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Administrateurs</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.administrators()}</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.adminUsers)}
 						</p>
@@ -157,7 +158,7 @@
 			<Card.Title class="flex items-center justify-between">
 				<span class="flex items-center space-x-2">
 					<Users class="w-5 h-5" />
-					<span>Gestion des utilisateurs</span>
+					<span>{m.user_management()}</span>
 					<Badge variant="secondary">{data.users.length}</Badge>
 				</span>
 			</Card.Title>
@@ -167,12 +168,12 @@
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>
-							<Table.Head class="w-[250px]">Utilisateur</Table.Head>
-							<Table.Head class="w-[120px] text-center">Statut</Table.Head>
-							<Table.Head class="w-[100px] text-center">Liens</Table.Head>
-							<Table.Head class="w-[100px] text-center">Clics</Table.Head>
-							<Table.Head class="w-[150px]">Inscrit le</Table.Head>
-							<Table.Head class="w-[250px] text-center">Actions</Table.Head>
+							<Table.Head class="w-[250px]">{m.user_column()}</Table.Head>
+							<Table.Head class="w-[120px] text-center">{m.status_column()}</Table.Head>
+							<Table.Head class="w-[100px] text-center">{m.links_column()}</Table.Head>
+							<Table.Head class="w-[100px] text-center">{m.clicks_column()}</Table.Head>
+							<Table.Head class="w-[150px]">{m.registered_column()}</Table.Head>
+							<Table.Head class="w-[250px] text-center">{m.actions_column()}</Table.Head>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -231,9 +232,9 @@
 												isLoading = user.id;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message as string || 'Statut mis à jour');
+														toast.success(result.data?.message as string || m.status_updated());
 													} else {
-														toast.error('Erreur lors de la mise à jour');
+														toast.error(m.update_error());
 													}
 													await update();
 													isLoading = '';
@@ -254,10 +255,10 @@
 													></div>
 												{:else if !user.isActive}
 													<UserCheck class="w-3 h-3 mr-1" />
-													Activer
+													{m.activate()}
 												{:else}
 													<UserX class="w-3 h-3 mr-1" />
-													Désactiver
+													{m.deactivate()}
 												{/if}
 											</Button>
 										</form>
@@ -269,9 +270,9 @@
 												isLoading = `admin-${user.id}`;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message as string || 'Droits admin mis à jour');
+														toast.success(result.data?.message as string || m.admin_rights_updated());
 													} else {
-														toast.error('Erreur lors de la mise à jour');
+														toast.error(m.update_error());
 													}
 													await update();
 													isLoading = '';
@@ -293,10 +294,10 @@
 													></div>
 												{:else if user.isAdmin}
 													<UserX class="w-3 h-3 mr-1" />
-													Retirer admin
+													{m.remove_admin()}
 												{:else}
 													<Shield class="w-3 h-3 mr-1" />
-													Rendre admin
+													{m.make_admin()}
 												{/if}
 											</Button>
 										</form>
@@ -307,7 +308,7 @@
 											use:enhance={() => {
 												if (
 													!confirm(
-														`Êtes-vous sûr de vouloir supprimer l'utilisateur ${user.email} ?\n\nCette action est irréversible et supprimera tous ses liens et données.`
+														m.delete_user_confirm({ email: user.email })
 													)
 												) {
 													return () => {};
@@ -315,9 +316,9 @@
 												isLoading = `delete-${user.id}`;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success('Utilisateur supprimé avec succès');
+														toast.success(m.user_deleted_success());
 													} else {
-														toast.error('Erreur lors de la suppression');
+														toast.error(m.delete_error());
 													}
 													await update();
 													isLoading = '';
@@ -358,14 +359,14 @@
 				<AlertTriangle class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
 				<div>
 					<h3 class="font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
-						⚠️ Zone d'administration
+						{m.admin_zone_warning()}
 					</h3>
 					<div class="text-sm text-yellow-800 dark:text-yellow-200 space-y-1">
-						<p>• <strong>Désactiver</strong> un utilisateur l'empêche de se connecter</p>
+						<p>{m.disable_user_info()}</p>
 						<p>
-							• <strong>Supprimer</strong> un utilisateur efface définitivement toutes ses données
+							{m.delete_user_info()}
 						</p>
-						<p>• Ces actions sont <strong>irréversibles</strong> - soyez prudent</p>
+						<p>{m.irreversible_actions()}</p>
 					</div>
 				</div>
 			</div>

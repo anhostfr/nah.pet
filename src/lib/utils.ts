@@ -1,23 +1,25 @@
 import { type ClassValue, clsx } from 'clsx';
 import { MediaQuery } from 'svelte/reactivity';
 import { twMerge } from 'tailwind-merge';
+import { getLocale } from './paraglide/runtime';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+const actualLocale = getLocale() || 'fr';
+
 export function formatDate(date: Date): string {
-	return new Intl.DateTimeFormat('fr-FR', {
+	
+	return new Intl.DateTimeFormat(actualLocale, {
 		year: 'numeric',
 		month: 'long',
-		day: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit'
+		day: 'numeric'
 	}).format(date);
 }
 
 export function formatNumber(num: number): string {
-	return new Intl.NumberFormat('fr-FR').format(num);
+	return new Intl.NumberFormat(actualLocale).format(num);
 }
 
 export function isValidUrl(string: string): boolean {

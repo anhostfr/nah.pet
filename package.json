@@ -37,6 +37,7 @@
     "vite-plugin-devtools-json": "^0.2.1"
   },
   "dependencies": {
+    "@inlang/paraglide-js": "^2.2.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@node-rs/argon2": "^2.0.2",
     "@prisma/client": "^6.14.0",

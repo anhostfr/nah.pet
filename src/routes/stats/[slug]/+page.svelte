@@ -6,6 +6,7 @@
 	import { BarChart3, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { page } from '$app/stores';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 </script>

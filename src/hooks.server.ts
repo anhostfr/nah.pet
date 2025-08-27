@@ -1,9 +1,11 @@
+import { paraglideMiddleware } from '$lib/paraglide/server';
 import { lucia } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { type Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 
-export const handle: Handle = async ({ event, resolve }) => {
+const authHandle: Handle = async ({ event, resolve }) => {
 	const host = event.request.headers.get('host');
 	const customDomain = await detectCustomDomain(host);
 
@@ -72,6 +74,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return resolve(event);
 };
+
+const handleParaglide: Handle = ({ event, resolve }) =>
+	paraglideMiddleware(event.request, ({ request, locale }) => {
+		event.request = request;
+
+		return resolve(event, {
+			transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
+		});
+});
+
+export const handle = sequence(handleParaglide, authHandle);
 
 async function detectCustomDomain(host: string | null) {
 	if (!host) return null;

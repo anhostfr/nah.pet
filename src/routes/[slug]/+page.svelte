@@ -6,7 +6,7 @@
 	import { enhance } from '$app/forms';
 	import { Lock } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-
+	import * as m from '$lib/paraglide/messages.js';
 	let { data, form } = $props();
 	let password = $state('');
 	let isLoading = $state(false);
@@ -46,12 +46,12 @@
 			>
 				<div class="space-y-4">
 					<div>
-						<Label for="password">Mot de passe</Label>
+						<Label for="password">{m.password()}</Label>
 						<Input
 							id="password"
 							name="password"
 							type="password"
-							placeholder="Entrez le mot de passe"
+							placeholder={m.password_placeholder()}
 							bind:value={password}
 							required
 							autofocus
@@ -64,7 +64,7 @@
 
 					<Button type="submit" disabled={isLoading || !password} class="w-full">
 						{#if isLoading}
-							Vérification...
+							{m.verification_progress()}
 						{:else}
 							Accéder au lien
 						{/if}

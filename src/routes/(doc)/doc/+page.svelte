@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages';
 	import { MoveLeft } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import SwaggerUI from 'swagger-ui';
@@ -23,7 +24,7 @@
 			class="inline-flex items-center text-secondary-foreground transition-colors"
 		>
 			<MoveLeft class="mr-2" />
-			Retour
+			{m.back()}
 		</a>
 	</div>
 	<div

@@ -2,42 +2,46 @@
 	import '../app.css';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { User, Settings, Globe, ChartBar, ExternalLink, Menu, X } from 'lucide-svelte';
+	import { User, Settings, Globe, ChartBar, ExternalLink, Menu, X, Languages } from 'lucide-svelte';
 	import { page } from '$app/state';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
+	import * as m from '$lib/paraglide/messages.js';
+	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+	import { slide } from 'svelte/transition';
 
 	let { children, data } = $props();
 	let mobileMenuOpen = $state(false);
 
 	const navItems = [
-		{ href: '/', label: 'Dashboard', icon: ChartBar, active: page.url.pathname === '/' },
+		{ href: '/', label: m.dashboard(), icon: ChartBar, active: page.url.pathname === '/' },
 		{
 			href: '/stats',
-			label: 'Analytics',
+			label: m.analytics(),
 			icon: ChartBar,
 			active: page.url.pathname.startsWith('/stats')
 		},
 		{
 			href: '/domains',
-			label: 'Domaines',
+			label: m.domains(),
 			icon: ExternalLink,
 			active: page.url.pathname.startsWith('/domains')
 		},
 		{
 			href: '/settings',
-			label: 'Paramètres',
+			label: m.settings(),
 			icon: Settings,
 			active: page.url.pathname === '/settings'
 		}
 	];
+
 </script>
 
 <svelte:head>
-	<title>Nah.pet - Rewriting path with bad energy</title>
+	<title>{m.nahpet_tagline()}</title>
 	<meta
 		name="description"
-		content="Nah.pet is an open source URL shortener that allows you to create and manage short links easily."
+		content={m.nahpet_description()}
 	/>
 </svelte:head>
 
@@ -50,23 +54,25 @@
 					<a href="/" class="flex items-center space-x-2 sm:space-x-3 group">
 						<img
 							src="/favicon.webp"
-							alt="Nah.pet Logo"
+							alt={m.nahpet_logo()}
 							class="w-8 h-8 sm:w-10 sm:h-10 object-contain"
 						/>
 						<div>
-							<h1 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Nah.pet</h1>
+							<h1 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{m.nahpet()}</h1>
 							<p class="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
-								Open Source URL Shortener
+								{m.url_shortener_tagline()}
 							</p>
 						</div>
 					</a>
-					<Badge variant="outline" class="text-xs font-medium hidden sm:inline-flex">
+					<Badge variant="outline" class="text-xs font-medium hidden sm:inline-flex mr-2">
 						<Globe class="w-3 h-3 mr-1" />
-						Open Source
+						{m.open_source()}
 					</Badge>
 				</div>
 
 				<div class="flex items-center space-x-2 sm:space-x-3">
+					<LanguageSelector />
+					
 					{#if data.user}
 						<div class="hidden lg:flex items-center space-x-1">
 							{#each navItems as item}
@@ -98,7 +104,7 @@
 							class="flex items-center space-x-2 sm:space-x-3 pl-2 sm:pl-3 border-l border-gray-200 dark:border-gray-700"
 						>
 							<div class="text-right hidden md:block">
-								<p class="text-sm font-medium text-gray-900 dark:text-white">Connecté</p>
+								<p class="text-sm font-medium text-gray-900 dark:text-white">{m.connected()}</p>
 								<p class="text-xs text-gray-500 dark:text-gray-400 max-w-24 truncate">
 									{data.user.email}
 								</p>
@@ -109,13 +115,13 @@
 								<User class="w-4 h-4 text-gray-600 dark:text-gray-300" />
 							</div>
 							<form method="POST" action="/logout" class="hidden sm:block">
-								<Button variant="ghost" size="sm" type="submit">Déconnexion</Button>
+								<Button variant="ghost" size="sm" type="submit">{m.logout()}</Button>
 							</form>
 						</div>
 					{:else}
 						<div class="flex items-center space-x-2 sm:space-x-3">
-							<Button href="/login" variant="ghost" size="sm" class="text-sm">Connexion</Button>
-							<Button href="/register" size="sm" class="text-sm">Commencer</Button>
+							<Button href="/login" variant="ghost" size="sm" class="text-sm">{m.login()}</Button>
+							<Button href="/register" size="sm" class="text-sm">{m.get_started()}</Button>
 						</div>
 					{/if}
 				</div>
@@ -123,7 +129,7 @@
 		</div>
 
 		{#if data.user && mobileMenuOpen}
-			<div class="lg:hidden bg-primary-foreground border-t border-border">
+			<div class="lg:hidden bg-primary-foreground border-t border-border" transition:slide>
 				<div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
 					<nav class="space-y-2">
 						{#each navItems as item}
@@ -144,7 +150,7 @@
 									class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-secondary transition-colors w-full text-left"
 								>
 									<User class="w-5 h-5" />
-									<span class="font-medium">Déconnexion</span>
+									<span class="font-medium">{m.logout()}</span>
 								</button>
 							</form>
 						</div>

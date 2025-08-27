@@ -7,6 +7,7 @@
 	import { Link } from 'lucide-svelte';
 	import { goto, invalidate } from '$app/navigation';
 	import { authClient } from '$lib/auth-client.js';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { form } = $props();
 	let email = $state('');
@@ -19,14 +20,14 @@
 			oauthLoading = true;
 			await authClient.redirectToAuth();
 		} catch (err) {
-			console.error('Erreur OAuth:', err);
+			console.error('Error OAuth:', err);
 			oauthLoading = false;
 		}
 	}
 </script>
 
 <svelte:head>
-	<title>Connexion - Nah.pet</title>
+	<title>{m.login_title()}</title>
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
@@ -35,8 +36,8 @@
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
 				<Link class="h-8 w-8 text-primary-foreground" />
 			</div>
-			<Card.Title>Connexion</Card.Title>
-			<p class="text-sm text-muted-foreground">Connectez-vous à votre compte Nah.pet</p>
+			<Card.Title>{m.login()}</Card.Title>
+			<p class="text-sm text-muted-foreground">{m.login_subtitle()}</p>
 		</Card.Header>
 		<Card.Content>
 			<form
@@ -56,12 +57,12 @@
 			>
 				<div class="space-y-4">
 					<div class="space-y-2">
-						<Label for="email">Email</Label>
+						<Label for="email">{m.email()}</Label>
 						<Input
 							id="email"
 							name="email"
 							type="email"
-							placeholder="votre@email.com"
+							placeholder={m.votre_email_placeholder()}
 							bind:value={email}
 							required
 							autofocus
@@ -69,12 +70,12 @@
 					</div>
 
 					<div class="space-y-2">
-						<Label for="password">Mot de passe</Label>
+						<Label for="password">{m.password()}</Label>
 						<Input
 							id="password"
 							name="password"
 							type="password"
-							placeholder="Votre mot de passe"
+							placeholder={m.your_password_placeholder()}
 							bind:value={password}
 							required
 						/>
@@ -86,9 +87,9 @@
 
 					<Button type="submit" disabled={isLoading || !email || !password} class="w-full">
 						{#if isLoading}
-							Connexion...
+							{m.connecting()}
 						{:else}
-							Se connecter
+							{m.sign_in()}
 						{/if}
 					</Button>
 				</div>
@@ -99,7 +100,7 @@
 					<div class="w-full border-t border-gray-300"></div>
 				</div>
 				<div class="relative flex justify-center text-sm">
-					<span class="px-2 bg-card text-muted-foreground">ou</span>
+					<span class="px-2 bg-card text-muted-foreground">{m.or()}</span>
 				</div>
 			</div>
 
@@ -114,20 +115,20 @@
 							/>
 						</svg>
 					{/if}
-					Se connecter avec Anhost
+					{m.signin_with_anhost()}
 				</Button>
 			</div>
 
 			<div class="mt-6 text-center text-sm">
 				<p class="text-muted-foreground">
-					Pas encore de compte ?
-					<a href="/register" class="text-primary hover:underline"> S'inscrire </a>
+					{m.no_account()}
+					<a href="/register" class="text-primary hover:underline">{m.sign_up_link()}</a>
 				</p>
 			</div>
 
 			<hr class="my-6 border-t border-gray-200 dark:border-gray-700" />
 			<div class="text-center text-sm text-gray-500 dark:text-gray-400">
-				<p>© {new Date().getFullYear()} Nah.pet — It’s a no from us, dawg.</p>
+				<p>{m.copyright_text({ year: new Date().getFullYear() })})}</p>
 			</div>
 		</Card.Content>
 	</Card.Root>

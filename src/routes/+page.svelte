@@ -15,6 +15,7 @@
 		Globe
 	} from 'lucide-svelte';
 	import { formatNumber } from '$lib/utils.js';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data, form } = $props();
 
@@ -38,26 +39,26 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard - Nah.pet</title>
+	<title>{m.dashboard_title()}</title>
 </svelte:head>
 
 <div class="space-y-8">
 	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 		<div>
-			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">{m.dashboard()}</h1>
 			<p class="text-gray-600 dark:text-gray-400 mt-1">
-				Vue d'ensemble de vos liens raccourcis et performances
+				{m.dashboard_overview()}
 			</p>
 		</div>
 		<div class="flex items-center space-x-3 flex-wrap gap-2">
 			<Badge variant="outline" class="text-xs">
 				<Activity class="w-3 h-3 mr-1" />
-				En temps réel
+				{m.real_time()}
 			</Badge>
 			<Button href="/stats" variant="outline" size="sm">
 				<BarChart3 class="w-4 h-4 mr-2" />
-				<span class="hidden sm:inline">Analytics détaillées</span>
-				<span class="sm:hidden">Analytics</span>
+				<span class="hidden sm:inline">{m.detailed_analytics()}</span>
+				<span class="sm:hidden">{m.analytics()}</span>
 			</Button>
 		</div>
 	</div>
@@ -67,7 +68,7 @@
 			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2 flex-1">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des liens</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_links()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalLinks)}
 						</p>
@@ -97,13 +98,13 @@
 			<Card.Content class="py-3">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2 flex-1">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total des clics</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_clicks()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalClicks)}
 						</p>
 						<div class="flex flex-wrap items-center gap-2">
 							<Badge variant="secondary" class="text-xs">
-								+{data.stats.clicksThisMonth} ce mois
+								+{data.stats.clicksThisMonth} {m.this_month_label()}
 							</Badge>
 							{#if Number(clickGrowthRate) > 0}
 								<div class="flex items-center gap-1">
@@ -129,13 +130,13 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics moyens</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.average_clicks()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{data.stats.totalLinks > 0
 								? Math.round(data.stats.totalClicks / data.stats.totalLinks)
 								: 0}
 						</p>
-						<Badge variant="secondary" class="text-xs">par lien</Badge>
+						<Badge variant="secondary" class="text-xs">{m.per_link()}</Badge>
 					</div>
 					<div
 						class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
@@ -153,7 +154,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Liens actifs</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.active_links()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.activeLinks)}
 						</p>
@@ -162,14 +163,14 @@
 								variant="outline"
 								class="text-xs border-green-200 text-green-700 dark:border-green-800 dark:text-green-300"
 							>
-								✓ Actifs
+								✓ {m.active_links_badge()}
 							</Badge>
 							{#if data.stats.expiredLinks > 0}
 								<Badge
 									variant="outline"
 									class="text-xs border-red-200 text-red-700 dark:border-red-800 dark:text-red-300"
 								>
-									{data.stats.expiredLinks} expirés
+									{data.stats.expiredLinks} {m.expired_links_badge()}
 								</Badge>
 							{/if}
 						</div>
@@ -195,7 +196,7 @@
 				>
 					<Link class="w-4 h-4 text-blue-600 dark:text-blue-400" />
 				</div>
-				<span>Créer un nouveau lien</span>
+				<span>{m.create_new_link()}</span>
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="p-6">
@@ -212,15 +213,15 @@
 					>
 						<BarChart3 class="w-4 h-4 text-gray-600 dark:text-gray-400" />
 					</div>
-					<span>Mes liens</span>
+					<span>{m.my_links()}</span>
 					<Badge variant="secondary" class="ml-2">
 						{data.links.length}
 					</Badge>
 				</Card.Title>
 				<Button href="/stats" variant="outline" size="sm">
 					<Eye class="w-4 h-4 mr-2" />
-					<span class="hidden sm:inline">Voir tout</span>
-					<span class="sm:hidden">Tout</span>
+					<span class="hidden sm:inline">{m.view_all()}</span>
+					<span class="sm:hidden">{m.view_all()}</span>
 				</Button>
 			</div>
 		</Card.Header>
@@ -241,10 +242,9 @@
 						<Globe class="w-5 h-5 text-white" />
 					</div>
 					<div>
-						<h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">💡 Astuce du jour</h3>
+						<h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">{m.tip_of_day()}</h3>
 						<p class="text-sm text-blue-800 dark:text-blue-200">
-							Utilisez des slugs personnalisés pour rendre vos liens plus mémorables et
-							professionnels.
+							{m.tip_custom_slugs()}
 						</p>
 					</div>
 				</div>
@@ -263,10 +263,10 @@
 					</div>
 					<div>
 						<h3 class="font-semibold text-green-900 dark:text-green-100 mb-2">
-							🚀 Projet Open Source
+							{m.open_source_project()}
 						</h3>
 						<p class="text-sm text-green-800 dark:text-green-200">
-							Contribuez au projet sur GitHub ou partagez vos idées d'amélioration !
+							{m.contribute_github()}
 						</p>
 					</div>
 				</div>

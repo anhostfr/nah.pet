@@ -5,6 +5,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
+	import * as m from '$lib/paraglide/messages';
 	import { enhance } from '$app/forms';
 	import {
 		Link,
@@ -19,6 +20,7 @@
 	} from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
+	import { page } from '$app/state';
 
 	let { form, customDomains } = $props();
 
@@ -32,22 +34,14 @@
 	let isLoading = $state(false);
 	let copied = $state(false);
 
-	const domainOptions = $derived([
-		{ value: '', label: 'nah.pet (domaine principal)' },
-		...customDomains.map((domain: any) => ({
-			value: domain.id,
-			label: domain.domain
-		}))
-	]);
-
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
 			copied = true;
-			toast.success('Lien copié dans le presse-papier !');
+			toast.success(m.link_copied_clipboard());
 			setTimeout(() => (copied = false), 2000);
 		} catch (err) {
-			toast.error('Impossible de copier le lien');
+			toast.error(m.link_copy_error());
 		}
 	};
 
@@ -76,7 +70,7 @@
 					<div class="flex-1 space-y-4">
 						<div>
 							<h3 class="font-semibold text-green-900 dark:text-green-100 mb-2">
-								✨ Lien créé avec succès !
+								✨ {m.link_created_success()}
 							</h3>
 							{#if form.link.title}
 								<p class="text-sm text-green-800 dark:text-green-200 mb-2">
@@ -154,13 +148,13 @@
 		<input type="hidden" name="customDomainId" value={selectedDomainValue} />
 
 		<div class="space-y-2">
-			<Label for="originalUrl" class="text-base font-medium">URL à raccourcir</Label>
+			<Label for="originalUrl" class="text-base font-medium">{m.url_to_shorten()}</Label>
 			<div class="relative">
 				<Input
 					id="originalUrl"
 					name="originalUrl"
 					type="url"
-					placeholder="https://example.com/ma-super-url-tres-longue"
+					placeholder={m.url_placeholder()}
 					bind:value={originalUrl}
 					required
 					class="pl-10 text-base h-12"
@@ -171,23 +165,24 @@
 		</div>
 
 		{#if customDomains.length > 0}
+		{@const primaryDomain = page.url.origin.match(/https?:\/\/(www\.)?([^\/]+)/)?.[2] || 'nah.pet'}
 			<div class="space-y-2">
 				<Label class="text-base font-medium flex items-center gap-2">
 					<Globe class="w-4 h-4" />
-					Domaine pour le lien court
+					{m.domain_for_short_link()}
 				</Label>
 				<Select.Root type="single" bind:value={selectedDomainValue}>
 					<Select.Trigger class="h-12">
 						<span>
 							{selectedDomainValue === ''
-								? 'nah.pet (domaine principal)'
+								? `${primaryDomain} (${m.primary_domain()})`
 								: customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}
 						</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="" label="nah.pet (domaine principal)">
-							nah.pet (domaine principal)
-							<Badge variant="outline" class="ml-2 text-xs">Par défaut</Badge>
+						<Select.Item value="" label={primaryDomain + ' (' +  m.primary_domain() + ')'}>
+							{primaryDomain} ({m.primary_domain()})
+							<Badge variant="outline" class="ml-2 text-xs">{m.default_badge()}</Badge>
 						</Select.Item>
 						{#each customDomains as domain}
 							<Select.Item value={domain.id} label={domain.domain}>
@@ -208,7 +203,7 @@
 				class="flex items-center space-x-2"
 			>
 				<Settings class="w-4 h-4" />
-				<span>Options avancées</span>
+				<span>{m.advanced_options()}</span>
 				<div
 					class="w-2 h-2 rounded-full bg-blue-500 {showAdvanced
 						? 'opacity-100'
@@ -222,14 +217,14 @@
 				<div class="grid md:grid-cols-2 gap-4">
 					<div class="space-y-2">
 						<Label for="customSlug" class="flex items-center space-x-2">
-							<span>Slug personnalisé</span>
-							<Badge variant="secondary" class="text-xs">Optionnel</Badge>
+							<span>{m.custom_slug()}</span>
+							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
 						<div class="flex space-x-2">
 							<Input
 								id="customSlug"
 								name="customSlug"
-								placeholder="mon-lien"
+								placeholder={m.custom_slug_placeholder()}
 								bind:value={customSlug}
 								class="font-mono"
 							/>
@@ -238,19 +233,21 @@
 							</Button>
 						</div>
 						<p class="text-xs text-gray-500">
-							URL finale : {selectedDomainValue
+							{m.final_url({
+								url: selectedDomainValue
 								? `https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}`
-								: `${window.location.origin}/${customSlug || 'votre-slug'}`}
+								: `${window.location.origin}/${customSlug || 'votre-slug'}`
+							})}
 						</p>
 					</div>
 
 					<div class="space-y-2">
 						<Label for="title" class="flex items-center space-x-2">
-							<span>Titre du lien</span>
-							<Badge variant="secondary" class="text-xs">Optionnel</Badge>
+							<span>{m.link_title()}</span>
+							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
 						<Input id="title" name="title" placeholder="Mon lien important" bind:value={title} />
-						<p class="text-xs text-gray-500">Pour vous aider à identifier ce lien</p>
+						<p class="text-xs text-gray-500">{m.help_identify_link()}</p>
 					</div>
 				</div>
 
@@ -258,8 +255,8 @@
 					<div class="space-y-2">
 						<Label for="password" class="flex items-center space-x-2">
 							<Lock class="w-4 h-4" />
-							<span>Mot de passe</span>
-							<Badge variant="secondary" class="text-xs">Optionnel</Badge>
+							<span>{m.password()}</span>
+							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
 						<Input
 							id="password"
@@ -268,17 +265,17 @@
 							placeholder="Protéger par mot de passe"
 							bind:value={password}
 						/>
-						<p class="text-xs text-gray-500">Le lien nécessitera ce mot de passe</p>
+						<p class="text-xs text-gray-500">{m.link_require_password()}</p>
 					</div>
 
 					<div class="space-y-2">
 						<Label for="expiresAt" class="flex items-center space-x-2">
 							<Calendar class="w-4 h-4" />
-							<span>Expiration</span>
-							<Badge variant="secondary" class="text-xs">Optionnel</Badge>
+							<span>{m.expiration()}</span>
+							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
 						<Input id="expiresAt" name="expiresAt" type="datetime-local" bind:value={expiresAt} />
-						<p class="text-xs text-gray-500">Le lien expirera automatiquement</p>
+						<p class="text-xs text-gray-500">{m.link_expire_automatically()}</p>
 					</div>
 				</div>
 			</div>
@@ -304,10 +301,10 @@
 				<div
 					class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
 				></div>
-				Création en cours...
+				{m.creating_progress()}
 			{:else}
 				<Link class="w-5 h-5 mr-2" />
-				Raccourcir le lien
+				{m.shorten_link()}
 			{/if}
 		</Button>
 	</form>

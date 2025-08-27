@@ -4,9 +4,10 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Copy, ExternalLink, BarChart3, Trash2, Lock, Calendar } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { toast } from 'svelte-sonner';
 	import { enhance } from '$app/forms';
+	import * as m from "$lib/paraglide/messages"
 
 	type Link = {
 		id: string;
@@ -32,11 +33,11 @@
 		try {
 			const url = link.customDomain
 				? `https://${link.customDomain.domain}/${link.slug}`
-				: `${$page.url.origin}/${link.slug}`;
+				: `${page.url.origin}/${link.slug}`;
 			await navigator.clipboard.writeText(url);
-			toast.success('Lien copié !');
+			toast.success(m.link_copied_clipboard());
 		} catch (err) {
-			toast.error('Impossible de copier le lien');
+			toast.error(m.link_copy_error());
 		}
 	}
 
@@ -48,20 +49,20 @@
 
 {#if links.length === 0}
 	<div class="text-center py-8 text-muted-foreground">
-		<p>Aucun lien créé pour le moment.</p>
-		<p class="text-sm">Commencez par raccourcir votre première URL !</p>
+		<p>{m.no_links_created()}</p>
+		<p class="text-sm">{m.start_first_url()}</p>
 	</div>
 {:else}
 	<div class="rounded-md border mx-2 overflow-x-auto">
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>
-					<Table.Head>Lien</Table.Head>
-					<Table.Head class="hidden sm:table-cell">URL originale</Table.Head>
-					<Table.Head>Clics</Table.Head>
-					<Table.Head class="hidden md:table-cell">Créé le</Table.Head>
-					<Table.Head class="hidden lg:table-cell">Status</Table.Head>
-					<Table.Head class="text-right">Actions</Table.Head>
+					<Table.Head>{m.link_table_header()}</Table.Head>
+					<Table.Head class="hidden sm:table-cell">{m.original_url_header()}</Table.Head>
+					<Table.Head>{m.clicks_header()}</Table.Head>
+					<Table.Head class="hidden md:table-cell">{m.created_header()}</Table.Head>
+					<Table.Head class="hidden lg:table-cell">{m.status_header()}</Table.Head>
+					<Table.Head class="text-right">{m.actions_header()}</Table.Head>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -95,11 +96,11 @@
 									<div class="flex items-center gap-2 text-xs text-muted-foreground">
 										<span>{formatDate(new Date(link.createdAt))}</span>
 										{#if isExpired(link.expiresAt)}
-											<span class="text-red-600">• Expiré</span>
+											<span class="text-red-600">• {m.expired()}</span>
 										{:else if link.expiresAt}
-											<span>• Expire le {formatDate(new Date(link.expiresAt))}</span>
+											<span>• {m.expires_on()} {formatDate(new Date(link.expiresAt))}</span>
 										{:else}
-											<span class="text-green-600">• Actif</span>
+											<span class="text-green-600">• {m.active()}</span>
 										{/if}
 									</div>
 								</div>
@@ -128,13 +129,13 @@
 						</Table.Cell>
 						<Table.Cell class="hidden lg:table-cell">
 							{#if isExpired(link.expiresAt)}
-								<Badge variant="destructive">Expiré</Badge>
+								<Badge variant="destructive">{m.expired()}</Badge>
 							{:else if link.expiresAt}
 								<Badge variant="secondary">
-									Expire le {formatDate(new Date(link.expiresAt))}
+									{m.expires_on} {formatDate(new Date(link.expiresAt))}
 								</Badge>
 							{:else}
-								<Badge variant="default">Actif</Badge>
+								<Badge variant="default">{m.active()}</Badge>
 							{/if}
 						</Table.Cell>
 						<Table.Cell class="text-right">
@@ -167,7 +168,7 @@
 									use:enhance={() => {
 										if (
 											!confirm(
-												'Êtes-vous sûr de vouloir supprimer ce lien ? Cette action est irréversible.'
+												m.delete_link_confirm()
 											)
 										) {
 											return () => {};
@@ -175,9 +176,9 @@
 										deletingLinkId = link.id;
 										return async ({ result, update }) => {
 											if (result.type === 'success') {
-												toast.success('Lien supprimé avec succès');
+												toast.success(m.link_deleted_success());
 											} else {
-												toast.error('Erreur lors de la suppression du lien');
+												toast.error(m.link_delete_error());
 											}
 											await update();
 											deletingLinkId = null;

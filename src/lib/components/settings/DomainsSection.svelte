@@ -7,6 +7,7 @@
 	import { Globe, Plus, Trash2 } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { slide } from 'svelte/transition';
+	import * as m from '$lib/paraglide/messages';
 	let { data, showAddDomain = $bindable(), formatDate } = $props();
 </script>
 
@@ -17,15 +18,15 @@
 				<div>
 					<Card.Title class="flex items-center space-x-2">
 						<Globe class="w-5 h-5" />
-						<span>Domaines personnalisés</span>
+						<span>{m.custom_domains()}</span>
 					</Card.Title>
 					<Card.Description
-						>Configurez vos propres domaines pour créer des liens courts personnalisés</Card.Description
+						>{m.custom_domains_desc()}</Card.Description
 					>
 				</div>
 				<Button onclick={() => (showAddDomain = true)}>
 					<Plus class="w-4 h-4 mr-2" />
-					Ajouter un domaine
+					{m.add_domain()}
 				</Button>
 			</div>
 		</Card.Header>
@@ -36,27 +37,27 @@
 						<form method="POST" action="?/addDomain" use:enhance class="space-y-4">
 							<h3 class="font-semibold flex items-center space-x-2 mb-4">
 								<Plus class="w-4 h-4" />
-								<span>Ajouter un nouveau domaine</span>
+								<span>{m.add_new_domain()}</span>
 							</h3>
 
 							<div class="space-y-2">
 								<Label for="domain">Domaine</Label>
 								<Input id="domain" name="domain" type="text" placeholder="exemple.com" required />
 								<p class="text-xs text-muted-foreground">
-									Format: monsite.com (sans https:// ni www)
+									{m.domain_format()}
 								</p>
 							</div>
 
 							<div class="space-y-2">
-								<Label>Méthode de vérification</Label>
+								<Label>{m.verification_method()}</Label>
 								<div class="flex gap-4">
 									<label class="flex items-center space-x-2">
 										<input type="radio" name="method" value="dns" checked required />
-										<span class="text-sm">DNS (Recommandé)</span>
+										<span class="text-sm">{m.dns_recommended()}</span>
 									</label>
 									<label class="flex items-center space-x-2">
 										<input type="radio" name="method" value="file" required />
-										<span class="text-sm">Fichier</span>
+										<span class="text-sm">{m.file_method()}</span>
 									</label>
 								</div>
 							</div>
@@ -64,10 +65,10 @@
 							<div class="flex gap-2">
 								<Button type="submit">
 									<Plus class="w-4 h-4 mr-2" />
-									Ajouter le domaine
+									{m.add_domain_button()}
 								</Button>
 								<Button type="button" variant="outline" onclick={() => (showAddDomain = false)}>
-									Annuler
+									{m.cancel()}
 								</Button>
 							</div>
 						</form>
@@ -76,10 +77,10 @@
 			{/if}
 
 			<div class="space-y-3">
-				<h3 class="font-semibold">Domaines existants</h3>
+				<h3 class="font-semibold">{m.existing_domains()}</h3>
 
 				{#if data.customDomains.length === 0}
-					<p class="text-sm text-muted-foreground">Aucun domaine personnalisé configuré</p>
+					<p class="text-sm text-muted-foreground">{m.no_custom_domains()}</p>
 				{:else}
 					{#each data.customDomains as domain}
 						<div class="border rounded-lg p-4 space-y-4">
@@ -87,7 +88,7 @@
 								<div class="flex items-center space-x-3">
 									<h4 class="font-medium text-lg">{domain.domain}</h4>
 									<Badge variant={domain.verified ? 'default' : 'secondary'}>
-										{domain.verified ? 'Vérifié' : 'En attente'}
+										{domain.verified ? m.verified() : m.pending()}
 									</Badge>
 								</div>
 								<form method="POST" action="?/deleteDomain" use:enhance class="inline">
@@ -97,7 +98,7 @@
 										variant="ghost"
 										size="sm"
 										onclick={(e) => {
-											if (!confirm('Êtes-vous sûr de vouloir supprimer ce domaine ?')) {
+											if (!confirm(m.delete_domain_confirm_request())) {
 												e.preventDefault();
 											}
 										}}
@@ -108,27 +109,27 @@
 							</div>
 
 							<div class="text-sm text-muted-foreground">
-								<p>Créé le {formatDate(domain.createdAt)} • {domain._count.links} lien(s)</p>
+								<p>{m.created_on()} {formatDate(domain.createdAt)} • {domain._count.links} lien(s)</p>
 							</div>
 
 							{#if !domain.verified}
 								<div class="p-3 bg-muted rounded-lg">
-									<h5 class="font-medium mb-2">Instructions de vérification</h5>
+									<h5 class="font-medium mb-2">{m.verification_instructions()}</h5>
 									{#if domain.verificationMethod === 'dns'}
 										<ol class="list-decimal list-inside space-y-1 text-sm">
-											<li>Connectez-vous à votre fournisseur DNS</li>
-											<li>Ajoutez un enregistrement TXT :</li>
-											<li class="ml-4">• Type: TXT</li>
-											<li class="ml-4">• Nom: {domain.domain}</li>
-											<li class="ml-4">• Valeur: {domain.verificationToken}</li>
-											<li>Attendez la propagation DNS puis cliquez sur "Vérifier"</li>
+											<li>{m.connect_dns_provider()}</li>
+											<li>{m.add_txt_record()}</li>
+											<li class="ml-4">{m.txt_type()}</li>
+											<li class="ml-4">{m.txt_name({ domain: domain.domain })}</li>
+											<li class="ml-4">{m.txt_value({ token: domain.verificationToken })}</li>
+											<li>{m.wait_dns_propagation()}</li>
 										</ol>
 									{:else}
 										<ol class="list-decimal list-inside space-y-1 text-sm">
-											<li>Créez le fichier /.well-known/nah-pet-verification.txt</li>
-											<li>Contenu: {domain.verificationToken}</li>
+											<li>{m.create_wellknown_file()}</li>
+											<li>{m.file_content({ token: domain.verificationToken })}</li>
 											<li>
-												Rendez-le accessible via https://{domain.domain}/.well-known/nah-pet-verification.txt
+												{m.make_accessible({ domain: domain.domain })}
 											</li>
 										</ol>
 									{/if}
@@ -136,7 +137,7 @@
 
 								<form method="POST" action="?/verifyDomain" use:enhance>
 									<input type="hidden" name="domainId" value={domain.id} />
-									<Button type="submit" size="sm">Vérifier le domaine</Button>
+									<Button type="submit" size="sm">{m.verify_domain_button()}</Button>
 								</form>
 							{/if}
 						</div>

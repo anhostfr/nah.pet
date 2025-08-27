@@ -21,6 +21,7 @@
 	} from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { toast } from 'svelte-sonner';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 
@@ -30,10 +31,10 @@
 		try {
 			await navigator.clipboard.writeText(text);
 			copied = slug;
-			toast.success('Lien copié !');
+			toast.success(m.link_copied());
 			setTimeout(() => (copied = ''), 2000);
 		} catch (err) {
-			toast.error('Impossible de copier le lien');
+			toast.error(m.could_not_copy());
 		}
 	};
 
@@ -41,14 +42,14 @@
 		const now = new Date();
 		const diffInMinutes = Math.floor((now.getTime() - new Date(date).getTime()) / (1000 * 60));
 
-		if (diffInMinutes < 1) return "À l'instant";
-		if (diffInMinutes < 60) return `Il y a ${diffInMinutes}m`;
+		if (diffInMinutes < 1) return m.just_now();
+		if (diffInMinutes < 60) return m.minutes_ago({ minutes: diffInMinutes });
 
 		const diffInHours = Math.floor(diffInMinutes / 60);
-		if (diffInHours < 24) return `Il y a ${diffInHours}h`;
+		if (diffInHours < 24) return m.hours_ago({ hours: diffInHours });
 
 		const diffInDays = Math.floor(diffInHours / 24);
-		if (diffInDays < 7) return `Il y a ${diffInDays}j`;
+		if (diffInDays < 7) return m.days_ago_short({ days: diffInDays });
 
 		return formatDate(date);
 	};
@@ -61,27 +62,27 @@
 </script>
 
 <svelte:head>
-	<title>Analytics - Nah.pet</title>
+	<title>{m.analytics_title()}</title>
 </svelte:head>
 
 <div class="space-y-8">
 	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 		<div>
-			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+			<h1 class="text-2xl font-bold text-gray-900 dark:text-white">{m.analytics()}</h1>
 			<p class="text-gray-600 dark:text-gray-400 mt-1">
-				Analysez les performances de vos liens raccourcis
+				{m.analytics_description()}
 			</p>
 		</div>
 		<div class="flex items-center space-x-3 flex-wrap gap-2">
 			<Badge variant="outline" class="text-xs">
 				<Activity class="w-3 h-3 mr-1" />
-				<span class="hidden sm:inline">Données en temps réel</span>
-				<span class="sm:hidden">Temps réel</span>
+				<span class="hidden sm:inline">{m.real_time_data()}</span>
+				<span class="sm:hidden">{m.real_time_short()}</span>
 			</Badge>
 			<Button href="/" variant="outline" size="sm">
 				<Link class="w-4 h-4 mr-2" />
-				<span class="hidden sm:inline">Retour au Dashboard</span>
-				<span class="sm:hidden">Retour</span>
+				<span class="hidden sm:inline">{m.back_to_dashboard()}</span>
+				<span class="sm:hidden">{m.back_short()}</span>
 			</Button>
 		</div>
 	</div>
@@ -91,7 +92,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Clics aujourd'hui</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.clicks_today()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.clicksToday)}
 						</p>
@@ -104,7 +105,7 @@
 										{data.stats.todayGrowth > 0 ? '+' : ''}{data.stats.todayGrowth}%
 									</span>
 								</div>
-								<span class="text-xs text-gray-500">vs hier</span>
+								<span class="text-xs text-gray-500">{m.vs_yesterday()}</span>
 							{/if}
 						</div>
 					</div>
@@ -122,7 +123,7 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Cette semaine</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.this_week()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.clicksThisWeek)}
 						</p>
@@ -135,7 +136,7 @@
 										{data.stats.weekGrowth > 0 ? '+' : ''}{data.stats.weekGrowth}%
 									</span>
 								</div>
-								<span class="text-xs text-gray-500">vs semaine passée</span>
+								<span class="text-xs text-gray-500">{m.vs_last_week()}</span>
 							{/if}
 						</div>
 					</div>
@@ -155,11 +156,11 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total clics</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_clicks_all()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalClicks)}
 						</p>
-						<Badge variant="secondary" class="text-xs">Tous vos liens</Badge>
+						<Badge variant="secondary" class="text-xs">{m.all_your_links()}</Badge>
 					</div>
 					<div
 						class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
@@ -177,12 +178,12 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">Moy. par lien</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.avg_per_link()}</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.avgClicksPerLink)}
 						</p>
 						<Badge variant="secondary" class="text-xs">
-							{formatNumber(data.stats.totalLinks)} liens
+							{m.links_count({ count: data.stats.totalLinks })}
 						</Badge>
 					</div>
 					<div
@@ -202,17 +203,17 @@
 		<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 			<Card.Title class="flex items-center space-x-2">
 				<Globe class="w-5 h-5" />
-				<span>Stats par domaine</span>
-				<Badge variant="secondary" class="ml-2">Principal & Custom</Badge>
+				<span>{m.stats_by_domain()}</span>
+				<Badge variant="secondary" class="ml-2">{m.main_and_custom()}</Badge>
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="p-6 overflow-x-auto">
 			<Table.Root>
 				<Table.Header>
 					<Table.Row>
-						<Table.Head>Domaine</Table.Head>
-						<Table.Head class="text-center">Liens</Table.Head>
-						<Table.Head class="text-center">Clics</Table.Head>
+						<Table.Head>{m.domain_column()}</Table.Head>
+						<Table.Head class="text-center">{m.links_column()}</Table.Head>
+						<Table.Head class="text-center">{m.clicks_column()}</Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
@@ -233,24 +234,24 @@
 			<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 				<Card.Title class="flex items-center space-x-2">
 					<TrendingUp class="w-5 h-5" />
-					<span>Top liens</span>
-					<Badge variant="secondary" class="ml-2">Plus cliqués</Badge>
+					<span>{m.top_links()}</span>
+					<Badge variant="secondary" class="ml-2">{m.most_clicked()}</Badge>
 				</Card.Title>
 			</Card.Header>
 			<Card.Content class="p-0">
 				{#if data.topLinks.length === 0}
 					<div class="text-center py-8">
-						<p class="text-gray-500 dark:text-gray-400">Aucun lien pour l'instant</p>
+						<p class="text-gray-500 dark:text-gray-400">{m.no_links_yet()}</p>
 					</div>
 				{:else}
 					<div class="mx-6 overflow-x-auto">
 						<Table.Root>
 							<Table.Header>
 								<Table.Row>
-									<Table.Head class="w-[50px] hidden sm:table-cell">Nom</Table.Head>
-									<Table.Head>Lien</Table.Head>
-									<Table.Head class="text-center w-[80px]">Clics</Table.Head>
-									<Table.Head class="w-[80px]">Action</Table.Head>
+									<Table.Head class="w-[50px] hidden sm:table-cell">{m.name_column()}</Table.Head>
+									<Table.Head>{m.link_column()}</Table.Head>
+									<Table.Head class="text-center w-[80px]">{m.clicks_column_short()}</Table.Head>
+									<Table.Head class="w-[80px]">{m.action_column()}</Table.Head>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
@@ -320,14 +321,14 @@
 			<Card.Header class="border-b border-gray-100 dark:border-gray-700">
 				<Card.Title class="flex items-center space-x-2">
 					<Activity class="w-5 h-5" />
-					<span>Activité récente</span>
-					<Badge variant="secondary" class="ml-2">Derniers clics</Badge>
+					<span>{m.recent_activity()}</span>
+					<Badge variant="secondary" class="ml-2">{m.latest_clicks()}</Badge>
 				</Card.Title>
 			</Card.Header>
 			<Card.Content class="p-6">
 				{#if data.recentClicks.length === 0}
 					<div class="text-center py-8">
-						<p class="text-gray-500 dark:text-gray-400">Aucun clic récent</p>
+						<p class="text-gray-500 dark:text-gray-400">{m.no_recent_clicks()}</p>
 					</div>
 				{:else}
 					<div class="space-y-4">

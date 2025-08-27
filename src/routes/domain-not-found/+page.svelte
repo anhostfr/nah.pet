@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { AlertTriangle, Home, ExternalLink } from 'lucide-svelte';
-
+	import * as m from '$lib/paraglide/messages.js';
 	const domain = page.url.searchParams.get('domain') || 'domaine inconnu';
 	let { data } = $props();
 </script>
@@ -19,31 +19,30 @@
 			>
 				<AlertTriangle class="w-8 h-8 text-destructive" />
 			</div>
-			<h1 class="text-2xl font-bold text-white mb-2 text-center">Domaine non reconnu</h1>
+			<h1 class="text-2xl font-bold text-white mb-2 text-center">{m.domain_not_found_title()}</h1>
 			<p class="text-gray-400 text-center">
-				Le domaine <strong class="text-destructive">{domain}</strong> n'est pas configuré
-				sur notre service.
+				{m.domain_not_configured({ domain })}
 			</p>
 		</div>
 
 		<div class="bg-gray-800 rounded-lg p-4 mb-6">
-			<h3 class="font-semibold text-white mb-2">Que faire ?</h3>
+			<h3 class="font-semibold text-white mb-2">{m.what_to_do()}</h3>
 			<ul class="text-sm text-gray-400 space-y-1 text-left">
-				<li>• Vérifiez que le domaine est correctement configuré</li>
-				<li>• Contactez l'administrateur du domaine</li>
-				<li>• Utilisez directement nah.pet</li>
+				<li>{m.check_domain_config()}</li>
+				<li>{m.contact_domain_admin()}</li>
+				<li>{m.use_nahpet_directly({ domain: 'nah.pet' })}</li>
 			</ul>
 		</div>
 
 		<div class="flex flex-col sm:flex-row gap-3 justify-center">
 			<Button href="https://nah.pet" class="flex items-center gap-2">
 				<Home class="w-4 h-4" />
-				Aller à Nah.pet
+				{m.go_to_nahpet()}
 			</Button>
 			{#if data?.user}
 				<Button variant="outline" href="https://nah.pet/domains" class="flex items-center gap-2">
 					<ExternalLink class="w-4 h-4" />
-					Gérer les domaines
+					{m.manage_domains()}
 				</Button>
 			{/if}
 		</div>

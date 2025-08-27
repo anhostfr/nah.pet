@@ -6,6 +6,7 @@
 	import { enhance } from '$app/forms';
 	import { UserPlus } from 'lucide-svelte';
 	import { goto, invalidate } from '$app/navigation';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { form } = $props();
 	let email = $state('');
@@ -15,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Inscription - Nah.pet</title>
+	<title>{m.register_title()}</title>
 </svelte:head>
 
 <div class="min-h-full bg-primary-foreground flex items-center justify-center">
@@ -24,8 +25,8 @@
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
 				<UserPlus class="h-8 w-8 text-primary-foreground" />
 			</div>
-			<Card.Title>Inscription</Card.Title>
-			<p class="text-sm text-muted-foreground">Créez votre compte Nah.pet gratuit</p>
+			<Card.Title>{m.register()}</Card.Title>
+			<p class="text-sm text-muted-foreground">{m.create_account()}</p>
 		</Card.Header>
 		<Card.Content>
 			<form
@@ -45,12 +46,12 @@
 			>
 				<div class="space-y-4">
 					<div class="space-y-2">
-						<Label for="email">Email</Label>
+						<Label for="email">{m.email()}</Label>
 						<Input
 							id="email"
 							name="email"
 							type="email"
-							placeholder="votre@email.com"
+							placeholder={m.votre_email_placeholder()}
 							bind:value={email}
 							required
 							autofocus
@@ -58,24 +59,24 @@
 					</div>
 
 					<div class="space-y-2">
-						<Label for="password">Mot de passe</Label>
+						<Label for="password">{m.password()}</Label>
 						<Input
 							id="password"
 							name="password"
 							type="password"
-							placeholder="Minimum 8 caractères"
+							placeholder={m.minimum_characters()}
 							bind:value={password}
 							required
 						/>
 					</div>
 
 					<div class="space-y-2">
-						<Label for="confirmPassword">Confirmer le mot de passe</Label>
+						<Label for="confirmPassword">{m.confirm_password()}</Label>
 						<Input
 							id="confirmPassword"
 							name="confirmPassword"
 							type="password"
-							placeholder="Répétez votre mot de passe"
+							placeholder={m.repeat_password()}
 							bind:value={confirmPassword}
 							required
 						/>
@@ -91,9 +92,9 @@
 						class="w-full"
 					>
 						{#if isLoading}
-							Création du compte...
+							{m.creating_account()}
 						{:else}
-							Créer mon compte
+							{m.create_my_account()}
 						{/if}
 					</Button>
 				</div>
@@ -101,14 +102,14 @@
 
 			<div class="mt-6 text-center text-sm">
 				<p class="text-muted-foreground">
-					Déjà un compte ?
-					<a href="/login" class="text-primary hover:underline"> Se connecter </a>
+					{m.already_have_account()}
+					<a href="/login" class="text-primary hover:underline">{m.sign_in_link()}</a>
 				</p>
 			</div>
 
 			<hr class="my-6 border-t border-gray-200 dark:border-gray-700" />
 			<div class="text-center text-sm text-gray-500 dark:text-gray-400">
-				<p>© {new Date().getFullYear()} Nah.pet - Links be like: “Nah, I'd redirect.”</p>
+				<p>{m.copyright_register({ year: new Date().getFullYear()})}</p>
 			</div>
 		</Card.Content>
 	</Card.Root>

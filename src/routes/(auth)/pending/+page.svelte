@@ -14,7 +14,7 @@
 		LogOut
 	} from 'lucide-svelte';
 	import { formatDate } from '$lib/utils.js';
-	import { page } from '$app/stores';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 
@@ -28,14 +28,14 @@
 	};
 
 	const getWaitingMessage = (days: number) => {
-		if (days === 0) return "Demande envoyée aujourd'hui";
-		if (days === 1) return 'En attente depuis 1 jour';
-		return `En attente depuis ${days} jours`;
+		if (days === 0) return m.request_sent_today();
+		if (days === 1) return m.waiting_1_day();
+		return m.waiting_days({ days });
 	};
 </script>
 
 <svelte:head>
-	<title>Compte en attente - Nah.pet</title>
+	<title>{m.pending_account_title()}</title>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center p-4">
@@ -48,7 +48,7 @@
 					<Clock class="w-10 h-10 text-yellow-600 dark:text-yellow-400" />
 				</div>
 				<Card.Title class="text-xl text-gray-900 dark:text-white">
-					Votre compte n'est pas encore activé
+					{m.account_not_activated()}
 				</Card.Title>
 			</Card.Header>
 
@@ -57,7 +57,7 @@
 					<div class="flex items-center justify-between p-4 rounded-lg">
 						<div class="flex items-center space-x-3">
 							<Mail class="w-5 h-5 text-accent" />
-							<span class="text-sm text-secondary-foreground">Email :</span>
+							<span class="text-sm text-secondary-foreground">{m.email_field()}</span>
 						</div>
 						<span class="font-medium text-gray-900 dark:text-white">
 							{data.user?.email}
@@ -67,7 +67,7 @@
 					<div class="flex items-center justify-between p-4 rounded-lg">
 						<div class="flex items-center space-x-3">
 							<Clock class="w-5 h-5 text-accent" />
-							<span class="text-sm text-secondary-foreground">Statut :</span>
+							<span class="text-sm text-secondary-foreground">{m.status_field()}</span>
 						</div>
 						<Badge
 							variant="outline"
@@ -80,7 +80,7 @@
 					<div class="flex items-center justify-between p-4 rounded-lg">
 						<div class="flex items-center space-x-3">
 							<Users class="w-5 h-5 text-accent" />
-							<span class="text-sm text-secondary-foreground">Inscrit le :</span>
+							<span class="text-sm text-secondary-foreground">{m.registered_on_field()}</span>
 						</div>
 						<span class="font-medium text-gray-900 dark:text-white">
 							{formatDate(data.user?.createdAt || new Date())}
@@ -95,13 +95,13 @@
 						<AlertCircle class="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
 						<div>
 							<h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-								Qu'est-ce que cela signifie ?
+								{m.what_does_this_mean()}
 							</h3>
 							<div class="text-sm text-blue-800 dark:text-blue-200 space-y-2">
-								<p>• Votre compte a été créé avec succès</p>
-								<p>• Un administrateur doit approuver votre demande d'accès</p>
-								<p>• Vous recevrez une notification dès l'activation</p>
-								<p>• En attendant, vous ne pouvez pas créer de liens</p>
+								<p>{m.account_created_successfully()}</p>
+								<p>{m.admin_must_approve()}</p>
+								<p>{m.notification_on_activation()}</p>
+								<p>{m.cannot_create_links()}</p>
 							</div>
 						</div>
 					</div>
@@ -110,24 +110,24 @@
 				<div class="border-border border-[1px] rounded-lg p-6">
 					<h3 class="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
 						<CheckCircle class="w-5 h-5 mr-2 text-green-500" />
-						Processus d'approbation
+						{m.approval_process()}
 					</h3>
 					<div class="space-y-3">
 						<div class="flex items-center space-x-3">
 							<div class="w-2 h-2 bg-green-500 rounded-full"></div>
 							<span class="text-sm text-gray-600 dark:text-gray-400">
-								✅ Compte créé et email vérifié
+								{m.account_created_verified()}
 							</span>
 						</div>
 						<div class="flex items-center space-x-3">
 							<div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
 							<span class="text-sm text-gray-600 dark:text-gray-400">
-								⏳ En attente de validation administrateur
+								{m.waiting_admin_validation()}
 							</span>
 						</div>
 						<div class="flex items-center space-x-3">
 							<div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-							<span class="text-sm text-gray-400"> 🎯 Accès complet au service </span>
+							<span class="text-sm text-gray-400"> {m.full_service_access()} </span>
 						</div>
 					</div>
 				</div>
@@ -136,22 +136,22 @@
 					<Button onclick={refreshPage} disabled={isRefreshing} variant="default" class="flex-1">
 						{#if isRefreshing}
 							<RefreshCw class="w-4 h-4 mr-2 animate-spin" />
-							Actualisation...
+							{m.refreshing()}
 						{:else}
 							<RefreshCw class="w-4 h-4 mr-2" />
-							Actualiser le statut
+							{m.refresh_status()}
 						{/if}
 					</Button>
 
 					<Button href="/" variant="outline" class="flex-1">
 						<Home class="w-4 h-4 mr-2" />
-						Retour à l'accueil
+						{m.back_to_home()}
 					</Button>
 
 					<form method="POST" action="/logout" class="flex-1">
 						<Button type="submit" variant="ghost" class="w-full">
 							<LogOut class="w-4 h-4 mr-2" />
-							Se déconnecter
+							{m.logout()}
 						</Button>
 					</form>
 				</div>
@@ -159,7 +159,9 @@
 		</Card.Root>
 
 		<div class="text-center text-sm text-gray-500 dark:text-gray-400">
-			<p>© {new Date().getFullYear()} Nah.pet — Pet-redirect-as-a-Service since forever.</p>
+			<p>{m.copyright_pending({
+				year: new Date().getFullYear()
+			})}</p>
 		</div>
 	</div>
 </div>

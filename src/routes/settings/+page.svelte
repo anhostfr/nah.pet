@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Settings, User, Key, Globe } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
+	import * as m from '$lib/paraglide/messages.js';
 	import AccountSection from '$lib/components/settings/AccountSection.svelte';
 	import ApiKeysSection from '$lib/components/settings/ApiKeysSection.svelte';
 	import DomainsSection from '$lib/components/settings/DomainsSection.svelte';
@@ -14,14 +15,14 @@
 	let showAddDomain = $state(false);
 
 	const tabs = [
-		{ id: 'account', label: 'Compte', icon: User },
-		{ id: 'api-keys', label: 'Clés API', icon: Key },
-		{ id: 'domains', label: 'Domaines', icon: Globe }
+		{ id: 'account', label: m.account_settings(), icon: User },
+		{ id: 'api-keys', label: m.api_keys(), icon: Key },
+		{ id: 'domains', label: m.domains(), icon: Globe }
 	];
 
 	async function copyToClipboard(text: string) {
 		await navigator.clipboard.writeText(text);
-		toast.success('Copié dans le presse-papier');
+		toast.success(m.copied_clipboard());
 	}
 
 	function formatDate(dateString: string) {
@@ -37,11 +38,11 @@
 	function getPermissionLabel(permission: string) {
 		switch (permission) {
 			case 'links:read':
-				return 'Lecture liens';
+				return m.read_links_permission();
 			case 'links:write':
-				return 'Écriture liens';
+				return m.write_links_permission();
 			case 'stats:read':
-				return 'Lecture stats';
+				return m.read_stats_permission();
 			default:
 				return permission;
 		}
@@ -64,7 +65,7 @@
 	<div class="w-full md:w-64 space-y-2">
 		<div class="flex items-center space-x-2 mb-6">
 			<Settings class="w-6 h-6" />
-			<h1 class="text-2xl font-bold">Paramètres</h1>
+			<h1 class="text-2xl font-bold">{m.settings_title()}</h1>
 		</div>
 
 		<nav class="space-y-1">
@@ -110,6 +111,6 @@
 
 {#if form?.success}
 	<script>
-		toast.success('Opération réussie');
+		toast.success(m.operation_successful());
 	</script>
 {/if}
