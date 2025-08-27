@@ -132,7 +132,7 @@
 								<Badge variant="destructive">{m.expired()}</Badge>
 							{:else if link.expiresAt}
 								<Badge variant="secondary">
-									{m.expires_on} {formatDate(new Date(link.expiresAt))}
+									{m.expires_on()} {formatDate(new Date(link.expiresAt))}
 								</Badge>
 							{:else}
 								<Badge variant="default">{m.active()}</Badge>
