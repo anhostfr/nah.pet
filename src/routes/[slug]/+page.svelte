@@ -22,8 +22,8 @@
 			<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
 				<Lock class="h-8 w-8" />
 			</div>
-			<Card.Title>Lien protégé</Card.Title>
-			<p class="text-sm text-muted-foreground">Ce lien est protégé par un mot de passe</p>
+			<Card.Title>{m.protected_link()}</Card.Title>
+			<p class="text-sm text-muted-foreground">{m.protected_link_desc()}</p>
 			{#if data?.link?.title}
 				<p class="text-sm font-medium">{data.link.title}</p>
 			{/if}
@@ -66,7 +66,7 @@
 						{#if isLoading}
 							{m.verification_progress()}
 						{:else}
-							Accéder au lien
+							{m.access_link()}
 						{/if}
 					</Button>
 				</div>

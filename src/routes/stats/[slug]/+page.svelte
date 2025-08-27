@@ -19,14 +19,17 @@
 	<div class="flex flex-col sm:flex-row sm:items-center gap-4">
 		<Button href="/" variant="ghost" size="sm">
 			<ArrowLeft class="h-4 w-4 mr-2" />
-			Retour
+			{m.back()}
 		</Button>
 		<div>
-			<h1 class="text-2xl sm:text-3xl font-bold">Statistiques détaillées</h1>
+			<h1 class="text-2xl sm:text-3xl font-bold">{m.detailed_analytics()}</h1>
 			<p class="text-muted-foreground break-all">
-				Analyse des performances pour {data.link.customDomain
-					? `${data.link.customDomain.domain}/`
-					: '/'}{data.link.slug}
+				{m.performance_analysis({
+					domain: data.link.customDomain
+						? `${data.link.customDomain.domain}/`
+						: '/',
+					slug: data.link.slug
+				})}
 			</p>
 		</div>
 	</div>
@@ -35,13 +38,13 @@
 		<Card.Header>
 			<Card.Title class="flex items-center gap-2">
 				<BarChart3 class="h-5 w-5" />
-				Informations du lien
+				{m.link_info()}
 			</Card.Title>
 		</Card.Header>
 		<Card.Content class="space-y-4">
 			<div class="grid gap-4 grid-cols-1 lg:grid-cols-2">
 				<div>
-					<p class="text-sm font-medium text-muted-foreground">Lien raccourci</p>
+					<p class="text-sm font-medium text-muted-foreground">{m.shorten_link()}</p>
 					<div class="flex items-center gap-2 flex-wrap">
 						<code class="text-sm bg-muted px-2 py-1 rounded break-all">
 							{data.link.customDomain
@@ -61,7 +64,7 @@
 					</div>
 				</div>
 				<div>
-					<p class="text-sm font-medium text-muted-foreground">URL originale</p>
+					<p class="text-sm font-medium text-muted-foreground">{m.original_url()}</p>
 					<a
 						href={data.link.originalUrl}
 						target="_blank"
@@ -75,19 +78,19 @@
 
 			{#if data.link.title}
 				<div>
-					<p class="text-sm font-medium text-muted-foreground">Titre</p>
+					<p class="text-sm font-medium text-muted-foreground">{m.title()}</p>
 					<p class="text-sm">{data.link.title}</p>
 				</div>
 			{/if}
 
 			<div class="flex gap-4 text-sm">
 				<div>
-					<span class="text-muted-foreground">Créé le :</span>
+					<span class="text-muted-foreground">{m.created_on()}</span>
 					{formatDate(new Date(data.link.createdAt))}
 				</div>
 				{#if data.link.expiresAt}
 					<div>
-						<span class="text-muted-foreground">Expire le :</span>
+						<span class="text-muted-foreground">{m.expires_on()}</span>
 						{formatDate(new Date(data.link.expiresAt))}
 					</div>
 				{/if}
@@ -95,18 +98,20 @@
 
 			<div class="flex gap-2">
 				{#if data.link.password}
-					<Badge variant="secondary">Protégé par mot de passe</Badge>
+					<Badge variant="secondary">{m.password_protected()}</Badge>
 				{/if}
 				{#if data.link.expiresAt}
 					{#if new Date() > new Date(data.link.expiresAt)}
-						<Badge variant="destructive">Expiré</Badge>
+						<Badge variant="destructive">{m.expired()}</Badge>
 					{:else}
 						<Badge variant="default"
-							>Actif jusqu'au {formatDate(new Date(data.link.expiresAt))}</Badge
+							>{m.active_until({
+								date: formatDate(new Date(data.link.expiresAt))
+							})}</Badge
 						>
 					{/if}
 				{:else}
-					<Badge variant="default">Permanent</Badge>
+					<Badge variant="default">{m.permanent()}</Badge>
 				{/if}
 			</div>
 		</Card.Content>
@@ -115,57 +120,57 @@
 	<div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<Card.Title class="text-sm font-medium">Total des clics</Card.Title>
+				<Card.Title class="text-sm font-medium">{m.total_clicks()}</Card.Title>
 				<Eye class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.totalClicks)}</div>
 				<p class="text-xs text-muted-foreground">
-					{data.stats.clicksToday > 0 ? `+${data.stats.clicksToday}` : '0'} aujourd'hui
+					{data.stats.clicksToday > 0 ? `+${data.stats.clicksToday}` : '0'} {m.today().toLowerCase()}
 				</p>
 			</Card.Content>
 		</Card.Root>
 
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<Card.Title class="text-sm font-medium">Cette semaine</Card.Title>
+				<Card.Title class="text-sm font-medium">{m.this_week()}</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisWeek)}</div>
-				<p class="text-xs text-muted-foreground">7 derniers jours</p>
+				<p class="text-xs text-muted-foreground">{m.last_7_days()}</p>
 			</Card.Content>
 		</Card.Root>
 
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<Card.Title class="text-sm font-medium">Ce mois</Card.Title>
+				<Card.Title class="text-sm font-medium">{m.this_month_stat()}</Card.Title>
 				<Calendar class="h-4 w-4 text-muted-foreground" />
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{formatNumber(data.stats.clicksThisMonth)}</div>
-				<p class="text-xs text-muted-foreground">30 derniers jours</p>
+				<p class="text-xs text-muted-foreground">{m.last_30_days()}</p>
 			</Card.Content>
 		</Card.Root>
 	</div>
 
 	<Card.Root>
 		<Card.Header>
-			<Card.Title>Historique des clics récents</Card.Title>
+			<Card.Title>{m.recent_clicks_history()}</Card.Title>
 		</Card.Header>
 		<Card.Content>
 			{#if data.recentClicks.length === 0}
 				<div class="text-center py-8 text-muted-foreground">
-					<p>Aucun clic enregistré pour ce lien.</p>
+					<p>{m.no_clicks_recorded()}</p>
 				</div>
 			{:else}
 				<div class="rounded-md border overflow-x-auto">
 					<Table.Root>
 						<Table.Header>
 							<Table.Row>
-								<Table.Head>Date et heure</Table.Head>
+								<Table.Head>{m.date_time_column()}</Table.Head>
 								<Table.Head class="hidden sm:table-cell">IP</Table.Head>
-								<Table.Head class="hidden md:table-cell">Navigateur</Table.Head>
+								<Table.Head class="hidden md:table-cell">{m.browser_column()}</Table.Head>
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
@@ -177,20 +182,20 @@
 										</div>
 										<div class="sm:hidden mt-1 space-y-1">
 											<div class="text-xs text-muted-foreground font-mono">
-												IP: {click.ip || 'Non disponible'}
+												IP: {click.ip || m.not_available()}
 											</div>
 											<div class="text-xs text-muted-foreground truncate max-w-xs md:hidden">
-												{click.userAgent || 'Non disponible'}
+												{click.userAgent || m.not_available()}
 											</div>
 										</div>
 									</Table.Cell>
 									<Table.Cell class="font-mono text-sm hidden sm:table-cell">
-										{click.ip || 'Non disponible'}
+										{click.ip || m.not_available()}
 									</Table.Cell>
 									<Table.Cell
 										class="text-sm text-muted-foreground max-w-xs truncate hidden md:table-cell"
 									>
-										{click.userAgent || 'Non disponible'}
+										{click.userAgent || m.not_available()}
 									</Table.Cell>
 								</Table.Row>
 							{/each}
@@ -200,9 +205,10 @@
 
 				{#if data.stats.totalClicks > data.recentClicks.length}
 					<p class="text-sm text-muted-foreground mt-4 text-center">
-						Affichage des {data.recentClicks.length} clics les plus récents sur {formatNumber(
-							data.stats.totalClicks
-						)} au total
+						{m.showing_recent_clicks({
+							shown: data.recentClicks.length,
+							total: formatNumber(data.stats.totalClicks)
+						})}
 					</p>
 				{/if}
 			{/if}

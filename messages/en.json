@@ -314,10 +314,13 @@
   "use_nahpet_directly": "• Use {domain} directly",
   "go_to_nahpet": "Go to Nah.pet",
   "manage_domains": "Manage domains",
+  "access_link": "Access link",
+  "protected_link_desc": "This link is protected by a password",
   "custom_domains_title": "Custom domains - Nah Pet",
   "active_links_badge": "Active",
   "expired_links_badge": "expired",
   "link_copy_error": "Erreur de copie du lien",
   "primary_domain": "Primary domain",
-  "delete_domain_confirm_request": "Are you sure you want to delete it ?"
+  "delete_domain_confirm_request": "Are you sure you want to delete it ?",
+  "protected_link": "This link is protected"
 }

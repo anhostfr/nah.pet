@@ -308,6 +308,8 @@
   "domain_not_found_title": "Domaine non trouvé - Nah.pet",
   "domain_not_recognized": "Domaine non reconnu",
   "domain_not_configured": "Le domaine <strong class= \"text-destructive \">{domain}</strong> n'est pas configuré sur notre service.",
+  "protected_link_desc": "Ce lien est protégé par un mot de passe",
+  "access_link": "Accéder au lien",
   "what_to_do": "Que faire ?",
   "check_domain_config": "• Vérifiez que le domaine est correctement configuré",
   "contact_domain_admin": "• Contactez l'administrateur du domaine",
@@ -319,5 +321,6 @@
   "expired_links_badge": "expirés",
   "link_copy_error": "Erreur de copie du lien",
   "primary_domain": "Domaine principal",
-  "delete_domain_confirm_request": "Êtes-vous sûr de vouloir supprimer ce domaine ?"
+  "delete_domain_confirm_request": "Êtes-vous sûr de vouloir supprimer ce domaine ?",
+  "protected_link": "Lien protégé"
 }

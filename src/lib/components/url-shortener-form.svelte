@@ -246,7 +246,7 @@
 							<span>{m.link_title()}</span>
 							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
-						<Input id="title" name="title" placeholder="Mon lien important" bind:value={title} />
+						<Input id="title" name="title" placeholder={m.link_title_placeholder()} bind:value={title} />
 						<p class="text-xs text-gray-500">{m.help_identify_link()}</p>
 					</div>
 				</div>
