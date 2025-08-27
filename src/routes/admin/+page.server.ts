@@ -1,6 +1,7 @@
 import { error, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db.js';
+import { ADMIN_EMAIL } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -20,8 +21,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 			_count: {
 				select: {
 					links: true,
-					sessions: true
+					sessions: true,
 				}
+			}
+		},
+		where: {
+			email: {
+				not: ADMIN_EMAIL
 			}
 		},
 		orderBy: {
@@ -37,6 +43,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 						userId: user.id
 					}
 				}
+
 			});
 
 			return {

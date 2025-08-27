@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
-	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { Badge, type BadgeVariant } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import {
@@ -9,19 +9,18 @@
 		UserX,
 		Shield,
 		Trash2,
-		BarChart3,
 		AlertTriangle,
 		CheckCircle,
 		XCircle,
-		Activity,
 		Link as LinkIcon,
 		Eye
 	} from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
 	import { formatDate, formatNumber } from '$lib/utils.js';
+	import type { SvelteComponent } from 'svelte';
 
-	let { data, form } = $props();
+	let { data } = $props();
 
 	let isLoading = $state('');
 
@@ -38,7 +37,7 @@
 		return formatDate(date);
 	};
 
-	const getUserStatus = (user: any) => {
+	const getUserStatus = (user: any): { label: string; variant: BadgeVariant; icon: typeof SvelteComponent<any> } => {
 		if (!user.isActive) {
 			return { label: 'Désactivé', variant: 'destructive', icon: XCircle };
 		}
@@ -232,7 +231,7 @@
 												isLoading = user.id;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message || 'Statut mis à jour');
+														toast.success(result.data?.message as string || 'Statut mis à jour');
 													} else {
 														toast.error('Erreur lors de la mise à jour');
 													}
@@ -270,7 +269,7 @@
 												isLoading = `admin-${user.id}`;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message || 'Droits admin mis à jour');
+														toast.success(result.data?.message as string || 'Droits admin mis à jour');
 													} else {
 														toast.error('Erreur lors de la mise à jour');
 													}
