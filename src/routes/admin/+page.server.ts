@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			_count: {
 				select: {
 					links: true,
-					sessions: true,
+					sessions: true
 				}
 			}
 		},
@@ -44,7 +44,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 						userId: user.id
 					}
 				}
-
 			});
 
 			return {
@@ -111,7 +110,9 @@ export const actions: Actions = {
 				data: { isActive: newStatus }
 			});
 
-			return actionSuccess(newStatus ? 'admin.user_activated' : 'admin.user_deactivated', { userId });
+			return actionSuccess(newStatus ? 'admin.user_activated' : 'admin.user_deactivated', {
+				userId
+			});
 		} catch (err) {
 			console.error('Erreur lors de la mise à jour:', err);
 			return actionFail(500, 'common.server_error');
@@ -158,7 +159,10 @@ export const actions: Actions = {
 				data: { isAdmin: newStatus }
 			});
 
-			return actionSuccess(newStatus ? 'admin.admin_rights_granted' : 'admin.admin_rights_revoked', { userId });
+			return actionSuccess(
+				newStatus ? 'admin.admin_rights_granted' : 'admin.admin_rights_revoked',
+				{ userId }
+			);
 		} catch (err) {
 			console.error('Erreur lors de la mise à jour:', err);
 			return actionFail(500, 'common.server_error');

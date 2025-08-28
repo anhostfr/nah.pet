@@ -4,7 +4,7 @@
 	import { Languages } from 'lucide-svelte';
 	import { browser } from '$app/environment';
 
-	type Locale = typeof locales[number];
+	type Locale = (typeof locales)[number];
 	const currentLang = getLocale();
 
 	const languages = [
@@ -21,8 +21,8 @@
 
 <Select.Root type="single" value={currentLang} onValueChange={handleLanguageChange}>
 	<Select.Trigger class="h-8 flex items-center gap-2">
-			<Languages class="w-4 h-4" />
-			{languages.find((lang) => lang.value === currentLang)?.flag}
+		<Languages class="w-4 h-4" />
+		{languages.find((lang) => lang.value === currentLang)?.flag}
 	</Select.Trigger>
 	<Select.Content>
 		<Select.Group>

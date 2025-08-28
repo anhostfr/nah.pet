@@ -9,5 +9,3 @@ export type NormalizedActionData = {
 	qrCode?: string;
 	[key: string]: unknown;
 };
-
-

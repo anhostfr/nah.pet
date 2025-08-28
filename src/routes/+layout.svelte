@@ -34,15 +34,11 @@
 			active: page.url.pathname === '/settings'
 		}
 	];
-
 </script>
 
 <svelte:head>
 	<title>{m.nahpet_tagline()}</title>
-	<meta
-		name="description"
-		content={m.nahpet_description()}
-	/>
+	<meta name="description" content={m.nahpet_description()} />
 </svelte:head>
 
 <ModeWatcher defaultMode={'dark'} />
@@ -58,7 +54,9 @@
 							class="w-8 h-8 sm:w-10 sm:h-10 object-contain"
 						/>
 						<div>
-							<h1 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{m.nahpet()}</h1>
+							<h1 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+								{m.nahpet()}
+							</h1>
 							<p class="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
 								{m.url_shortener_tagline()}
 							</p>
@@ -72,7 +70,7 @@
 
 				<div class="flex items-center space-x-2 sm:space-x-3">
 					<LanguageSelector />
-					
+
 					{#if data.user}
 						<div class="hidden lg:flex items-center space-x-1">
 							{#each navItems as item}

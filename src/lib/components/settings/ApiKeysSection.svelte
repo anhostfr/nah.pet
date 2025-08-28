@@ -8,7 +8,7 @@
 	import { Key, Shield, Plus, Trash2, Copy, Clock } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { slide } from 'svelte/transition';
-	import * as m from '$lib/paraglide/messages'
+	import * as m from '$lib/paraglide/messages';
 	let {
 		data,
 		showCreateApiKey = $bindable(),
@@ -50,7 +50,9 @@
 				>
 					<div class="flex items-center space-x-2 mb-2">
 						<Shield class="w-5 h-5 text-green-600 dark:text-green-400" />
-						<h3 class="font-semibold text-green-800 dark:text-green-200">{m.new_api_key_created()}</h3>
+						<h3 class="font-semibold text-green-800 dark:text-green-200">
+							{m.new_api_key_created()}
+						</h3>
 					</div>
 					<p class="text-sm text-green-700 dark:text-green-300 mb-3">
 						{m.copy_key_warning()}

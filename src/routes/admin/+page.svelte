@@ -38,7 +38,9 @@
 		return formatDate(date);
 	};
 
-	const getUserStatus = (user: any): { label: string; variant: BadgeVariant; icon: typeof SvelteComponent<any> } => {
+	const getUserStatus = (
+		user: any
+	): { label: string; variant: BadgeVariant; icon: typeof SvelteComponent<any> } => {
 		if (!user.isActive) {
 			return { label: m.disabled_status(), variant: 'destructive', icon: XCircle };
 		}
@@ -306,11 +308,7 @@
 											method="POST"
 											action="?/deleteUser"
 											use:enhance={() => {
-												if (
-													!confirm(
-														m.delete_user_confirm({ email: user.email })
-													)
-												) {
+												if (!confirm(m.delete_user_confirm({ email: user.email }))) {
 													return () => {};
 												}
 												isLoading = `delete-${user.id}`;

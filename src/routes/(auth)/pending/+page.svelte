@@ -159,9 +159,11 @@
 		</Card.Root>
 
 		<div class="text-center text-sm text-gray-500 dark:text-gray-400">
-			<p>{m.copyright_pending({
-				year: new Date().getFullYear()
-			})}</p>
+			<p>
+				{m.copyright_pending({
+					year: new Date().getFullYear()
+				})}
+			</p>
 		</div>
 	</div>
 </div>

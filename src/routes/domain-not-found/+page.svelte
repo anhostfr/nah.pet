@@ -36,12 +36,16 @@
 		</div>
 
 		<div class="flex flex-col sm:flex-row gap-3 justify-center">
-			<Button href={"https://" + PUBLIC_MAIN_DOMAIN} class="flex items-center gap-2">
+			<Button href={'https://' + PUBLIC_MAIN_DOMAIN} class="flex items-center gap-2">
 				<Home class="w-4 h-4" />
 				{m.go_to_nahpet()}
 			</Button>
 			{#if data?.user}
-				<Button variant="outline" href={"https://" + PUBLIC_MAIN_DOMAIN + "/domains"} class="flex items-center gap-2">
+				<Button
+					variant="outline"
+					href={'https://' + PUBLIC_MAIN_DOMAIN + '/domains'}
+					class="flex items-center gap-2"
+				>
 					<ExternalLink class="w-4 h-4" />
 					{m.manage_domains()}
 				</Button>

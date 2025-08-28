@@ -8,7 +8,7 @@
 	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 	import { toast } from 'svelte-sonner';
 	import { enhance } from '$app/forms';
-	import * as m from "$lib/paraglide/messages"
+	import * as m from '$lib/paraglide/messages';
 
 	type Link = {
 		id: string;
@@ -133,7 +133,8 @@
 								<Badge variant="destructive">{m.expired()}</Badge>
 							{:else if link.expiresAt}
 								<Badge variant="secondary">
-									{m.expires_on()} {formatDate(link.expiresAt)}
+									{m.expires_on()}
+									{formatDate(link.expiresAt)}
 								</Badge>
 							{:else}
 								<Badge variant="default">{m.active()}</Badge>
@@ -167,11 +168,7 @@
 									action="?/delete"
 									class="inline"
 									use:enhance={() => {
-										if (
-											!confirm(
-												m.delete_link_confirm()
-											)
-										) {
+										if (!confirm(m.delete_link_confirm())) {
 											return () => {};
 										}
 										deletingLinkId = link.id;

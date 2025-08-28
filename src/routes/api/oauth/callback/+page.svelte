@@ -5,7 +5,8 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import { tKey } from '$lib/i18n';
 
-	let { data }: { data: { success?: boolean; redirectTo?: string; messageKey?: string } } = $props();
+	let { data }: { data: { success?: boolean; redirectTo?: string; messageKey?: string } } =
+		$props();
 	let loading = $state(true);
 	let error = $state('');
 

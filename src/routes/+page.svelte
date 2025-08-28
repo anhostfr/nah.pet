@@ -4,22 +4,14 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import LinksTable from '$lib/components/links-table.svelte';
 	import UrlShortenerForm from '$lib/components/url-shortener-form.svelte';
-	import {
-		Link,
-		ChartBar,
-		Eye,
-		Calendar,
-		TrendingUp,
-		Activity,
-		Users,
-		Globe
-	} from 'lucide-svelte';
+	import { Link, ChartBar, Eye, Calendar, TrendingUp, Activity, Users, Globe } from 'lucide-svelte';
 	import { formatNumber } from '$lib/utils.js';
 	import * as m from '$lib/paraglide/messages.js';
 	import type { ActionData, PageServerData } from './$types';
 	import type { NormalizedActionData } from '$lib/types';
 
-	let { data, form }: { data: PageServerData; form: (ActionData & NormalizedActionData) | null } = $props();
+	let { data, form }: { data: PageServerData; form: (ActionData & NormalizedActionData) | null } =
+		$props();
 
 	const growthRate =
 		data.stats.linksThisMonth > 0
@@ -106,7 +98,8 @@
 						</p>
 						<div class="flex flex-wrap items-center gap-2">
 							<Badge variant="secondary" class="text-xs">
-								+{data.stats.clicksThisMonth} {m.this_month_label()}
+								+{data.stats.clicksThisMonth}
+								{m.this_month_label()}
 							</Badge>
 							{#if Number(clickGrowthRate) > 0}
 								<div class="flex items-center gap-1">
@@ -172,7 +165,8 @@
 									variant="outline"
 									class="text-xs border-red-200 text-red-700 dark:border-red-800 dark:text-red-300"
 								>
-									{data.stats.expiredLinks} {m.expired_links_badge()}
+									{data.stats.expiredLinks}
+									{m.expired_links_badge()}
 								</Badge>
 							{/if}
 						</div>

@@ -20,7 +20,10 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		!customDomain;
 
 	if (isUnknownDomain) {
-		throw redirect(302, `https://${PUBLIC_MAIN_DOMAIN}/domain-not-found?domain=${encodeURIComponent(host)}`);
+		throw redirect(
+			302,
+			`https://${PUBLIC_MAIN_DOMAIN}/domain-not-found?domain=${encodeURIComponent(host)}`
+		);
 	}
 
 	event.locals.customDomain = customDomain;
@@ -83,7 +86,7 @@ const handleParaglide: Handle = ({ event, resolve }) =>
 		return resolve(event, {
 			transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
 		});
-});
+	});
 
 export const handle = sequence(handleParaglide, authHandle);
 

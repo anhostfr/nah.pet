@@ -112,7 +112,7 @@
 
 			<hr class="my-6 border-t border-gray-200 dark:border-gray-700" />
 			<div class="text-center text-sm text-gray-500 dark:text-gray-400">
-				<p>{m.copyright_register({ year: new Date().getFullYear()})}</p>
+				<p>{m.copyright_register({ year: new Date().getFullYear() })}</p>
 			</div>
 		</Card.Content>
 	</Card.Root>

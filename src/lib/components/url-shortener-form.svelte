@@ -25,7 +25,8 @@
 	import { tKey } from '$lib/i18n';
 	import type { NormalizedActionData } from '$lib/types';
 
-	let { form, customDomains }: { form: NormalizedActionData | null; customDomains: any[] } = $props();
+	let { form, customDomains }: { form: NormalizedActionData | null; customDomains: any[] } =
+		$props();
 
 	let originalUrl = $state('');
 	let customSlug = $state('');
@@ -93,7 +94,9 @@
 								size="sm"
 								variant="ghost"
 								onclick={() =>
-									copyToClipboard(form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`)}
+									copyToClipboard(
+										form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`
+									)}
 								class="h-8 w-8 p-0"
 							>
 								{#if copied}
@@ -182,7 +185,7 @@
 						</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="" label={PUBLIC_MAIN_DOMAIN + ' (' +  m.primary_domain() + ')'}>
+						<Select.Item value="" label={PUBLIC_MAIN_DOMAIN + ' (' + m.primary_domain() + ')'}>
 							{PUBLIC_MAIN_DOMAIN} ({m.primary_domain()})
 							<Badge variant="outline" class="ml-2 text-xs">{m.default_badge()}</Badge>
 						</Select.Item>
@@ -237,8 +240,8 @@
 						<p class="text-xs text-gray-500">
 							{m.final_url({
 								url: selectedDomainValue
-								? `https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}`
-								: `${window.location.origin}/${customSlug || 'votre-slug'}`
+									? `https://${customDomains.find((d: any) => d.id === selectedDomainValue)?.domain || 'domaine.com'}/${customSlug || 'votre-slug'}`
+									: `${window.location.origin}/${customSlug || 'votre-slug'}`
 							})}
 						</p>
 					</div>
@@ -248,7 +251,12 @@
 							<span>{m.link_title()}</span>
 							<Badge variant="secondary" class="text-xs">{m.optional()}</Badge>
 						</Label>
-						<Input id="title" name="title" placeholder={m.link_title_placeholder()} bind:value={title} />
+						<Input
+							id="title"
+							name="title"
+							placeholder={m.link_title_placeholder()}
+							bind:value={title}
+						/>
 						<p class="text-xs text-gray-500">{m.help_identify_link()}</p>
 					</div>
 				</div>

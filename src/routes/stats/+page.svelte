@@ -156,7 +156,9 @@
 			<Card.Content class="p-6">
 				<div class="flex items-center justify-between">
 					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.total_clicks_all()}</p>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+							{m.total_clicks_all()}
+						</p>
 						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
 							{formatNumber(data.stats.totalClicks)}
 						</p>

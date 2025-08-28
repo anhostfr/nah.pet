@@ -80,17 +80,13 @@
 					m.txt_type(),
 					m.txt_name({ domain }),
 					m.txt_value({ token }),
-					m.wait_dns_propagation(),
+					m.wait_dns_propagation()
 				]
 			};
 		} else {
 			return {
 				title: m.file_verification(),
-				steps: [
-					m.create_wellknown_file(),
-					m.file_content({ token }),
-					m.make_accessible({ domain }),
-				]
+				steps: [m.create_wellknown_file(), m.file_content({ token }), m.make_accessible({ domain })]
 			};
 		}
 	}

@@ -20,9 +20,7 @@
 						<Globe class="w-5 h-5" />
 						<span>{m.custom_domains()}</span>
 					</Card.Title>
-					<Card.Description
-						>{m.custom_domains_desc()}</Card.Description
-					>
+					<Card.Description>{m.custom_domains_desc()}</Card.Description>
 				</div>
 				<Button onclick={() => (showAddDomain = true)}>
 					<Plus class="w-4 h-4 mr-2" />
@@ -109,7 +107,10 @@
 							</div>
 
 							<div class="text-sm text-muted-foreground">
-								<p>{m.created_on()} {formatDate(domain.createdAt)} • {domain._count.links} lien(s)</p>
+								<p>
+									{m.created_on()}
+									{formatDate(domain.createdAt)} • {domain._count.links} lien(s)
+								</p>
 							</div>
 
 							{#if !domain.verified}

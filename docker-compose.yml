@@ -1,18 +1,18 @@
-version: "3.8"
+version: '3.8'
 services:
   nahpet-app:
     build: .
     restart: always
     environment:
-      NODE_ENV: "production"
-      ORIGIN: "https://${NAHPET_HOST}"
-      HOST: "0.0.0.0"
-      PORT: "3000"
-      PROTOCOL_HEADER: "x-forwarded-proto"
-      HOST_HEADER: "x-forwarded-host"
-      MAIN_URL: "https://${NAHPET_HOST}"
-      PUBLIC_URL: "https://${NAHPET_HOST}"
-      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public"
+      NODE_ENV: 'production'
+      ORIGIN: 'https://${NAHPET_HOST}'
+      HOST: '0.0.0.0'
+      PORT: '3000'
+      PROTOCOL_HEADER: 'x-forwarded-proto'
+      HOST_HEADER: 'x-forwarded-host'
+      MAIN_URL: 'https://${NAHPET_HOST}'
+      PUBLIC_URL: 'https://${NAHPET_HOST}'
+      DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public'
     volumes:
       - nahpet-uploads:/uploads/
     depends_on:
@@ -20,10 +20,10 @@ services:
         condition: service_healthy
     command: sh -c "bunx prisma migrate deploy && HOST=0.0.0.0 PORT=3000 bun run build/index.js"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nahpet.rule=HostRegexp(`.*`)"
-      - "traefik.http.routers.nahpet.priority=1"
-      - "traefik.http.services.nahpet.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.nahpet.rule=HostRegexp(`.*`)'
+      - 'traefik.http.routers.nahpet.priority=1'
+      - 'traefik.http.services.nahpet.loadbalancer.server.port=3000'
     networks:
       - dokploy-network
   nahpet-postgres:
