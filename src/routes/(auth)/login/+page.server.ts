@@ -6,6 +6,7 @@ import { verify } from '@node-rs/argon2';
 import { isRateLimited } from '$lib/server/rateLimit';
 import { z } from 'zod';
 import { sleep } from '$lib/utils';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
@@ -29,7 +30,7 @@ export const actions: Actions = {
 		const parseResult = schema.safeParse({ email, password });
 		if (!parseResult.success) {
 			await sleep(2000);
-			return fail(400, { error: parseResult.error.errors[0]?.message || 'Données invalides' });
+			return actionFail(400, 'auth.invalid_data');
 		}
 
 		const { email: validEmail, password: validPasswordInput } = parseResult.data;
@@ -39,7 +40,7 @@ export const actions: Actions = {
 		const rateLimitKey = `login:${ip}:${validEmail}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);
-			return fail(429, { error: 'Trop de tentatives, réessayez plus tard.' });
+			return actionFail(429, 'common.too_many_attempts');
 		}
 
 		try {
@@ -49,14 +50,14 @@ export const actions: Actions = {
 
 			if (!user || !user.password) {
 				await sleep(2000);
-				return fail(400, { error: 'Email ou mot de passe incorrect' });
+				return actionFail(400, 'auth.invalid_credentials');
 			}
 
 			const validPassword = await verify(user.password, validPasswordInput);
 
 			if (!validPassword) {
 				await sleep(2000);
-				return fail(400, { error: 'Email ou mot de passe incorrect' });
+				return actionFail(400, 'auth.invalid_credentials');
 			}
 
 			const session = await lucia.createSession(user.id, {});
@@ -67,7 +68,7 @@ export const actions: Actions = {
 				...sessionCookie.attributes
 			});
 
-			return { success: true, redirectTo: '/' };
+			return actionSuccess('auth.login_success', { redirectTo: '/' });
 		} catch (error) {
 			if (error instanceof Response) {
 				throw error;
@@ -75,7 +76,7 @@ export const actions: Actions = {
 
 			console.error('Erreur lors de la connexion:', error);
 			await sleep(2000);
-			return fail(500, { error: 'Erreur serveur' });
+			return actionFail(500, 'common.server_error');
 		}
 	}
 };

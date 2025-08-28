@@ -1,16 +1,17 @@
 import type { PageServerLoad } from './$types';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { getServerAuthClient } from '$lib/server/auth/oauth-instance.js';
 import { db } from '$lib/server/db.js';
 import { lucia } from '$lib/server/auth.js';
 import { hash } from '@node-rs/argon2';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
 
 	if (!code || !state) {
-		throw error(400, 'Code ou state manquant');
+		return actionFail(400, 'auth.oauth_missing_code_state');
 	}
 
 	try {
@@ -19,11 +20,11 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		const result = await authClient.exchangeCodeForSession(code, state);
 
 		if (result.error) {
-			throw error(400, result.error.message);
+			return actionFail(400, 'auth.oauth_exchange_failed');
 		}
 
 		if (!result.data) {
-			throw error(400, 'Impossible de récupérer les données utilisateur');
+			return actionFail(400, 'auth.oauth_user_fetch_failed');
 		}
 
 		const { user: oauthUser } = result.data;
@@ -61,15 +62,12 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 			...sessionCookie.attributes
 		});
 
-		return {
-			success: true,
-			redirectTo: user.isActive ? '/' : '/pending'
-		};
+		return actionSuccess('auth.oauth_success', { redirectTo: user.isActive ? '/' : '/pending' });
 	} catch (err) {
 		if (err instanceof Response && err.status >= 300 && err.status < 400) {
 			throw err;
 		}
-		console.error('Erreur callback OAuth:', err);
-		throw error(500, 'Erreur lors de la connexion OAuth');
+		console.error('Error callback OAuth:', err);
+		return actionFail(500, 'common.server_error');
 	}
 };

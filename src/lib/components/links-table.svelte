@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { Copy, ExternalLink, BarChart3, Trash2, Lock, Calendar } from 'lucide-svelte';
+	import { Copy, ExternalLink, ChartBar, Trash2, Lock, Calendar } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { page } from '$app/state';
 	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
@@ -15,8 +15,8 @@
 		slug: string;
 		originalUrl: string;
 		title?: string | null;
-		password?: string;
-		expiresAt?: Date;
+		password?: string | null;
+		expiresAt?: Date | null;
 		createdAt: Date;
 		_count: {
 			clicks: number;
@@ -42,7 +42,7 @@
 		}
 	}
 
-	function isExpired(expiresAt?: Date): boolean {
+	function isExpired(expiresAt?: Date | null): boolean {
 		if (!expiresAt) return false;
 		return new Date() > new Date(expiresAt);
 	}
@@ -95,11 +95,11 @@
 										{link.originalUrl}
 									</a>
 									<div class="flex items-center gap-2 text-xs text-muted-foreground">
-										<span>{formatDate(new Date(link.createdAt))}</span>
+										<span>{formatDate(link.createdAt)}</span>
 										{#if isExpired(link.expiresAt)}
 											<span class="text-red-600">• {m.expired()}</span>
 										{:else if link.expiresAt}
-											<span>• {m.expires_on()} {formatDate(new Date(link.expiresAt))}</span>
+											<span>• {m.expires_on()} {formatDate(link.expiresAt)}</span>
 										{:else}
 											<span class="text-green-600">• {m.active()}</span>
 										{/if}
@@ -121,7 +121,7 @@
 							<div class="flex items-center gap-2">
 								<span class="font-medium">{formatNumber(link._count.clicks)}</span>
 								<Button variant="ghost" size="sm" href="/stats/{link.slug}">
-									<BarChart3 class="h-3 w-3" />
+									<ChartBar class="h-3 w-3" />
 								</Button>
 							</div>
 						</Table.Cell>
@@ -133,7 +133,7 @@
 								<Badge variant="destructive">{m.expired()}</Badge>
 							{:else if link.expiresAt}
 								<Badge variant="secondary">
-									{m.expires_on()} {formatDate(new Date(link.expiresAt))}
+									{m.expires_on()} {formatDate(link.expiresAt)}
 								</Badge>
 							{:else}
 								<Badge variant="default">{m.active()}</Badge>
@@ -160,7 +160,7 @@
 									href="/stats/{link.slug}"
 									class="hidden sm:inline-flex"
 								>
-									<BarChart3 class="h-3 w-3" />
+									<ChartBar class="h-3 w-3" />
 								</Button>
 								<form
 									method="POST"

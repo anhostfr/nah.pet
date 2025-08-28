@@ -11,6 +11,8 @@
 	import { toast } from 'svelte-sonner';
 	import { isMobile } from '$lib/utils';
 	import * as m from '$lib/paraglide/messages';
+	import { tKey } from '$lib/i18n';
+	import type { NormalizedActionData } from '$lib/types';
 
 	const SYSTEM_RESERVED_SLUGS = [
 		'admin',
@@ -44,7 +46,7 @@
 		'account'
 	];
 
-	let { data, form }: { data: PageData; form: any } = $props();
+	let { data, form }: { data: PageData; form: NormalizedActionData } = $props();
 
 	let isAdding = $state(false);
 	let isVerifying = $state(false);
@@ -53,11 +55,11 @@
 
 	$effect(() => {
 		if (form?.success) {
-		toast.success(form.message);
-		invalidateAll();
-	} else if (form?.error) {
-		toast.error(form.error);
-	}
+			toast.success(tKey(form.messageKey, form));
+			invalidateAll();
+		} else if (form && form.success === false) {
+			toast.error(tKey(form.messageKey, form));
+		}
 	});
 
 	function getStatusBadge(verified: boolean) {
@@ -115,7 +117,7 @@
 		</Card.Header>
 		<Card.Content class="text-red-600">
 			<p class="mb-2">
-				{m.total_isolation()}
+				{@html m.total_isolation()}
 			</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
 				<li>{m.custom_domain_access()}</li>
@@ -137,7 +139,7 @@
 		</Card.Header>
 		<Card.Content class="text-blue-600">
 			<p class="mb-3">
-				{m.after_verification_config()}
+				{@html m.after_verification_config()}
 			</p>
 			<div class="bg-blue-900/20 p-3 rounded-lg mb-3">
 				<p class="font-mono text-sm">

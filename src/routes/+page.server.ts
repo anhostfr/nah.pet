@@ -7,6 +7,7 @@ import { isValidUrl } from '$lib/utils.js';
 import { hash } from '@node-rs/argon2';
 import { isSlugReserved } from '$lib/server/domain-verification';
 import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || !locals.user.isAuthorized) {
@@ -105,11 +106,11 @@ export const actions: Actions = {
 		const customDomainId = formData.get('customDomainId') as string;
 
 		if (!originalUrl) {
-			return fail(400, { error: 'URL requise' });
+			return actionFail(400, 'links.url_required');
 		}
 
 		if (!isValidUrl(originalUrl)) {
-			return fail(400, { error: 'URL invalide' });
+			return actionFail(400, 'links.url_invalid');
 		}
 
 		let verifiedCustomDomain = null;
@@ -123,13 +124,11 @@ export const actions: Actions = {
 			});
 
 			if (!verifiedCustomDomain) {
-				return fail(400, { error: 'Domaine personnalisé invalide ou non vérifié' });
+				return actionFail(400, 'domains.invalid_or_unverified_custom_domain');
 			}
 
 			if (customSlug && isSlugReserved(customSlug)) {
-				return fail(400, {
-					error: `Le slug "${customSlug}" est réservé et ne peut pas être utilisé sur un domaine personnalisé`
-				});
+				return actionFail(400, 'links.reserved_slug_on_custom_domain');
 			}
 		}
 
@@ -163,8 +162,7 @@ export const actions: Actions = {
 				: `${PUBLIC_MAIN_DOMAIN}/${slug}`;
 			const qrCode = await generateQRCode(shortUrl);
 
-			return {
-				success: true,
+			return actionSuccess('links.created', {
 				link: {
 					id: link.id,
 					slug: link.slug,
@@ -173,15 +171,15 @@ export const actions: Actions = {
 				},
 				shortUrl,
 				qrCode
-			};
+			});
 		} catch (error) {
 			console.error('Erreur lors de la création du lien:', error);
 
 			if (error instanceof Error && error.message.includes('slug personnalisé existe déjà')) {
-				return fail(400, { error: 'Ce slug personnalisé est déjà utilisé' });
+				return actionFail(400, 'links.custom_slug_taken');
 			}
 
-			return fail(500, { error: 'Erreur lors de la création du lien' });
+			return actionFail(500, 'links.create_failed');
 		}
 	},
 
@@ -201,10 +199,10 @@ export const actions: Actions = {
 				}
 			});
 
-			return { success: true };
+			return actionSuccess('links.deleted');
 		} catch (error) {
 			console.error('Erreur lors de la suppression:', error);
-			return fail(500, { error: 'Erreur lors de la suppression du lien' });
+			return actionFail(500, 'links.delete_failed');
 		}
 	}
 };

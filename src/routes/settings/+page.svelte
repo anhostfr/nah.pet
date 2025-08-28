@@ -5,8 +5,10 @@
 	import AccountSection from '$lib/components/settings/AccountSection.svelte';
 	import ApiKeysSection from '$lib/components/settings/ApiKeysSection.svelte';
 	import DomainsSection from '$lib/components/settings/DomainsSection.svelte';
+	import { tKey } from '$lib/i18n';
+	import type { NormalizedActionData } from '$lib/types';
 
-	let { data, form } = $props();
+	let { data, form }: { data: any; form: NormalizedActionData } = $props();
 
 	let activeTab = $state('account');
 	let showNewApiKey = $state(false);
@@ -103,14 +105,14 @@
 	</div>
 </div>
 
-{#if form?.error}
+{#if form && form.success === false}
 	<script>
-		toast.error(form.error);
+		toast.error(tKey(form.messageKey, form));
 	</script>
 {/if}
 
 {#if form?.success}
 	<script>
-		toast.success(m.operation_successful());
+		toast.success(tKey(form.messageKey, form));
 	</script>
 {/if}

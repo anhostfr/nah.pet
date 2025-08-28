@@ -7,7 +7,10 @@
 	import { Lock } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
-	let { data, form } = $props();
+	import { tKey } from '$lib/i18n';
+	import type { PageData, ActionData } from './$types';
+	import type { NormalizedActionData } from '$lib/types';
+	let { data, form }: { data: PageData; form: ActionData & NormalizedActionData } = $props();
 	let password = $state('');
 	let isLoading = $state(false);
 </script>
@@ -58,8 +61,8 @@
 						/>
 					</div>
 
-					{#if form?.error}
-						<p class="text-sm text-destructive">{form.error}</p>
+					{#if form && form.success === false}
+						<p class="text-sm text-destructive">{tKey(form.messageKey, form)}</p>
 					{/if}
 
 					<Button type="submit" disabled={isLoading || !password} class="w-full">

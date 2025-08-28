@@ -3,7 +3,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { BarChart3, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
+	import { ChartBar, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import * as m from '$lib/paraglide/messages.js';
 	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
@@ -37,7 +37,7 @@
 	<Card.Root>
 		<Card.Header>
 			<Card.Title class="flex items-center gap-2">
-				<BarChart3 class="h-5 w-5" />
+				<ChartBar class="h-5 w-5" />
 				{m.link_info()}
 			</Card.Title>
 		</Card.Header>

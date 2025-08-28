@@ -232,7 +232,7 @@
 												isLoading = user.id;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message as string || m.status_updated());
+														toast.success(m.status_updated());
 													} else {
 														toast.error(m.update_error());
 													}
@@ -270,7 +270,7 @@
 												isLoading = `admin-${user.id}`;
 												return async ({ result, update }) => {
 													if (result.type === 'success') {
-														toast.success(result.data?.message as string || m.admin_rights_updated());
+														toast.success(m.admin_rights_updated());
 													} else {
 														toast.error(m.update_error());
 													}
@@ -362,11 +362,11 @@
 						{m.admin_zone_warning()}
 					</h3>
 					<div class="text-sm text-yellow-800 dark:text-yellow-200 space-y-1">
-						<p>{m.disable_user_info()}</p>
+						<p>{@html m.disable_user_info()}</p>
 						<p>
-							{m.delete_user_info()}
+							{@html m.delete_user_info()}
 						</p>
-						<p>{m.irreversible_actions()}</p>
+						<p>{@html m.irreversible_actions()}</p>
 					</div>
 				</div>
 			</div>

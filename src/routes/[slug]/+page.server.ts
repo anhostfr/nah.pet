@@ -5,6 +5,7 @@ import { verify } from '@node-rs/argon2';
 import { sleep } from '$lib/utils';
 import { isRateLimited } from '$lib/server/rateLimit';
 import { isSlugReserved } from '$lib/server/domain-verification';
+import { actionFail } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ params, request, getClientAddress, locals }) => {
 	const { slug } = params;
@@ -102,18 +103,18 @@ export const actions: Actions = {
 		const rateLimitKey = `slug:${ip}:${slug}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);
-			return fail(429, { error: 'Trop de tentatives, réessayez plus tard.' });
+			return actionFail(429, 'common.too_many_attempts');
 		}
 
 		if (!password) {
-			return fail(400, { error: 'Mot de passe requis' });
+			return actionFail(400, 'links.password_required');
 		}
 
 		const isValidPassword = await verify(link.password, password);
 
 		if (!isValidPassword) {
 			sleep(2000);
-			return fail(400, { error: 'Mot de passe incorrect' });
+			return actionFail(400, 'links.password_incorrect');
 		}
 
 		const userAgent = request.headers.get('user-agent') || '';

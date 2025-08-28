@@ -6,7 +6,7 @@
 	import UrlShortenerForm from '$lib/components/url-shortener-form.svelte';
 	import {
 		Link,
-		BarChart3,
+		ChartBar,
 		Eye,
 		Calendar,
 		TrendingUp,
@@ -16,8 +16,10 @@
 	} from 'lucide-svelte';
 	import { formatNumber } from '$lib/utils.js';
 	import * as m from '$lib/paraglide/messages.js';
+	import type { ActionData, PageServerData } from './$types';
+	import type { NormalizedActionData } from '$lib/types';
 
-	let { data, form } = $props();
+	let { data, form }: { data: PageServerData; form: (ActionData & NormalizedActionData) | null } = $props();
 
 	const growthRate =
 		data.stats.linksThisMonth > 0
@@ -56,7 +58,7 @@
 				{m.real_time()}
 			</Badge>
 			<Button href="/stats" variant="outline" size="sm">
-				<BarChart3 class="w-4 h-4 mr-2" />
+				<ChartBar class="w-4 h-4 mr-2" />
 				<span class="hidden sm:inline">{m.detailed_analytics()}</span>
 				<span class="sm:hidden">{m.analytics()}</span>
 			</Button>
@@ -141,7 +143,7 @@
 					<div
 						class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
 					>
-						<BarChart3 class="w-6 h-6 text-purple-600 dark:text-purple-400" />
+						<ChartBar class="w-6 h-6 text-purple-600 dark:text-purple-400" />
 					</div>
 				</div>
 			</Card.Content>
@@ -211,7 +213,7 @@
 					<div
 						class="w-6 h-6 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
 					>
-						<BarChart3 class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+						<ChartBar class="w-4 h-4 text-gray-600 dark:text-gray-400" />
 					</div>
 					<span>{m.my_links()}</span>
 					<Badge variant="secondary" class="ml-2">

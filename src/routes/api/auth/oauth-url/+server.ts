@@ -9,12 +9,12 @@ export const GET: RequestHandler = async ({ url }) => {
 		const result = await authClient.signInWithOAuth();
 
 		if (result.error) {
-			return json({ error: result.error.message }, { status: 400 });
+			return json({ success: false, messageKey: 'auth.oauth_url_failed' }, { status: 400 });
 		}
 
-		return json({ url: result.data?.url });
+		return json({ success: true, url: result.data?.url });
 	} catch (err) {
 		console.error('Erreur génération URL OAuth:', err);
-		return json({ error: 'Erreur serveur' }, { status: 500 });
+		return json({ success: false, messageKey: 'common.server_error' }, { status: 500 });
 	}
 };

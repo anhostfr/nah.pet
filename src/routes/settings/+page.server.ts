@@ -3,6 +3,7 @@ import { db } from '$lib/server/db.js';
 import { generateApiKey } from '$lib/server/api-auth.js';
 import { randomBytes } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -50,7 +51,7 @@ export const actions: Actions = {
 		const permissions = data.getAll('permissions') as string[];
 
 		if (!name || name.length < 3) {
-			return { error: 'Le nom doit contenir au moins 3 caractères' };
+			return actionFail(400, 'settings.api_key_name_too_short');
 		}
 
 		const key = generateApiKey();
@@ -64,7 +65,7 @@ export const actions: Actions = {
 			}
 		});
 
-		return { success: true, key };
+		return actionSuccess('settings.api_key_created', { key });
 	},
 
 	deleteApiKey: async ({ locals, request }) => {
@@ -82,7 +83,7 @@ export const actions: Actions = {
 			}
 		});
 
-		return { success: true };
+		return actionSuccess('settings.api_key_deleted');
 	},
 
 	updateProfile: async ({ locals, request }) => {
@@ -94,7 +95,7 @@ export const actions: Actions = {
 		const email = data.get('email') as string;
 
 		if (!email) {
-			return { error: 'Email requis' };
+			return actionFail(400, 'settings.email_required');
 		}
 
 		await db.user.update({
@@ -102,7 +103,7 @@ export const actions: Actions = {
 			data: { email }
 		});
 
-		return { success: true };
+		return actionSuccess('settings.profile_updated');
 	},
 
 	addDomain: async ({ locals, request }) => {
@@ -115,13 +116,13 @@ export const actions: Actions = {
 		const method = data.get('method') as 'dns' | 'file';
 
 		if (!domain || !method) {
-			return { error: 'Domaine et méthode requis' };
+			return actionFail(400, 'domains.domain_and_method_required');
 		}
 
 		// Validation du domaine
 		const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 		if (!domainRegex.test(domain)) {
-			return { error: 'Format de domaine invalide' };
+			return actionFail(400, 'domains.invalid_format');
 		}
 
 		// Vérifier si le domaine existe déjà
@@ -130,7 +131,7 @@ export const actions: Actions = {
 		});
 
 		if (existingDomain) {
-			return { error: 'Ce domaine est déjà utilisé' };
+			return actionFail(400, 'domains.already_in_use');
 		}
 
 		const verificationToken = randomBytes(32).toString('hex');
@@ -145,7 +146,7 @@ export const actions: Actions = {
 			}
 		});
 
-		return { success: true };
+		return actionSuccess('domains.added');
 	},
 
 	verifyDomain: async ({ locals, request }) => {
@@ -157,7 +158,7 @@ export const actions: Actions = {
 		const domainId = data.get('domainId') as string;
 
 		if (!domainId) {
-			return { error: 'ID de domaine requis' };
+			return actionFail(400, 'domains.domain_id_required');
 		}
 
 		const domain = await db.customDomain.findFirst({
@@ -165,7 +166,7 @@ export const actions: Actions = {
 		});
 
 		if (!domain) {
-			return { error: 'Domaine non trouvé' };
+			return actionFail(404, 'domains.not_found');
 		}
 
 		// Simulation de la vérification
@@ -175,7 +176,7 @@ export const actions: Actions = {
 			data: { verified: true }
 		});
 
-		return { success: true, message: 'Domaine vérifié avec succès' };
+		return actionSuccess('domains.verified');
 	},
 
 	deleteDomain: async ({ locals, request }) => {
@@ -187,13 +188,13 @@ export const actions: Actions = {
 		const domainId = data.get('domainId') as string;
 
 		if (!domainId) {
-			return { error: 'ID de domaine requis' };
+			return actionFail(400, 'domains.domain_id_required');
 		}
 
 		await db.customDomain.delete({
 			where: { id: domainId, userId: locals.user.id }
 		});
 
-		return { success: true };
+		return actionSuccess('domains.deleted');
 	}
 };

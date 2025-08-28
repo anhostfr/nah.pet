@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import {
-		BarChart3,
+		ChartBar,
 		TrendingUp,
 		TrendingDown,
 		Eye,
@@ -165,7 +165,7 @@
 					<div
 						class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
 					>
-						<BarChart3 class="w-6 h-6 text-purple-600 dark:text-purple-400" />
+						<ChartBar class="w-6 h-6 text-purple-600 dark:text-purple-400" />
 					</div>
 				</div>
 			</Card.Content>
@@ -291,7 +291,7 @@
 													variant="ghost"
 													class="h-8 w-8 p-0"
 												>
-													<BarChart3 class="w-4 h-4" />
+													<ChartBar class="w-4 h-4" />
 												</Button>
 												<Button
 													size="sm"

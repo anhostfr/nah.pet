@@ -1,6 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 import {
 	generateVerificationToken,
 	verifyDomainOwnership,
@@ -40,9 +41,7 @@ export const actions: Actions = {
 		const ip = getClientAddress();
 		const rateLimitKey = `add_domain:${ip}:${locals.user.id}`;
 		if (isRateLimited(rateLimitKey, 5, 300)) {
-			return fail(429, {
-				error: 'Trop de tentatives. Veuillez attendre avant de réessayer.'
-			});
+			return actionFail(429, 'common.too_many_attempts');
 		}
 
 		const formData = await request.formData();
@@ -50,21 +49,19 @@ export const actions: Actions = {
 		const verificationMethod = formData.get('method') as 'dns' | 'file';
 
 		if (!domain) {
-			return fail(400, { error: 'Le domaine est requis' });
+			return actionFail(400, 'domains.domain_required');
 		}
 
 		if (!validateDomainFormat(domain)) {
-			return fail(400, { error: 'Format de domaine invalide' });
+			return actionFail(400, 'domains.invalid_format');
 		}
 
 		if (!isDomainAllowed(domain)) {
-			return fail(400, {
-				error: "Ce domaine n'est pas autorisé (domaine principal, localhost, IP, etc.)"
-			});
+			return actionFail(400, 'domains.not_allowed');
 		}
 
 		if (!['dns', 'file'].includes(verificationMethod)) {
-			return fail(400, { error: 'Méthode de vérification invalide' });
+			return actionFail(400, 'domains.invalid_verification_method');
 		}
 
 		const domainCount = await db.customDomain.count({
@@ -72,9 +69,7 @@ export const actions: Actions = {
 		});
 
 		if (domainCount >= MAX_DOMAINS_PER_USER) {
-			return fail(400, {
-				error: `Limite de ${MAX_DOMAINS_PER_USER} domaines atteinte`
-			});
+			return actionFail(400, 'domains.limit_reached');
 		}
 
 		const existingDomain = await db.customDomain.findUnique({
@@ -82,9 +77,7 @@ export const actions: Actions = {
 		});
 
 		if (existingDomain) {
-			return fail(400, {
-				error: 'Ce domaine est déjà enregistré'
-			});
+			return actionFail(400, 'domains.already_registered');
 		}
 
 		const verificationToken = generateVerificationToken();
@@ -100,16 +93,14 @@ export const actions: Actions = {
 				}
 			});
 
-			return {
-				success: true,
-				message: 'Domaine ajouté avec succès. Procédez à la vérification.',
+			return actionSuccess('domains.added', {
 				verificationToken,
 				verificationMethod,
 				domain
-			};
+			});
 		} catch (error) {
 			console.error('Error adding domain:', error);
-			return fail(500, { error: "Erreur lors de l'ajout du domaine" });
+			return actionFail(500, 'domains.add_failed');
 		}
 	},
 
@@ -121,16 +112,14 @@ export const actions: Actions = {
 		const ip = request.headers.get('x-forwarded-for') || 'unknown';
 		const rateLimitKey = `verify_domain:${ip}:${locals.user.id}`;
 		if (isRateLimited(rateLimitKey, 10, 300)) {
-			return fail(429, {
-				error: 'Trop de tentatives de vérification. Veuillez attendre.'
-			});
+			return actionFail(429, 'common.too_many_attempts');
 		}
 
 		const formData = await request.formData();
 		const domainId = formData.get('domainId') as string;
 
 		if (!domainId) {
-			return fail(400, { error: 'ID du domaine requis' });
+			return actionFail(400, 'domains.domain_id_required');
 		}
 
 		const customDomain = await db.customDomain.findFirst({
@@ -142,9 +131,7 @@ export const actions: Actions = {
 		});
 
 		if (!customDomain) {
-			return fail(404, {
-				error: 'Domaine introuvable ou déjà vérifié'
-			});
+			return actionFail(404, 'domains.not_found_or_already_verified');
 		}
 
 		try {
@@ -160,20 +147,13 @@ export const actions: Actions = {
 					data: { verified: true }
 				});
 
-				return {
-					success: true,
-					message: 'Domaine vérifié avec succès!'
-				};
+				return actionSuccess('domains.verified');
 			} else {
-				return fail(400, {
-					error: `Vérification échouée: ${result.error}`
-				});
+				return actionFail(400, 'domains.verification_failed');
 			}
 		} catch (error) {
 			console.error('Error verifying domain:', error);
-			return fail(500, {
-				error: 'Erreur lors de la vérification du domaine'
-			});
+			return actionFail(500, 'domains.verify_failed');
 		}
 	},
 
@@ -186,7 +166,7 @@ export const actions: Actions = {
 		const domainId = formData.get('domainId') as string;
 
 		if (!domainId) {
-			return fail(400, { error: 'ID du domaine requis' });
+			return actionFail(400, 'domains.domain_id_required');
 		}
 
 		const customDomain = await db.customDomain.findFirst({
@@ -200,7 +180,7 @@ export const actions: Actions = {
 		});
 
 		if (!customDomain) {
-			return fail(404, { error: 'Domaine introuvable' });
+			return actionFail(404, 'domains.not_found');
 		}
 
 		try {
@@ -210,20 +190,10 @@ export const actions: Actions = {
 				where: { id: domainId }
 			});
 
-			const message =
-				linkCount > 0
-					? `Domaine supprimé avec succès (${linkCount} lien${linkCount > 1 ? 's' : ''} supprimé${linkCount > 1 ? 's' : ''})`
-					: 'Domaine supprimé avec succès';
-
-			return {
-				success: true,
-				message
-			};
+			return actionSuccess('domains.deleted_with_links', { linkCount });
 		} catch (error) {
 			console.error('Error deleting domain:', error);
-			return fail(500, {
-				error: 'Erreur lors de la suppression du domaine'
-			});
+			return actionFail(500, 'domains.delete_failed');
 		}
 	}
 };

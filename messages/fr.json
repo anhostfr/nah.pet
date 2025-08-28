@@ -322,5 +322,10 @@
   "link_copy_error": "Erreur de copie du lien",
   "primary_domain": "Domaine principal",
   "delete_domain_confirm_request": "Êtes-vous sûr de vouloir supprimer ce domaine ?",
-  "protected_link": "Lien protégé"
+  "protected_link": "Lien protégé",
+  "wait_connection": "Veuillez patienter pendant que nous finalisons votre connexion.",
+  "error_connection": "Erreur de connexion",
+  "back_to_login": "Retour à la page de connexion",
+  "redirecting": "Redirection en cours...",
+  "connection_success": "Connexion réussie"
 }

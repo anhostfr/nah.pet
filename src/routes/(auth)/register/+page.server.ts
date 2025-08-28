@@ -7,6 +7,7 @@ import { env } from '$env/dynamic/private';
 import { isRateLimited } from '$lib/server/rateLimit';
 import { z } from 'zod';
 import { sleep } from '$lib/utils';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
@@ -34,7 +35,7 @@ export const actions: Actions = {
 		const parseResult = schema.safeParse({ email, password, confirmPassword });
 		if (!parseResult.success) {
 			await sleep(2000);
-			return fail(400, { error: parseResult.error.errors[0]?.message || 'Données invalides' });
+			return actionFail(400, 'auth.invalid_data');
 		}
 
 		const {
@@ -45,7 +46,7 @@ export const actions: Actions = {
 
 		if (validPassword !== validConfirmPassword) {
 			await sleep(2000);
-			return fail(400, { error: 'Les mots de passe ne correspondent pas' });
+			return actionFail(400, 'auth.passwords_do_not_match');
 		}
 
 		const ip =
@@ -53,7 +54,7 @@ export const actions: Actions = {
 		const rateLimitKey = `register:${ip}:${validEmail}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);
-			return fail(429, { error: 'Trop de tentatives, réessayez plus tard.' });
+			return actionFail(429, 'common.too_many_attempts');
 		}
 
 		try {
@@ -63,7 +64,7 @@ export const actions: Actions = {
 
 			if (existingUser) {
 				await sleep(2000);
-				return fail(400, { error: 'Email invalide' });
+				return actionFail(400, 'auth.email_already_exists');
 			}
 
 			const hashedPassword = await hash(validPassword, {
@@ -90,7 +91,7 @@ export const actions: Actions = {
 				...sessionCookie.attributes
 			});
 
-			return { success: true, redirectTo: '/' };
+			return actionSuccess('auth.register_success', { redirectTo: '/' });
 		} catch (error) {
 			if (error instanceof Response) {
 				throw error;
@@ -98,7 +99,7 @@ export const actions: Actions = {
 
 			console.error("Erreur lors de l'inscription:", error);
 			await sleep(2000);
-			return fail(500, { error: 'Erreur serveur' });
+			return actionFail(500, 'common.server_error');
 		}
 	}
 };

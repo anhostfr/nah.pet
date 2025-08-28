@@ -319,8 +319,12 @@
   "custom_domains_title": "Custom domains - Nah Pet",
   "active_links_badge": "Active",
   "expired_links_badge": "expired",
-  "link_copy_error": "Erreur de copie du lien",
+  "link_copy_error": "Error copying link",
   "primary_domain": "Primary domain",
-  "delete_domain_confirm_request": "Are you sure you want to delete it ?",
-  "protected_link": "This link is protected"
+  "delete_domain_confirm_request": "Are you sure you want to delete it?",
+  "protected_link": "This link is protected",
+  "error_connection": "Unable to connect",
+  "back_to_login": "Back to login",
+  "redirecting": "Redirecting...",
+  "connection_success": "Connection successful"
 }

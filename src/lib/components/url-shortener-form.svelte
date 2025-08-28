@@ -22,8 +22,10 @@
 	import { slide } from 'svelte/transition';
 	import { page } from '$app/state';
 	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+	import { tKey } from '$lib/i18n';
+	import type { NormalizedActionData } from '$lib/types';
 
-	let { form, customDomains } = $props();
+	let { form, customDomains }: { form: NormalizedActionData | null; customDomains: any[] } = $props();
 
 	let originalUrl = $state('');
 	let customSlug = $state('');
@@ -73,9 +75,9 @@
 							<h3 class="font-semibold text-green-900 dark:text-green-100 mb-2">
 								✨ {m.link_created_success()}
 							</h3>
-							{#if form.link.title}
+							{#if (form.link as any).title}
 								<p class="text-sm text-green-800 dark:text-green-200 mb-2">
-									{form.link.title}
+									{(form.link as any).title}
 								</p>
 							{/if}
 						</div>
@@ -85,13 +87,13 @@
 						>
 							<Link class="w-4 h-4 text-green-600" />
 							<code class="flex-1 text-sm font-mono text-gray-900 dark:text-white">
-								{form.shortUrl || `${window.location.origin}/${form.link.slug}`}
+								{form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`}
 							</code>
 							<Button
 								size="sm"
 								variant="ghost"
 								onclick={() =>
-									copyToClipboard(form.shortUrl || `${window.location.origin}/${form.link.slug}`)}
+									copyToClipboard(form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`)}
 								class="h-8 w-8 p-0"
 							>
 								{#if copied}
@@ -101,7 +103,7 @@
 								{/if}
 							</Button>
 							<Button
-								href={form.shortUrl || `/${form.link.slug}`}
+								href={form.shortUrl || `/${(form.link as any).slug}`}
 								target="_blank"
 								size="sm"
 								variant="ghost"
@@ -281,13 +283,13 @@
 			</div>
 		{/if}
 
-		{#if form?.error}
+		{#if form && form.success === false}
 			<div
 				class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
 			>
 				<p class="text-sm text-red-800 dark:text-red-200 flex items-center space-x-2">
 					<span class="w-2 h-2 bg-red-500 rounded-full"></span>
-					<span>{form.error}</span>
+					<span>{tKey(form.messageKey, form)}</span>
 				</p>
 			</div>
 		{/if}

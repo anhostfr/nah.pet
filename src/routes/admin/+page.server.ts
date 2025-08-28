@@ -1,7 +1,8 @@
-import { error, redirect, fail } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db.js';
 import { ADMIN_EMAIL } from '$env/static/private';
+import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -72,7 +73,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	toggleActivation: async ({ request, locals }) => {
 		if (!locals.user) {
-			throw error(401, 'Non connecté');
+			return actionFail(401, 'auth.not_logged_in');
 		}
 
 		const currentUser = await db.user.findUnique({
@@ -80,14 +81,14 @@ export const actions: Actions = {
 		});
 
 		if (!currentUser?.isAdmin) {
-			throw error(403, 'Accès non autorisé');
+			return actionFail(403, 'auth.not_authorized');
 		}
 
 		const formData = await request.formData();
 		const userId = formData.get('userId') as string;
 
 		if (!userId) {
-			return fail(400, { error: 'ID utilisateur requis' });
+			return actionFail(400, 'admin.user_id_required');
 		}
 
 		try {
@@ -96,11 +97,11 @@ export const actions: Actions = {
 			});
 
 			if (!user) {
-				return fail(404, { error: 'Utilisateur introuvable' });
+				return actionFail(404, 'admin.user_not_found');
 			}
 
 			if (user.id === locals.user.id) {
-				return fail(400, { error: 'Vous ne pouvez pas modifier votre propre statut' });
+				return actionFail(400, 'admin.cannot_toggle_self_status');
 			}
 
 			const newStatus = !user.isActive;
@@ -110,19 +111,16 @@ export const actions: Actions = {
 				data: { isActive: newStatus }
 			});
 
-			return {
-				success: true,
-				message: `Utilisateur ${newStatus ? 'activé' : 'désactivé'} avec succès`
-			};
+			return actionSuccess(newStatus ? 'admin.user_activated' : 'admin.user_deactivated', { userId });
 		} catch (err) {
 			console.error('Erreur lors de la mise à jour:', err);
-			return fail(500, { error: 'Erreur serveur' });
+			return actionFail(500, 'common.server_error');
 		}
 	},
 
 	toggleAdmin: async ({ request, locals }) => {
 		if (!locals.user) {
-			throw error(401, 'Non connecté');
+			return actionFail(401, 'auth.not_logged_in');
 		}
 
 		const currentUser = await db.user.findUnique({
@@ -130,14 +128,14 @@ export const actions: Actions = {
 		});
 
 		if (!currentUser?.isAdmin) {
-			throw error(403, 'Accès non autorisé');
+			return actionFail(403, 'auth.not_authorized');
 		}
 
 		const formData = await request.formData();
 		const userId = formData.get('userId') as string;
 
 		if (!userId) {
-			return fail(400, { error: 'ID utilisateur requis' });
+			return actionFail(400, 'admin.user_id_required');
 		}
 
 		try {
@@ -146,11 +144,11 @@ export const actions: Actions = {
 			});
 
 			if (!user) {
-				return fail(404, { error: 'Utilisateur introuvable' });
+				return actionFail(404, 'admin.user_not_found');
 			}
 
 			if (user.id === locals.user.id) {
-				return fail(400, { error: 'Vous ne pouvez pas modifier vos propres droits admin' });
+				return actionFail(400, 'admin.cannot_change_own_admin_rights');
 			}
 
 			const newStatus = !user.isAdmin;
@@ -160,19 +158,16 @@ export const actions: Actions = {
 				data: { isAdmin: newStatus }
 			});
 
-			return {
-				success: true,
-				message: `Droits admin ${newStatus ? 'accordés' : 'retirés'} avec succès`
-			};
+			return actionSuccess(newStatus ? 'admin.admin_rights_granted' : 'admin.admin_rights_revoked', { userId });
 		} catch (err) {
 			console.error('Erreur lors de la mise à jour:', err);
-			return fail(500, { error: 'Erreur serveur' });
+			return actionFail(500, 'common.server_error');
 		}
 	},
 
 	deleteUser: async ({ request, locals }) => {
 		if (!locals.user) {
-			throw error(401, 'Non connecté');
+			return actionFail(401, 'auth.not_logged_in');
 		}
 
 		const currentUser = await db.user.findUnique({
@@ -180,14 +175,14 @@ export const actions: Actions = {
 		});
 
 		if (!currentUser?.isAdmin) {
-			throw error(403, 'Accès non autorisé');
+			return actionFail(403, 'auth.not_authorized');
 		}
 
 		const formData = await request.formData();
 		const userId = formData.get('userId') as string;
 
 		if (!userId) {
-			return fail(400, { error: 'ID utilisateur requis' });
+			return actionFail(400, 'admin.user_id_required');
 		}
 
 		try {
@@ -196,24 +191,21 @@ export const actions: Actions = {
 			});
 
 			if (!user) {
-				return fail(404, { error: 'Utilisateur introuvable' });
+				return actionFail(404, 'admin.user_not_found');
 			}
 
 			if (user.id === locals.user.id) {
-				return fail(400, { error: 'Vous ne pouvez pas supprimer votre propre compte' });
+				return actionFail(400, 'admin.cannot_delete_self');
 			}
 
 			await db.user.delete({
 				where: { id: userId }
 			});
 
-			return {
-				success: true,
-				message: 'Utilisateur supprimé avec succès'
-			};
+			return actionSuccess('admin.user_deleted', { userId });
 		} catch (err) {
 			console.error('Erreur lors de la suppression:', err);
-			return fail(500, { error: 'Erreur serveur' });
+			return actionFail(500, 'common.server_error');
 		}
 	}
 };

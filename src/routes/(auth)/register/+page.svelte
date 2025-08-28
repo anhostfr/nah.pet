@@ -7,8 +7,11 @@
 	import { UserPlus } from 'lucide-svelte';
 	import { goto, invalidate } from '$app/navigation';
 	import * as m from '$lib/paraglide/messages.js';
+	import { tKey } from '$lib/i18n';
+	import type { ActionData } from './$types';
+	import type { NormalizedActionData } from '$lib/types';
 
-	let { form } = $props();
+	let { form }: { form: ActionData & NormalizedActionData } = $props();
 	let email = $state('');
 	let password = $state('');
 	let confirmPassword = $state('');
@@ -82,8 +85,8 @@
 						/>
 					</div>
 
-					{#if form?.error}
-						<p class="text-sm text-destructive">{form.error}</p>
+					{#if form && form.success === false}
+						<p class="text-sm text-destructive">{tKey(form.messageKey, form)}</p>
 					{/if}
 
 					<Button
