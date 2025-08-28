@@ -1,0 +1,1089 @@
+{
+	"servers": [
+		{ "url": "https://nah.pet/api/v1", "description": "Production server" },
+		{ "url": "http://localhost:5173/api/v1", "description": "Development server" }
+	],
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Nah.pet API",
+		"version": "1.0.0",
+		"description": "Nah.pet API for pet owners",
+		"contact": { "name": "Nah.pet Support", "email": "", "url": "https://nah.pet" }
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "API Key",
+				"description": "Use your Nah.pet API key as Bearer token"
+			}
+		},
+		"schemas": {},
+		"parameters": {}
+	},
+	"paths": {
+		"/api/v1/links": {
+			"get": {
+				"tags": ["Links"],
+				"operationId": "getLinks",
+				"summary": "List user's links",
+				"description": "Retrieve a paginated list of user's shortened links",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": { "type": "number", "minimum": 1, "maximum": 100, "default": 50 },
+						"required": false,
+						"name": "limit",
+						"in": "query"
+					},
+					{
+						"schema": { "type": "number", "nullable": true, "minimum": 0, "default": 0 },
+						"required": false,
+						"name": "offset",
+						"in": "query"
+					},
+					{ "schema": { "type": "string" }, "required": false, "name": "domain", "in": "query" },
+					{
+						"schema": { "type": "string", "description": "Search in title and original URL" },
+						"required": false,
+						"description": "Search in title and original URL",
+						"name": "search",
+						"in": "query"
+					},
+					{
+						"schema": {
+							"type": "string",
+							"enum": ["createdAt", "clicks", "title"],
+							"default": "createdAt",
+							"description": "Sort by field"
+						},
+						"required": false,
+						"description": "Sort by field",
+						"name": "sortBy",
+						"in": "query"
+					},
+					{
+						"schema": {
+							"type": "string",
+							"enum": ["asc", "desc"],
+							"default": "desc",
+							"description": "Sort order"
+						},
+						"required": false,
+						"description": "Sort order",
+						"name": "sortOrder",
+						"in": "query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"links": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": { "type": "string", "description": "Link unique identifier" },
+													"slug": { "type": "string", "description": "Short URL slug" },
+													"originalUrl": { "type": "string", "description": "Original long URL" },
+													"title": {
+														"type": "string",
+														"nullable": true,
+														"description": "Link title"
+													},
+													"shortUrl": { "type": "string", "description": "Complete short URL" },
+													"clicks": { "type": "number", "description": "Number of clicks" },
+													"domain": {
+														"type": "string",
+														"nullable": true,
+														"description": "Custom domain if any"
+													},
+													"expiresAt": {
+														"type": "string",
+														"nullable": true,
+														"description": "Expiration date"
+													},
+													"createdAt": { "type": "string", "description": "Creation date" },
+													"updatedAt": { "type": "string", "description": "Last update date" }
+												},
+												"required": [
+													"id",
+													"slug",
+													"originalUrl",
+													"title",
+													"shortUrl",
+													"clicks",
+													"domain",
+													"expiresAt",
+													"createdAt",
+													"updatedAt"
+												]
+											}
+										},
+										"pagination": {
+											"type": "object",
+											"properties": {
+												"total": { "type": "number", "description": "Total number of links" },
+												"limit": { "type": "number", "description": "Current limit" },
+												"offset": { "type": "number", "description": "Current offset" },
+												"hasMore": {
+													"type": "boolean",
+													"description": "Whether there are more links"
+												}
+											},
+											"required": ["total", "limit", "offset", "hasMore"]
+										}
+									},
+									"required": ["links", "pagination"]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to fetch links" }
+				}
+			},
+			"post": {
+				"tags": ["Links"],
+				"operationId": "createLink",
+				"summary": "Create a new shortened link",
+				"description": "Create a new shortened link with optional customization",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"slug": { "type": "string", "description": "Custom slug (optional)" },
+									"title": {
+										"type": "string",
+										"maxLength": 255,
+										"description": "Link title (optional)"
+									},
+									"password": { "type": "string", "description": "Password protection (optional)" },
+									"expiresAt": {
+										"type": "string",
+										"description": "Expiration date (ISO string, optional)"
+									},
+									"domain": { "type": "string", "description": "Custom domain (optional)" }
+								},
+								"required": ["originalUrl"]
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"slug": { "type": "string", "description": "Custom slug (optional)" },
+									"title": {
+										"type": "string",
+										"maxLength": 255,
+										"description": "Link title (optional)"
+									},
+									"password": { "type": "string", "description": "Password protection (optional)" },
+									"expiresAt": {
+										"type": "string",
+										"description": "Expiration date (ISO string, optional)"
+									},
+									"domain": { "type": "string", "description": "Custom domain (optional)" }
+								},
+								"required": ["originalUrl"]
+							}
+						},
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"slug": { "type": "string", "description": "Custom slug (optional)" },
+									"title": {
+										"type": "string",
+										"maxLength": 255,
+										"description": "Link title (optional)"
+									},
+									"password": { "type": "string", "description": "Password protection (optional)" },
+									"expiresAt": {
+										"type": "string",
+										"description": "Expiration date (ISO string, optional)"
+									},
+									"domain": { "type": "string", "description": "Custom domain (optional)" }
+								},
+								"required": ["originalUrl"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": { "type": "string", "description": "Link unique identifier" },
+										"slug": { "type": "string", "description": "Short URL slug" },
+										"originalUrl": { "type": "string", "description": "Original long URL" },
+										"title": { "type": "string", "nullable": true, "description": "Link title" },
+										"shortUrl": { "type": "string", "description": "Complete short URL" },
+										"domain": {
+											"type": "string",
+											"nullable": true,
+											"description": "Custom domain if any"
+										},
+										"expiresAt": {
+											"type": "string",
+											"nullable": true,
+											"description": "Expiration date"
+										},
+										"createdAt": { "type": "string", "description": "Creation date" }
+									},
+									"required": [
+										"id",
+										"slug",
+										"originalUrl",
+										"title",
+										"shortUrl",
+										"domain",
+										"expiresAt",
+										"createdAt"
+									]
+								}
+							}
+						}
+					},
+					"400": { "description": "Bad request - Invalid input" },
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to create link" }
+				}
+			}
+		},
+		"/api/v1/links/{id}": {
+			"delete": {
+				"tags": ["Links"],
+				"operationId": "deleteLink",
+				"summary": "Delete a link",
+				"description": "Delete an existing shortened link",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": { "type": "string", "description": "Link ID" },
+						"required": true,
+						"description": "Link ID",
+						"name": "id",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": { "type": "boolean", "description": "Deletion success status" },
+										"message": { "type": "string", "description": "Success message" }
+									},
+									"required": ["success", "message"]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"404": { "description": "Link not found" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to delete link" }
+				}
+			},
+			"get": {
+				"tags": ["Links"],
+				"operationId": "getLink",
+				"summary": "Get a specific link",
+				"description": "Retrieve details of a specific shortened link",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": { "type": "string", "description": "Link ID" },
+						"required": true,
+						"description": "Link ID",
+						"name": "id",
+						"in": "query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": { "type": "string", "description": "Link unique identifier" },
+										"slug": { "type": "string", "description": "Short URL slug" },
+										"originalUrl": { "type": "string", "description": "Original long URL" },
+										"title": { "type": "string", "nullable": true, "description": "Link title" },
+										"shortUrl": { "type": "string", "description": "Complete short URL" },
+										"clicks": { "type": "number", "description": "Number of clicks" },
+										"domain": {
+											"type": "string",
+											"nullable": true,
+											"description": "Custom domain if any"
+										},
+										"expiresAt": {
+											"type": "string",
+											"nullable": true,
+											"description": "Expiration date"
+										},
+										"createdAt": { "type": "string", "description": "Creation date" },
+										"updatedAt": { "type": "string", "description": "Last update date" }
+									},
+									"required": [
+										"id",
+										"slug",
+										"originalUrl",
+										"title",
+										"shortUrl",
+										"clicks",
+										"domain",
+										"expiresAt",
+										"createdAt",
+										"updatedAt"
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"404": { "description": "Link not found" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to fetch link" }
+				}
+			},
+			"put": {
+				"tags": ["Links"],
+				"operationId": "updateLink",
+				"summary": "Update a link",
+				"description": "Update an existing shortened link",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": { "type": "string", "description": "Link ID" },
+						"required": true,
+						"description": "Link ID",
+						"name": "id",
+						"in": "path"
+					}
+				],
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"title": { "type": "string", "maxLength": 255, "description": "Link title" },
+									"password": { "type": "string", "description": "Password protection" },
+									"expiresAt": { "type": "string", "description": "Expiration date (ISO string)" }
+								}
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"title": { "type": "string", "maxLength": 255, "description": "Link title" },
+									"password": { "type": "string", "description": "Password protection" },
+									"expiresAt": { "type": "string", "description": "Expiration date (ISO string)" }
+								}
+							}
+						},
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"originalUrl": {
+										"type": "string",
+										"format": "uri",
+										"description": "The original URL to shorten"
+									},
+									"title": { "type": "string", "maxLength": 255, "description": "Link title" },
+									"password": { "type": "string", "description": "Password protection" },
+									"expiresAt": { "type": "string", "description": "Expiration date (ISO string)" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": { "type": "string", "description": "Link unique identifier" },
+										"slug": { "type": "string", "description": "Short URL slug" },
+										"originalUrl": { "type": "string", "description": "Original long URL" },
+										"title": { "type": "string", "nullable": true, "description": "Link title" },
+										"shortUrl": { "type": "string", "description": "Complete short URL" },
+										"domain": {
+											"type": "string",
+											"nullable": true,
+											"description": "Custom domain if any"
+										},
+										"expiresAt": {
+											"type": "string",
+											"nullable": true,
+											"description": "Expiration date"
+										},
+										"updatedAt": { "type": "string", "description": "Last update date" }
+									},
+									"required": [
+										"id",
+										"slug",
+										"originalUrl",
+										"title",
+										"shortUrl",
+										"domain",
+										"expiresAt",
+										"updatedAt"
+									]
+								}
+							}
+						}
+					},
+					"400": { "description": "Bad request - Invalid input" },
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"404": { "description": "Link not found" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to update link" }
+				}
+			}
+		},
+		"/api/v1/links/bulk": {
+			"delete": {
+				"tags": ["Links"],
+				"operationId": "deleteBulkLinks",
+				"summary": "Delete multiple links",
+				"description": "Delete multiple links in a single request",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"ids": {
+										"type": "array",
+										"items": { "type": "string" },
+										"minItems": 1,
+										"maxItems": 100,
+										"description": "Array of link IDs to delete (max 100)"
+									}
+								},
+								"required": ["ids"]
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"ids": {
+										"type": "array",
+										"items": { "type": "string" },
+										"minItems": 1,
+										"maxItems": 100,
+										"description": "Array of link IDs to delete (max 100)"
+									}
+								},
+								"required": ["ids"]
+							}
+						},
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"ids": {
+										"type": "array",
+										"items": { "type": "string" },
+										"minItems": 1,
+										"maxItems": 100,
+										"description": "Array of link IDs to delete (max 100)"
+									}
+								},
+								"required": ["ids"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": { "type": "boolean", "description": "Operation success" },
+										"deleted": {
+											"type": "array",
+											"items": { "type": "string" },
+											"description": "Successfully deleted link IDs"
+										},
+										"errors": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "string",
+														"description": "Link ID that failed to delete"
+													},
+													"error": { "type": "string", "description": "Error message" }
+												},
+												"required": ["id", "error"]
+											},
+											"description": "Errors for failed deletions"
+										}
+									},
+									"required": ["success", "deleted", "errors"]
+								}
+							}
+						}
+					},
+					"400": { "description": "Bad request - Invalid input" },
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to delete links" }
+				}
+			},
+			"post": {
+				"tags": ["Links"],
+				"operationId": "createBulkLinks",
+				"summary": "Create multiple shortened links",
+				"description": "Create multiple shortened links in a single request",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"links": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"originalUrl": { "type": "string", "format": "uri" },
+												"slug": { "type": "string" },
+												"title": { "type": "string" },
+												"password": { "type": "string" },
+												"expiresAt": { "type": "string" },
+												"domain": { "type": "string" }
+											},
+											"required": ["originalUrl"]
+										},
+										"minItems": 1,
+										"maxItems": 100
+									}
+								},
+								"required": ["links"]
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"links": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"originalUrl": { "type": "string", "format": "uri" },
+												"slug": { "type": "string" },
+												"title": { "type": "string" },
+												"password": { "type": "string" },
+												"expiresAt": { "type": "string" },
+												"domain": { "type": "string" }
+											},
+											"required": ["originalUrl"]
+										},
+										"minItems": 1,
+										"maxItems": 100
+									}
+								},
+								"required": ["links"]
+							}
+						},
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"links": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"originalUrl": { "type": "string", "format": "uri" },
+												"slug": { "type": "string" },
+												"title": { "type": "string" },
+												"password": { "type": "string" },
+												"expiresAt": { "type": "string" },
+												"domain": { "type": "string" }
+											},
+											"required": ["originalUrl"]
+										},
+										"minItems": 1,
+										"maxItems": 100
+									}
+								},
+								"required": ["links"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": { "type": "boolean", "description": "Operation success" },
+										"created": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": { "type": "string", "description": "Link unique identifier" },
+													"slug": { "type": "string", "description": "Short URL slug" },
+													"originalUrl": { "type": "string", "description": "Original long URL" },
+													"title": {
+														"type": "string",
+														"nullable": true,
+														"description": "Link title"
+													},
+													"shortUrl": { "type": "string", "description": "Complete short URL" },
+													"domain": {
+														"type": "string",
+														"nullable": true,
+														"description": "Custom domain if any"
+													},
+													"expiresAt": {
+														"type": "string",
+														"nullable": true,
+														"description": "Expiration date"
+													},
+													"createdAt": { "type": "string", "description": "Creation date" }
+												},
+												"required": [
+													"id",
+													"slug",
+													"originalUrl",
+													"title",
+													"shortUrl",
+													"domain",
+													"expiresAt",
+													"createdAt"
+												]
+											},
+											"description": "Successfully created links"
+										},
+										"errors": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"index": { "type": "number", "description": "Index of the failed link" },
+													"error": { "type": "string", "description": "Error message" }
+												},
+												"required": ["index", "error"]
+											},
+											"description": "Errors for failed links"
+										}
+									},
+									"required": ["success", "created", "errors"]
+								}
+							}
+						}
+					},
+					"400": { "description": "Bad request - Invalid input" },
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to create links" }
+				}
+			}
+		},
+		"/api/v1/stats": {
+			"get": {
+				"tags": ["Stats"],
+				"operationId": "getStats",
+				"summary": "Get user statistics",
+				"description": "Retrieve user's link statistics",
+				"security": [{ "bearerAuth": [] }],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"stats": {
+											"type": "object",
+											"properties": {
+												"totalLinks": { "type": "number", "description": "Total number of links" },
+												"totalClicks": {
+													"type": "number",
+													"description": "Total number of clicks"
+												},
+												"clicksThisMonth": { "type": "number", "description": "Clicks this month" },
+												"linksThisMonth": {
+													"type": "number",
+													"description": "Links created this month"
+												},
+												"activeLinks": {
+													"type": "number",
+													"description": "Number of active links"
+												},
+												"expiredLinks": {
+													"type": "number",
+													"description": "Number of expired links"
+												}
+											},
+											"required": [
+												"totalLinks",
+												"totalClicks",
+												"clicksThisMonth",
+												"linksThisMonth",
+												"activeLinks",
+												"expiredLinks"
+											]
+										}
+									},
+									"required": ["stats"]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to fetch stats" }
+				}
+			}
+		},
+		"/api/v1/stats/{slug}": {
+			"get": {
+				"tags": ["Stats"],
+				"operationId": "getLinkStats",
+				"summary": "Get link statistics",
+				"description": "Retrieve detailed statistics for a specific link",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": { "type": "string", "description": "Link slug" },
+						"required": true,
+						"description": "Link slug",
+						"name": "slug",
+						"in": "path"
+					},
+					{
+						"schema": {
+							"type": "number",
+							"minimum": 1,
+							"maximum": 365,
+							"default": 30,
+							"description": "Number of days to get stats for"
+						},
+						"required": false,
+						"description": "Number of days to get stats for",
+						"name": "days",
+						"in": "query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"link": {
+											"type": "object",
+											"properties": {
+												"id": { "type": "string", "description": "Link ID" },
+												"slug": { "type": "string", "description": "Link slug" },
+												"originalUrl": { "type": "string", "description": "Original URL" },
+												"title": {
+													"type": "string",
+													"nullable": true,
+													"description": "Link title"
+												},
+												"shortUrl": { "type": "string", "description": "Short URL" },
+												"totalClicks": { "type": "number", "description": "Total clicks" },
+												"createdAt": { "type": "string", "description": "Creation date" }
+											},
+											"required": [
+												"id",
+												"slug",
+												"originalUrl",
+												"title",
+												"shortUrl",
+												"totalClicks",
+												"createdAt"
+											]
+										},
+										"stats": {
+											"type": "object",
+											"properties": {
+												"totalClicks": { "type": "number", "description": "Total clicks" },
+												"clicksInPeriod": {
+													"type": "number",
+													"description": "Clicks in specified period"
+												},
+												"dailyStats": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"date": { "type": "string", "description": "Date" },
+															"clicks": { "type": "number", "description": "Clicks on that date" }
+														},
+														"required": ["date", "clicks"]
+													},
+													"description": "Daily click statistics"
+												},
+												"topCountries": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"country": { "type": "string", "description": "Country name" },
+															"clicks": { "type": "number", "description": "Number of clicks" }
+														},
+														"required": ["country", "clicks"]
+													},
+													"description": "Top countries by clicks"
+												},
+												"topCities": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"city": { "type": "string", "description": "City name" },
+															"clicks": { "type": "number", "description": "Number of clicks" }
+														},
+														"required": ["city", "clicks"]
+													},
+													"description": "Top cities by clicks"
+												}
+											},
+											"required": [
+												"totalClicks",
+												"clicksInPeriod",
+												"dailyStats",
+												"topCountries",
+												"topCities"
+											]
+										}
+									},
+									"required": ["link", "stats"]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"404": { "description": "Link not found" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to fetch link stats" }
+				}
+			}
+		},
+		"/api/v1/stats/export": {
+			"get": {
+				"tags": ["Stats"],
+				"operationId": "exportStats",
+				"summary": "Export statistics",
+				"description": "Export detailed statistics in JSON or CSV format",
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"schema": {
+							"type": "string",
+							"enum": ["json", "csv"],
+							"default": "json",
+							"description": "Export format"
+						},
+						"required": false,
+						"description": "Export format",
+						"name": "format",
+						"in": "query"
+					},
+					{
+						"schema": {
+							"type": "number",
+							"minimum": 1,
+							"maximum": 365,
+							"default": 30,
+							"description": "Number of days to export"
+						},
+						"required": false,
+						"description": "Number of days to export",
+						"name": "days",
+						"in": "query"
+					},
+					{
+						"schema": { "type": "string", "description": "Specific link ID to export (optional)" },
+						"required": false,
+						"description": "Specific link ID to export (optional)",
+						"name": "linkId",
+						"in": "query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"data": { "type": "string", "description": "Exported data as string" },
+										"filename": { "type": "string", "description": "Suggested filename" },
+										"mimeType": { "type": "string", "description": "MIME type for download" }
+									},
+									"required": ["data", "filename", "mimeType"]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input (path parameters, query string, or body)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": { "message": { "type": "string" } },
+									"required": ["message"]
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized - Invalid API key" },
+					"403": { "description": "Forbidden - Insufficient permissions" },
+					"429": { "description": "Rate limit exceeded" },
+					"500": { "description": "Failed to export stats" }
+				}
+			}
+		}
+	}
+}
