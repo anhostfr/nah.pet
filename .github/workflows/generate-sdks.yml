@@ -29,22 +29,9 @@ jobs:
         run: |
           wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.8.0/openapi-generator-cli-7.8.0.jar -O openapi-generator-cli.jar
           
-      - name: Fetch OpenAPI specification
+      - name: Use OpenAPI specification
         run: |
-          API_URL="${{ github.event.inputs.api_url || 'https://nah.pet' }}"
-          echo "🌐 Fetching OpenAPI spec from: ${API_URL}/api/v1/openapi.json"
-          
-          curl -f -s "${API_URL}/api/v1/openapi.json" -o openapi.json
-          
-          # Validate that we got valid JSON
-          if ! jq empty openapi.json 2>/dev/null; then
-            echo "❌ Failed to fetch valid OpenAPI JSON from ${API_URL}/api/v1/openapi.json"
-            echo "Response content:"
-            cat openapi.json
-            exit 1
-          fi
-          
-          echo "✅ Successfully fetched OpenAPI specification"
+          echo "✅ Using committed OpenAPI specification"
           echo "📄 Spec info: $(jq -r '.info.title + " v" + .info.version' openapi.json)"
           
       - name: Generate all SDKs
