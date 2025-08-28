@@ -97,7 +97,7 @@
 	<title>🐾 {m.nahpet()} - {m.url_shortener_tagline()}</title>
 	<meta
 		name="description"
-		content="{m.nahpet()} - {m.url_shortener_tagline()} avec domaines personnalisés, analyses détaillées et API complète. Rewriting paths with bad energy ✨"
+		content="{m.nahpet()} - {m.url_shortener_tagline()}"
 	/>
 </svelte:head>
 
