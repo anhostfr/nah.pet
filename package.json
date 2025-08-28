@@ -51,7 +51,7 @@
 		"qrcode": "^1.5.4",
 		"svelte-adapter-bun": "^0.5.2",
 		"sveltekit-api": "^0.6.1",
-		"swagger-ui": "^5.28.0",
+		"swagger-ui": "5.10.0",
 		"zod": "^3.25.76"
 	},
 	"trustedDependencies": [
