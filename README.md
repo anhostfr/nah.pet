@@ -217,7 +217,7 @@ MIT – see [LICENSE](LICENSE)
 * [sveltekit-api](https://github.com/JacobLinCool/sveltekit-api)
 * [Prisma](https://prisma.io/)
 * [Lucia Auth](https://lucia-auth.com/)
-* [Paraglide JS](https://inlang.com/m/gx6pgvp9/paraglide-js)
+* [Paraglide JS](https://inlang.com/)
 * [Bun](https://bun.sh/)
 
 ---
