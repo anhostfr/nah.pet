@@ -11,6 +11,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   generate-all-sdks:
     runs-on: ubuntu-latest
