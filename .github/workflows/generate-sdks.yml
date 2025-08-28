@@ -259,3 +259,19 @@ jobs:
           name: 🎁-complete-sdk-collection
           path: sdk-collection/
           retention-days: 90
+          
+      - name: Prepare release assets
+        if: github.event_name == 'release'
+        run: |
+          # Copy all SDK archives to root for release upload
+          cp sdk-collection/*.tar.gz . 2>/dev/null || true
+          
+      - name: Upload to release assets
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *-sdk.tar.gz
+            GENERATION_REPORT.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
