@@ -1,3 +1,4 @@
+import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 import { lucia } from '$lib/server/auth';
 import { db } from '$lib/server/db';
@@ -14,12 +15,12 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		!host.includes('localhost') &&
 		!host.includes('127.0.0.1') &&
 		!host.includes('0.0.0.0') &&
-		host !== 'nah.pet' &&
-		!host.startsWith('nah.pet:') &&
+		host !== PUBLIC_MAIN_DOMAIN &&
+		!host.startsWith(PUBLIC_MAIN_DOMAIN + ':') &&
 		!customDomain;
 
 	if (isUnknownDomain) {
-		throw redirect(302, `https://nah.pet/domain-not-found?domain=${encodeURIComponent(host)}`);
+		throw redirect(302, `https://${PUBLIC_MAIN_DOMAIN}/domain-not-found?domain=${encodeURIComponent(host)}`);
 	}
 
 	event.locals.customDomain = customDomain;
@@ -91,7 +92,7 @@ async function detectCustomDomain(host: string | null) {
 	if (host.includes('localhost') || host.includes('127.0.0.1') || host.includes('0.0.0.0')) {
 		return null;
 	}
-	if (host === 'nah.pet' || host.startsWith('nah.pet:')) {
+	if (host === PUBLIC_MAIN_DOMAIN || host.startsWith(PUBLIC_MAIN_DOMAIN + ':')) {
 		return null;
 	}
 	try {

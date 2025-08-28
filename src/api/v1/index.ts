@@ -1,3 +1,4 @@
+import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 import { API } from 'sveltekit-api';
 
 export default new API(
@@ -16,7 +17,7 @@ export default new API(
 		},
 		servers: [
 			{
-				url: 'https://nah.pet/api/v1',
+				url: 'https://' + PUBLIC_MAIN_DOMAIN + ' /api/v1',
 				description: 'Production server'
 			},
 			{

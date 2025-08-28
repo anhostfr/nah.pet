@@ -5,6 +5,7 @@
 	import { Copy, ExternalLink, BarChart3, Trash2, Lock, Calendar } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { page } from '$app/state';
+	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 	import { toast } from 'svelte-sonner';
 	import { enhance } from '$app/forms';
 	import * as m from "$lib/paraglide/messages"
@@ -33,7 +34,7 @@
 		try {
 			const url = link.customDomain
 				? `https://${link.customDomain.domain}/${link.slug}`
-				: `${page.url.origin}/${link.slug}`;
+				: `${PUBLIC_MAIN_DOMAIN}/${link.slug}`;
 			await navigator.clipboard.writeText(url);
 			toast.success(m.link_copied_clipboard());
 		} catch (err) {

@@ -6,6 +6,7 @@ import { generateQRCode } from '$lib/server/qr-generator.js';
 import { isValidUrl } from '$lib/utils.js';
 import { hash } from '@node-rs/argon2';
 import { isSlugReserved } from '$lib/server/domain-verification';
+import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || !locals.user.isAuthorized) {
@@ -159,7 +160,7 @@ export const actions: Actions = {
 
 			const shortUrl = verifiedCustomDomain
 				? `https://${verifiedCustomDomain.domain}/${slug}`
-				: `${url.origin}/${slug}`;
+				: `${PUBLIC_MAIN_DOMAIN}/${slug}`;
 			const qrCode = await generateQRCode(shortUrl);
 
 			return {

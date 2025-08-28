@@ -21,6 +21,7 @@
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
 	import { page } from '$app/state';
+	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 
 	let { form, customDomains } = $props();
 
@@ -165,7 +166,6 @@
 		</div>
 
 		{#if customDomains.length > 0}
-		{@const primaryDomain = page.url.origin.match(/https?:\/\/(www\.)?([^\/]+)/)?.[2] || 'nah.pet'}
 			<div class="space-y-2">
 				<Label class="text-base font-medium flex items-center gap-2">
 					<Globe class="w-4 h-4" />
@@ -175,13 +175,13 @@
 					<Select.Trigger class="h-12">
 						<span>
 							{selectedDomainValue === ''
-								? `${primaryDomain} (${m.primary_domain()})`
+								? `${PUBLIC_MAIN_DOMAIN} (${m.primary_domain()})`
 								: customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}
 						</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="" label={primaryDomain + ' (' +  m.primary_domain() + ')'}>
-							{primaryDomain} ({m.primary_domain()})
+						<Select.Item value="" label={PUBLIC_MAIN_DOMAIN + ' (' +  m.primary_domain() + ')'}>
+							{PUBLIC_MAIN_DOMAIN} ({m.primary_domain()})
 							<Badge variant="outline" class="ml-2 text-xs">{m.default_badge()}</Badge>
 						</Select.Item>
 						{#each customDomains as domain}

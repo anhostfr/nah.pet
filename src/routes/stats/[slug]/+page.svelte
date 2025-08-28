@@ -5,8 +5,8 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { BarChart3, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
-	import { page } from '$app/stores';
 	import * as m from '$lib/paraglide/messages.js';
+	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 
 	let { data } = $props();
 </script>
@@ -49,7 +49,7 @@
 						<code class="text-sm bg-muted px-2 py-1 rounded break-all">
 							{data.link.customDomain
 								? `https://${data.link.customDomain.domain}/${data.link.slug}`
-								: `${$page.url.origin}/${data.link.slug}`}
+								: `${PUBLIC_MAIN_DOMAIN}/${data.link.slug}`}
 						</code>
 						<Button
 							variant="ghost"

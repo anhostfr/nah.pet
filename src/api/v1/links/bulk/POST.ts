@@ -6,6 +6,7 @@ import { generateUniqueSlug } from '$lib/server/slug-generator';
 import { isValidUrl } from '$lib/utils';
 import { sanitizeTitle } from '$lib/utils/sanitize';
 import { hash } from '@node-rs/argon2';
+import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 
 export const Input = z.object({
 	links: z
@@ -136,7 +137,7 @@ export default new Endpoint({ Input, Output, Error, Modifier }).handle(async (in
 
 			const shortUrl = customDomain
 				? `https://${customDomain.domain}/${link.slug}`
-				: `https://nah.pet/${link.slug}`;
+				: `https://${PUBLIC_MAIN_DOMAIN}/${link.slug}`;
 
 			created.push({
 				id: link.id,

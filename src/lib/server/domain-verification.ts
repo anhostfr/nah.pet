@@ -1,6 +1,7 @@
 import * as dns from 'node:dns';
 import { promisify } from 'node:util';
 import { nanoid } from 'nanoid';
+import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 
 const resolveTxt = promisify(dns.resolveTxt);
 
@@ -149,7 +150,7 @@ export function validateDomainFormat(domain: string): boolean {
 }
 
 export function isDomainAllowed(domain: string): boolean {
-	const blockedDomains = ['localhost', 'nah.pet'];
+	const blockedDomains = ['localhost', PUBLIC_MAIN_DOMAIN];
 
 	const lowercaseDomain = domain.toLowerCase();
 
@@ -157,7 +158,7 @@ export function isDomainAllowed(domain: string): boolean {
 		return false;
 	}
 
-	if (lowercaseDomain.endsWith('.nah.pet')) {
+	if (lowercaseDomain.endsWith('.' + PUBLIC_MAIN_DOMAIN)) {
 		return false;
 	}
 
