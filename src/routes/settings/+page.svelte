@@ -2,10 +2,9 @@
 	import { Settings, User, Key, Globe } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import * as m from '$lib/paraglide/messages.js';
-	import AccountSection from '$lib/components/settings/AccountSection.svelte';
-	import ApiKeysSection from '$lib/components/settings/ApiKeysSection.svelte';
-	import DomainsSection from '$lib/components/settings/DomainsSection.svelte';
-	import { tKey } from '$lib/i18n';
+	import AccountSection from '$lib/components/settings/account-section.svelte';
+	import ApiKeysSection from '$lib/components/settings/api-keys-section.svelte';
+	import DomainsSection from '$lib/components/settings/domains-section.svelte';
 	import type { NormalizedActionData } from '$lib/types';
 
 	let { data, form }: { data: any; form: NormalizedActionData } = $props();

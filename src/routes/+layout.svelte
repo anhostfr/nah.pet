@@ -7,7 +7,7 @@
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
 	import * as m from '$lib/paraglide/messages.js';
-	import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+	import LanguageSelector from '$lib/components/language-selector.svelte';
 	import { slide } from 'svelte/transition';
 
 	let { children, data } = $props();
