@@ -5,6 +5,7 @@ import { db } from '$lib/server/db';
 import { type Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import '$lib/server/cleanup.js';
 
 const authHandle: Handle = async ({ event, resolve }) => {
 	const host = event.request.headers.get('host');
