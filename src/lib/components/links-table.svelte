@@ -119,7 +119,7 @@
 						<Table.Cell>
 							<div class="flex items-center gap-2">
 								<span class="font-medium">{formatNumber(link._count.clicks)}</span>
-								<Button variant="ghost" size="sm" href="/stats/{link.slug}">
+								<Button variant="ghost" size="sm" href="/stats/{link.slug}{link.customDomain ? `?domain=${link.customDomain.domain}` : ''}">
 									<ChartBar class="h-3 w-3" />
 								</Button>
 							</div>
@@ -157,7 +157,7 @@
 								<Button
 									variant="ghost"
 									size="sm"
-									href="/stats/{link.slug}"
+									href="/stats/{link.slug}{link.customDomain ? `?domain=${link.customDomain.domain}` : ''}"
 									class="hidden sm:inline-flex"
 								>
 									<ChartBar class="h-3 w-3" />

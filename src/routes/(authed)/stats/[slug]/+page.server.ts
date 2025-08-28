@@ -2,25 +2,43 @@ import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db.js';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, url }) => {
 	if (!locals.user || !locals.user.isAuthorized) {
 		throw redirect(302, '/login');
 	}
 
 	const { slug } = params;
+	const domainParam = url.searchParams.get('domain');
 
-	const link = await db.link.findFirst({
-		where: {
-			slug,
-			userId: locals.user.id
-		},
-		include: {
-			customDomain: true
-		}
-	});
+	let link;
+
+	if (domainParam) {
+		link = await db.link.findFirst({
+			where: {
+				slug,
+				userId: locals.user.id,
+				customDomain: {
+					domain: domainParam
+				}
+			},
+			include: {
+				customDomain: true
+			}
+		});
+	} else {
+		link = await db.link.findFirst({
+			where: {
+				slug,
+				userId: locals.user.id
+			},
+			include: {
+				customDomain: true
+			}
+		});
+	}
 
 	if (!link) {
-		throw error(404, "Lien introuvable ou vous n'avez pas les permissions pour le voir");
+		throw error(404, "link.not_found");
 	}
 
 	const now = new Date();
