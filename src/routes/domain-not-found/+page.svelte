@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Domaine non trouvé - Nah.pet</title>
+	<title>{m.domain_not_found_title()} - Nah.pet</title>
 </svelte:head>
 
 <div class="min-h-full flex items-center justify-center p-4">

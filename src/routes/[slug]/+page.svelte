@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Lien protégé - Nah.pet</title>
+	<title>{m.protected_link()} - Nah.pet</title>
 </svelte:head>
 
 <div class="max-w-md mx-auto mt-16">

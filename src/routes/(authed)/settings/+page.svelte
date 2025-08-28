@@ -62,6 +62,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>{m.settings_title()} - Nah.pet</title>
+</svelte:head>
+
 <div class="flex gap-6 flex-wrap">
 	<div class="w-full md:w-64 space-y-2">
 		<div class="flex items-center space-x-2 mb-6">
