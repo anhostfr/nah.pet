@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import FeatureCard from '$lib/components/feature-card.svelte';
+	import UnifiedCard from '$lib/components/unified-card.svelte';
 	import { 
 		Link, 
 		ChartBar, 
@@ -26,60 +26,60 @@
 		{
 			icon: Link,
 			color: 'blue',
-			title: '✂️ Raccourcissement d\'URL',
-			description: 'Créez des liens courts avec des slugs personnalisables pour une meilleure identification.',
-			badge: 'Slugs personnalisés'
+			title: m.url_shortening_title(),
+			description: m.url_shortening_description(),
+			badge: m.custom_slugs_badge()
 		},
 		{
 			icon: Shield,
 			color: 'red',
-			title: '🔐 Protection par mot de passe',
-			description: 'Sécurisez vos liens sensibles avec une protection par mot de passe.',
-			badge: 'Liens protégés'
+			title: m.password_protection_title(),
+			description: m.password_protection_description(),
+			badge: m.protected_link()
 		},
 		{
 			icon: Clock,
 			color: 'orange',
-			title: '⏰ Expiration automatique',
-			description: 'Définissez une date d\'expiration pour vos liens pour un contrôle temporel.',
-			badge: 'Contrôle temporel'
+			title: m.expiration_title(),
+			description: m.expiration_description(),
+			badge: m.temporal_control_badge()
 		},
 		{
 			icon: ChartBar,
 			color: 'green',
-			title: '📊 Analyses détaillées',
-			description: 'Statistiques complètes : clics, géolocalisation, navigateurs et plus encore.',
-			badge: 'Données en temps réel',
+			title: m.detailed_analytics_title(),
+			description: m.detailed_analytics_description(),
+			badge: m.real_time_badge(),
 			badgeIcon: Eye
 		},
 		{
 			icon: Globe,
 			color: 'purple',
-			title: '🌐 Domaines personnalisés',
-			description: 'Isolation complète avec vos propres domaines.',
-			badge: 'Isolation complète'
+			title: m.custom_domains_title_feature(),
+			description: m.custom_domains_description(),
+			badge: m.complete_isolation_badge()
 		},
 		{
 			icon: Users,
 			color: 'indigo',
-			title: '👥 Système d\'administration',
-			description: 'Approbation manuelle des utilisateurs et gestion avancée des permissions.',
-			badge: 'Contrôle d\'accès'
+			title: m.administration_title(),
+			description: m.administration_description(),
+			badge: m.access_control_badge()
 		},
 		{
 			icon: Key,
 			color: 'yellow',
-			title: '🔑 API REST complète',
-			description: 'Authentification par clé API avec spécification OpenAPI 3.0 complète.',
-			badge: 'OpenAPI 3.0',
+			title: m.api_rest_title(),
+			description: m.api_rest_description(),
+			badge: m.openapi_badge(),
 			badgeIcon: Code
 		},
 		{
 			icon: Languages,
 			color: 'teal',
-			title: '🌍 Interface multilingue',
-			description: 'Support multilingue avec Paraglide JS et Weblate pour une sécurité de type.',
-			badge: 'Type-safe i18n'
+			title: m.multilingual_title(),
+			description: m.multilingual_description(),
+			badge: m.typesafe_i18n_badge()
 		}
 	];
 
@@ -94,20 +94,19 @@
 </script>
 
 <svelte:head>
-	<title>🐾 Nah.pet - Raccourcisseur d'URL Open Source</title>
-	<meta name="description" content="Nah.pet - Raccourcisseur d'URL open source avec domaines personnalisés, analyses détaillées et API complète. Rewriting paths with bad energy ✨" />
+	<title>🐾 {m.nahpet()} - {m.url_shortener_tagline()}</title>
+	<meta name="description" content="{m.nahpet()} - {m.url_shortener_tagline()} avec domaines personnalisés, analyses détaillées et API complète. Rewriting paths with bad energy ✨" />
 </svelte:head>
 
 <div class="space-y-16 sm:space-y-20">
-	<!-- Hero Section -->
 	<section class="text-center space-y-6 sm:space-y-8 py-8 sm:py-12">
 		<div class="flex flex-wrap justify-center gap-2 mb-6">
 			<Badge variant="outline" class="text-xs font-medium">
-				🐾 Nah.pet
+				🐾 {m.nahpet()}
 			</Badge>
 			<Badge variant="outline" class="text-xs font-medium">
 				<Globe class="w-3 h-3 mr-1" />
-				Open Source
+				{m.open_source()}
 			</Badge>
 			<Badge variant="outline" class="text-xs font-medium">
 				MIT License
@@ -116,32 +115,31 @@
 		
 		<div class="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
 			<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-				🐾 Nah.pet
+				🐾 {m.nahpet()}
 			</h1>
-			<p class="text-xl sm:text-2xl text-blue-600 dark:text-blue-400 font-medium mb-4">
-				"Rewriting paths with bad energy" ✨
+			<p class="text-xl sm:text-2xl text-primary font-medium mb-4">
+				"{m.nahpet_tagline()}" ✨
 			</p>
 			<p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-				Raccourcisseur d'URL open source avec domaines personnalisés, analyses détaillées et API complète. 
-				Créé avec SvelteKit et TypeScript pour des performances optimales.
+				{m.nahpet_description()} avec domaines personnalisés, analyses détaillées et API complète. 
+				{m.created_with_sveltekit()}
 			</p>
 			
-			<!-- Example demonstration -->
-			<div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 max-w-3xl mx-auto border border-gray-200 dark:border-gray-700">
+			<div class="bg-secondary/15 rounded-xl p-6 max-w-3xl mx-auto border border-border">
 				<div class="flex flex-col sm:flex-row items-center gap-4">
-					<div class="flex-1 min-w-0">
-						<p class="text-sm text-gray-500 dark:text-gray-400 mb-1">URL longue :</p>
-						<code class="text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block truncate border">
+					<div class="flex-1 min-w-0 max-w-full">
+						<p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{m.long_url_label()}</p>
+						<code class="text-sm text-secondary-foreground bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block truncate border">
 							https://www.example.com/very/long/path/with/many/parameters?utm_source=newsletter&amp;utm_campaign=launch
 						</code>
 					</div>
-					<div class="flex-shrink-0">
-						<ArrowRight class="w-5 h-5 text-blue-500 transform rotate-90 sm:rotate-0" />
+					<div class="lg:mt-5">
+						<ArrowRight class="w-5 h-5 text-accent/90 max-md:rotate-90" />
 					</div>
 					<div class="flex-1 min-w-0">
-						<p class="text-sm text-gray-500 dark:text-gray-400 mb-1">URL courte :</p>
-						<code class="text-sm text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block font-semibold border">
-							nah.pet/launch2024
+						<p class="text-sm text-gray-600 dark:text-gray-400 0 mb-1">{m.short_url_label()}</p>
+						<code class="text-sm text-accent/90 bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block font-semibold border">
+							nah.pet/launch2025
 						</code>
 					</div>
 				</div>
@@ -156,53 +154,51 @@
 				</Button>
 			{:else}
 				<Button href="/register" size="lg" class="text-base px-8">
-					Commencer
+					{m.get_started()}
 					<ArrowRight class="w-4 h-4 ml-2" />
 				</Button>
 				<Button href="/login" variant="outline" size="lg" class="text-base px-8">
-					Se connecter
+					{m.login()}
 				</Button>
 			{/if}
 			<Button href="/doc" variant="outline" size="lg" class="text-base px-8">
-				📚 Documentation API
+				{m.api_documentation_link()}
 				<ExternalLink class="w-4 h-4 ml-2" />
 			</Button>
 		</div>
 	</section>
 
-	<!-- Features Section -->
 	<section class="space-y-8 sm:space-y-12">
 		<div class="text-center space-y-4">
 			<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-				✨ Fonctionnalités
+				{m.features_title()}
 			</h2>
 			<p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-				Un raccourcisseur d'URL complet avec toutes les fonctionnalités dont vous avez besoin
+				{m.features_description()}
 			</p>
 		</div>
 
 		<div class="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{#each features as feature}
-				<FeatureCard {...feature} />
+				<UnifiedCard type="feature" {...feature} />
 			{/each}
 		</div>
 	</section>
 
-	<!-- API Section -->
 	<section class="space-y-8 sm:space-y-12">
 		<div class="text-center space-y-4">
 			<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-				🔌 API REST complète
+				{m.api_section_title()}
 			</h2>
 			<p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-				Construite avec sveltekit-api et spécification OpenAPI 3.0 complète
+				{m.api_section_description()}
 			</p>
 		</div>
 
 		<div class="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Endpoints principaux</h3>
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{m.main_endpoints_title()}</h3>
 					<div class="space-y-2 text-sm">
 						{#each endpoints as endpoint}
 							<div class="flex items-center">
@@ -216,9 +212,9 @@
 
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Authentification</h3>
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{m.authentication_title()}</h3>
 					<p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
-						Utilisez votre clé API dans l'en-tête Authorization
+						{m.authentication_description()}
 					</p>
 					<div class="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
 						<code class="text-xs text-gray-800 dark:text-gray-200">
@@ -230,11 +226,11 @@
 
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Génération de SDK</h3>
+					<h3 class="text-lg font-semibold  mb-3">{m.sdk_generation_title()}</h3>
 					<p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
-						Générez automatiquement des SDKs pour différents langages
+						{m.sdk_generation_description()}
 					</p>
-					<div class="space-y-2">
+					<div class="space-y-2 space-x-1.5">
 						{#each sdks as sdk}
 							<Badge variant="secondary" class="text-xs">{sdk}</Badge>
 						{/each}
@@ -245,32 +241,30 @@
 
 		<div class="text-center">
 			<Button href="/doc" size="lg" class="text-base px-8">
-				📚 Voir la documentation complète
+				{m.view_complete_docs()}
 				<ExternalLink class="w-4 h-4 ml-2" />
 			</Button>
 		</div>
 	</section>
 
-	<!-- CTA Section -->
 	{#if !data.user}
 		<section class="text-center space-y-6 sm:space-y-8 py-8">
 			<div class="space-y-4">
-				<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-					Prêt à commencer ?
+				<h2 class="text-3xl sm:text-4xl font-bold">
+					{m.ready_to_start_title()}
 				</h2>
-				<p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-					Créez votre compte gratuitement et commencez à raccourcir vos liens dès maintenant. 
-					Open source et auto-hébergeable.
+				<p class="text-lg max-w-2xl mx-auto">
+					{m.ready_to_start_description()}
 				</p>
 			</div>
 
 			<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
 				<Button href="/register" size="lg" class="text-base px-8">
-					🐾 Commencer avec Nah.pet
+					{m.start_with_nahpet()}
 					<ArrowRight class="w-4 h-4 ml-2" />
 				</Button>
 				<Button href="/login" variant="outline" size="lg" class="text-base px-8">
-					Se connecter
+					{m.login()}
 				</Button>
 				<Button href="https://github.com/your-repo/nah-pet" variant="outline" size="lg" class="text-base px-8">
 					<Github class="w-4 h-4 mr-2" />
@@ -280,33 +274,30 @@
 		</section>
 	{/if}
 
-	<!-- Footer -->
-	<footer class="py-8 border-t border-gray-200 dark:border-gray-700">
+	<footer class="py-8 border-t border-border">
 		<div class="max-w-4xl mx-auto">
-			<!-- Quick links section -->
 			<div class="flex flex-wrap justify-center gap-6 mb-6">
-				<Button href="/doc" variant="ghost" size="sm" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-					📚 Documentation API
+				<Button href="/doc" variant="ghost" size="sm">
+					{m.api_documentation_link()}
 				</Button>
-				<Button href="https://github.com/your-repo/nah-pet" variant="ghost" size="sm" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+				<Button href="https://github.com/anhostfr/nah.pet" variant="ghost" size="sm">
 					<Github class="w-4 h-4 mr-1" />
-					Code source
+					{m.source_code_link()}
 				</Button>
-				<Button href="https://github.com/your-repo/nah-pet/issues" variant="ghost" size="sm" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-					🐛 Signaler un bug
+				<Button href="https://github.com/anhostfr/nah.pet/issues" variant="ghost" size="sm">
+					{m.report_bug_link()}
 				</Button>
-				<Button href="https://github.com/your-repo/nah-pet/releases" variant="ghost" size="sm" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-					🏷️ Versions
+				<Button href="https://github.com/anhostfr/nah.pet/releases" variant="ghost" size="sm">
+					{m.versions_link()}
 				</Button>
 			</div>
 			
-			<!-- Tagline and license -->
-			<div class="text-center text-gray-500 dark:text-gray-400 text-sm">
+			<div class="text-center text-gray-600 dark:text-gray-400 text-sm">
 				<p class="mb-2">
-					<em>"It's a no from us, dawg." – but it's a yes for open source!</em>
+					<em>{m.footer_tagline()}</em>
 				</p>
 				<p>
-					MIT License • Construit avec ❤️ et SvelteKit • 🐾 Nah.pet
+					{m.footer_license()}
 				</p>
 			</div>
 		</div>
