@@ -1,10 +1,11 @@
 # 🐾 Nah.pet – Open Source URL Shortener
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
-[![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=flat&logo=svelte&logoColor=white)](https://kit.svelte.dev/)  
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)  
-[![Translation Status](https://img.shields.io/badge/EN-100%25-brightgreen)](https://inlang.com/m/gx6pgvp9/paraglide-js)  
-[![Translation Status](https://img.shields.io/badge/FR-100%25-brightgreen)](https://inlang.com/m/gx6pgvp9/paraglide-js)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=flat&logo=svelte&logoColor=white)](https://kit.svelte.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
+[![Translation status](https://hosted.weblate.org/widget/nah-pet/paraglide-messages/svg-badge.svg)](https://hosted.weblate.org/engage/nah-pet/)
+[![Translation status](https://hosted.weblate.org/widget/nah-pet/language-badge.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
 > **Nah.pet** – *"Rewriting paths with bad energy"* ✨  
 > Open-source URL shortener with custom domains and analytics.
@@ -22,18 +23,20 @@
 - 🌐 **Custom domains** with complete isolation  
 - 👥 **Admin system** with manual approval  
 - 🔑 **REST API** with API key authentication  
-- 🌍 **Multilingual interface** (EN/FR)
+- 🌍 **Multilingual interface**
 
 ---
 
 ## 🌍 Translation Status
+[![Translation status](https://hosted.weblate.org/widget/nah-pet/paraglide-messages/svg-badge.svg)](https://hosted.weblate.org/engage/nah-pet/)
+[![Translation status](https://hosted.weblate.org/widget/nah-pet/language-badge.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
-| Language | Keys | Status |
-|----------|------|--------|
-| 🇬🇧 English (EN) | 295/295 | ✅ Complete |
-| 🇫🇷 French (FR)  | 295/295 | ✅ Complete |
+<a href="https://hosted.weblate.org/engage/nah-pet/">
+<img src="https://hosted.weblate.org/widget/nah-pet/
+paraglide-messages/multi-auto.svg" alt="Translation status" />
+</a>
 
-*Managed with Paraglide JS for type-safety.*
+*Managed with Paraglide JS and Weblate for type-safety.*
 
 ---
 
