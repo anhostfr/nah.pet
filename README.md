@@ -31,10 +31,7 @@
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/paraglide-messages/svg-badge.svg)](https://hosted.weblate.org/engage/nah-pet/)
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/language-badge.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
-<a href="https://hosted.weblate.org/engage/nah-pet/">
-<img src="https://hosted.weblate.org/widget/nah-pet/
-paraglide-messages/multi-auto.svg" alt="Translation status" />
-</a>
+[![Translation status](https://hosted.weblate.org/widget/nah-pet/multi-auto.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
 *Managed with Paraglide JS and Weblate for type-safety.*
 
