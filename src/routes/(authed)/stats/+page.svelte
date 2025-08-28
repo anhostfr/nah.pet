@@ -262,7 +262,9 @@
 										<Table.Cell>
 											<div class="flex items-center space-x-1">
 												<Button
-													href="/stats/{link.slug}{link.customDomain ? `?domain=${link.customDomain.domain}` : ''}"
+													href="/stats/{link.slug}{link.customDomain
+														? `?domain=${link.customDomain.domain}`
+														: ''}"
 													size="sm"
 													variant="ghost"
 													class="h-8 w-8 p-0"

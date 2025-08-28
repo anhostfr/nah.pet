@@ -19,7 +19,10 @@
 
 	function regionToTwemojiSvg(region?: string): string | null {
 		if (!region) return null;
-		const letters = region.toUpperCase().replace(/[^A-Z]/g, '').split('');
+		const letters = region
+			.toUpperCase()
+			.replace(/[^A-Z]/g, '')
+			.split('');
 		if (letters.length !== 2) return null;
 		const cps = letters.map((c) => (0x1f1e6 + (c.charCodeAt(0) - 65)).toString(16));
 		const filename = `${cps[0]}-${cps[1]}.svg`;
@@ -67,7 +70,10 @@
 				aria-hidden="true"
 			/>
 		{:else}
-			<span class="inline-flex items-center justify-center w-4 h-4 leading-none text-base" style="font-variant-emoji: emoji;">
+			<span
+				class="inline-flex items-center justify-center w-4 h-4 leading-none text-base"
+				style="font-variant-emoji: emoji;"
+			>
 				{languages.find((lang) => lang.value === currentLang)?.flag}
 			</span>
 		{/if}
@@ -80,7 +86,10 @@
 						{#if lang.flagSrc}
 							<img src={lang.flagSrc} alt="" class="w-4 h-4 object-contain" aria-hidden="true" />
 						{:else}
-							<span class="inline-flex items-center justify-center w-4 h-4 leading-none text-base" style="font-variant-emoji: emoji;">{lang.flag}</span>
+							<span
+								class="inline-flex items-center justify-center w-4 h-4 leading-none text-base"
+								style="font-variant-emoji: emoji;">{lang.flag}</span
+							>
 						{/if}
 						<span>{lang.label}</span>
 					</div>

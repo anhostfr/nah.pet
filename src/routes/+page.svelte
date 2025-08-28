@@ -3,10 +3,10 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import UnifiedCard from '$lib/components/unified-card.svelte';
-	import { 
-		Link, 
-		ChartBar, 
-		Globe, 
+	import {
+		Link,
+		ChartBar,
+		Globe,
 		Shield,
 		ArrowRight,
 		Eye,
@@ -95,7 +95,10 @@
 
 <svelte:head>
 	<title>🐾 {m.nahpet()} - {m.url_shortener_tagline()}</title>
-	<meta name="description" content="{m.nahpet()} - {m.url_shortener_tagline()} avec domaines personnalisés, analyses détaillées et API complète. Rewriting paths with bad energy ✨" />
+	<meta
+		name="description"
+		content="{m.nahpet()} - {m.url_shortener_tagline()} avec domaines personnalisés, analyses détaillées et API complète. Rewriting paths with bad energy ✨"
+	/>
 </svelte:head>
 
 <div class="space-y-16 sm:space-y-20">
@@ -108,28 +111,32 @@
 				<Globe class="w-3 h-3 mr-1" />
 				{m.open_source()}
 			</Badge>
-			<Badge variant="outline" class="text-xs font-medium">
-				MIT License
-			</Badge>
+			<Badge variant="outline" class="text-xs font-medium">MIT License</Badge>
 		</div>
-		
+
 		<div class="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
-			<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
+			<h1
+				class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight"
+			>
 				🐾 {m.nahpet()}
 			</h1>
 			<p class="text-xl sm:text-2xl text-primary font-medium mb-4">
 				"{m.nahpet_tagline()}" ✨
 			</p>
-			<p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-				{m.nahpet_description()} avec domaines personnalisés, analyses détaillées et API complète. 
+			<p
+				class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed"
+			>
+				{m.nahpet_description()} avec domaines personnalisés, analyses détaillées et API complète.
 				{m.created_with_sveltekit()}
 			</p>
-			
+
 			<div class="bg-secondary/15 rounded-xl p-6 max-w-3xl mx-auto border border-border">
 				<div class="flex flex-col sm:flex-row items-center gap-4">
 					<div class="flex-1 min-w-0 max-w-full">
 						<p class="text-sm text-gray-600 dark:text-gray-400 mb-1">{m.long_url_label()}</p>
-						<code class="text-sm text-secondary-foreground bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block truncate border">
+						<code
+							class="text-sm text-secondary-foreground bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block truncate border"
+						>
 							https://www.example.com/very/long/path/with/many/parameters?utm_source=newsletter&amp;utm_campaign=launch
 						</code>
 					</div>
@@ -138,7 +145,9 @@
 					</div>
 					<div class="flex-1 min-w-0">
 						<p class="text-sm text-gray-600 dark:text-gray-400 0 mb-1">{m.short_url_label()}</p>
-						<code class="text-sm text-accent/90 bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block font-semibold border">
+						<code
+							class="text-sm text-accent/90 bg-white dark:bg-gray-900 px-3 py-2 rounded-lg block font-semibold border"
+						>
 							nah.pet/launch2025
 						</code>
 					</div>
@@ -198,7 +207,9 @@
 		<div class="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{m.main_endpoints_title()}</h3>
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+						{m.main_endpoints_title()}
+					</h3>
 					<div class="space-y-2 text-sm">
 						{#each endpoints as endpoint}
 							<div class="flex items-center">
@@ -212,7 +223,9 @@
 
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">{m.authentication_title()}</h3>
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+						{m.authentication_title()}
+					</h3>
 					<p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
 						{m.authentication_description()}
 					</p>
@@ -226,7 +239,7 @@
 
 			<Card.Root>
 				<Card.Content class="p-6">
-					<h3 class="text-lg font-semibold  mb-3">{m.sdk_generation_title()}</h3>
+					<h3 class="text-lg font-semibold mb-3">{m.sdk_generation_title()}</h3>
 					<p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
 						{m.sdk_generation_description()}
 					</p>
@@ -266,7 +279,12 @@
 				<Button href="/login" variant="outline" size="lg" class="text-base px-8">
 					{m.login()}
 				</Button>
-				<Button href="https://github.com/your-repo/nah-pet" variant="outline" size="lg" class="text-base px-8">
+				<Button
+					href="https://github.com/your-repo/nah-pet"
+					variant="outline"
+					size="lg"
+					class="text-base px-8"
+				>
 					<Github class="w-4 h-4 mr-2" />
 					GitHub
 				</Button>
@@ -291,7 +309,7 @@
 					{m.versions_link()}
 				</Button>
 			</div>
-			
+
 			<div class="text-center text-gray-600 dark:text-gray-400 text-sm">
 				<p class="mb-2">
 					<em>{m.footer_tagline()}</em>

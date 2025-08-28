@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 	}
 
 	if (!link) {
-		throw error(404, "link.not_found");
+		throw error(404, 'link.not_found');
 	}
 
 	const now = new Date();

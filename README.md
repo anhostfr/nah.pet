@@ -7,7 +7,7 @@
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/paraglide-messages/svg-badge.svg)](https://hosted.weblate.org/engage/nah-pet/)
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/language-badge.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
-> **Nah.pet** – *"Rewriting paths with bad energy"* ✨  
+> **Nah.pet** – _"Rewriting paths with bad energy"_ ✨  
 > Open-source URL shortener with custom domains and analytics.
 
 📚 **[OpenAPI Documentation](https://nah.pet/doc)**
@@ -16,44 +16,47 @@
 
 ## ✨ Features
 
-- ✂️ **URL Shortening** with custom slugs  
-- 🔐 **Password protection** for sensitive links  
-- ⏰ **Automatic link expiration**  
-- 📊 **Detailed analytics** (clicks, geolocation, browsers)  
-- 🌐 **Custom domains** with complete isolation  
-- 👥 **Admin system** with manual approval  
-- 🔑 **REST API** with API key authentication  
+- ✂️ **URL Shortening** with custom slugs
+- 🔐 **Password protection** for sensitive links
+- ⏰ **Automatic link expiration**
+- 📊 **Detailed analytics** (clicks, geolocation, browsers)
+- 🌐 **Custom domains** with complete isolation
+- 👥 **Admin system** with manual approval
+- 🔑 **REST API** with API key authentication
 - 🌍 **Multilingual interface**
 
 ---
 
 ## 🌍 Translation Status
+
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/paraglide-messages/svg-badge.svg)](https://hosted.weblate.org/engage/nah-pet/)
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/language-badge.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
 [![Translation status](https://hosted.weblate.org/widget/nah-pet/multi-auto.svg?threshold=0)](https://hosted.weblate.org/engage/nah-pet/)
 
-*Managed with Paraglide JS and Weblate for type-safety.*
+_Managed with Paraglide JS and Weblate for type-safety._
 
 ---
 
 ## 🌐 Custom Domains
 
 ### Why `cat.yourDomain.tld`?
+
 The `cat.` prefix bypasses CORS restrictions from Cloudflare and other CDNs by using a dedicated subdomain.
 
 ### DNS Setup
 
-1. **Domain verification**:  
-   - DNS: TXT record with token  
-   - File: `/.well-known/nah-pet-verification.txt`  
+1. **Domain verification**:
+   - DNS: TXT record with token
+   - File: `/.well-known/nah-pet-verification.txt`
 
-2. **CNAME configuration**:  
+2. **CNAME configuration**:
    ```dns
    Type: CNAME
    Name: cat.example.com
    Value: cat.nah.pet
    TTL: 300
+   ```
 3. **Redirection**:
 
    ```
@@ -85,8 +88,8 @@ docker-compose up -d
 
 Access:
 
-* Web interface: `http://localhost:3000`
-* API: `http://localhost:3000/doc`
+- Web interface: `http://localhost:3000`
+- API: `http://localhost:3000/doc`
 
 ### 🛠️ Manual Installation
 
@@ -106,13 +109,13 @@ Built with **sveltekit-api** from [JacobLinCool](https://github.com/JacobLinCool
 
 ### Main Endpoints
 
-* `GET /api/v1/links` – List links
-* `POST /api/v1/links` – Create a link
-* `GET/PUT/DELETE /api/v1/links/{id}` – Manage a link
-* `GET /api/v1/stats` – Global statistics
-* `GET /api/v1/stats/{slug}` – Link statistics
-* `POST /api/v1/links/bulk` – Bulk operations
-* `GET /api/v1/stats/export` – Export data
+- `GET /api/v1/links` – List links
+- `POST /api/v1/links` – Create a link
+- `GET/PUT/DELETE /api/v1/links/{id}` – Manage a link
+- `GET /api/v1/stats` – Global statistics
+- `GET /api/v1/stats/{slug}` – Link statistics
+- `POST /api/v1/links/bulk` – Bulk operations
+- `GET /api/v1/stats/export` – Export data
 
 ### SDK Generation
 
@@ -138,14 +141,14 @@ curl -H "Authorization: Bearer YOUR_API_KEY" \
 
 ## 🏗️ Tech Stack
 
-* **Frontend/Backend**: SvelteKit 5 + TypeScript
-* **Runtime**: Bun 1.x
-* **Database**: PostgreSQL + Prisma ORM
-* **Authentication**: Lucia Auth + OAuth2
-* **Styling**: TailwindCSS 4 + Shadcn/ui
-* **i18n**: Paraglide JS
-* **API**: Sveltekit-api (OpenAPI)
-* **Deployment**: Docker + Docker Compose
+- **Frontend/Backend**: SvelteKit 5 + TypeScript
+- **Runtime**: Bun 1.x
+- **Database**: PostgreSQL + Prisma ORM
+- **Authentication**: Lucia Auth + OAuth2
+- **Styling**: TailwindCSS 4 + Shadcn/ui
+- **i18n**: Paraglide JS
+- **API**: Sveltekit-api (OpenAPI)
+- **Deployment**: Docker + Docker Compose
 
 ### Project Structure
 
@@ -213,12 +216,12 @@ MIT – see [LICENSE](LICENSE)
 
 ## 🙏 Acknowledgements
 
-* [SvelteKit](https://kit.svelte.dev/)
-* [sveltekit-api](https://github.com/JacobLinCool/sveltekit-api)
-* [Prisma](https://prisma.io/)
-* [Lucia Auth](https://lucia-auth.com/)
-* [Paraglide JS](https://inlang.com/)
-* [Bun](https://bun.sh/)
+- [SvelteKit](https://kit.svelte.dev/)
+- [sveltekit-api](https://github.com/JacobLinCool/sveltekit-api)
+- [Prisma](https://prisma.io/)
+- [Lucia Auth](https://lucia-auth.com/)
+- [Paraglide JS](https://inlang.com/)
+- [Bun](https://bun.sh/)
 
 ---
 

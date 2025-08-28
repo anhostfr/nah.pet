@@ -17,26 +17,26 @@ permissions:
 jobs:
   generate-all-sdks:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Java (required for openapi-generator)
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-          
+
       - name: Install OpenAPI Generator
         run: |
           wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.8.0/openapi-generator-cli-7.8.0.jar -O openapi-generator-cli.jar
-          
+
       - name: Use OpenAPI specification
         run: |
           echo "✅ Using committed OpenAPI specification"
           echo "📄 Spec info: $(jq -r '.info.title + " v" + .info.version' openapi.json)"
-          
+
       - name: Generate all SDKs
         run: |
           # Liste de tous les générateurs
@@ -58,13 +58,13 @@ jobs:
             "typescript-node" "typescript-redux-query" "typescript-rxjs" 
             "xojo-client" "zapier"
           )
-          
+
           mkdir -p generated-sdks
           successful=0
           total=${#generators[@]}
-          
+
           echo "🚀 Démarrage génération de $total SDKs..."
-          
+
           for generator in "${generators[@]}"; do
             echo ""
             echo "🔨 Génération SDK: $generator"
@@ -117,31 +117,31 @@ jobs:
               rm -rf "generated-sdks/$generator"
             fi
           done
-          
+
           echo ""
           echo "📊 Résumé: $successful/$total SDKs générés avec succès"
           echo "success_count=$successful" >> $GITHUB_OUTPUT
           echo "total_count=$total" >> $GITHUB_OUTPUT
-          
+
       - name: Upload all SDKs
         uses: actions/upload-artifact@v4
         with:
           name: all-generated-sdks
           path: generated-sdks/
           retention-days: 90
-          
+
   collect-and-summarize:
     needs: generate-all-sdks
     runs-on: ubuntu-latest
     if: always()
-    
+
     steps:
       - name: Download all SDK artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
           merge-multiple: true
-          
+
       - name: Create comprehensive summary
         run: |
           echo "# 🎉 SDK Generation Report" > GENERATION_REPORT.md
@@ -150,11 +150,11 @@ jobs:
           echo "**API URL:** ${{ github.event.inputs.api_url || 'https://nah.pet' }}" >> GENERATION_REPORT.md
           echo "**Workflow:** [\${{ github.run_number }}](\${{ github.server_url }}/\${{ github.repository }}/actions/runs/\${{ github.run_id }})" >> GENERATION_REPORT.md
           echo "" >> GENERATION_REPORT.md
-          
+
           successful=0
           total=0
           total_size=0
-          
+
           # Count and categorize SDKs
           declare -A categories
           categories[web]="javascript typescript typescript-angular typescript-aurelia typescript-axios typescript-fetch typescript-inversify typescript-jquery typescript-nestjs typescript-node typescript-redux-query typescript-rxjs"
@@ -164,10 +164,10 @@ jobs:
           categories[systems]="c cpp-oatpp-client cpp-qt-client cpp-restsdk cpp-tiny cpp-tizen cpp-ue4 rust"
           categories[functional]="scala-akka scala-gatling scala-http4s scala-pekko scala-sttp scala-sttp4 scalaz haskell-http-client elixir erlang-client erlang-proper clojure elm ocaml"
           categories[other]="ada apex crystal eiffel gdscript groovy jaxrs-cxf-client jetbrains-http-client jmeter julia-client k6 n4js nim xojo-client zapier javascript-apollo-deprecated javascript-closure-angular javascript-flowtyped"
-          
+
           echo "## ✅ Successfully Generated SDKs" >> GENERATION_REPORT.md
           echo "" >> GENERATION_REPORT.md
-          
+
           # Process each category
           for category in web mobile backend scripting systems functional other; do
             echo "### ${category^} SDKs" >> GENERATION_REPORT.md
@@ -193,7 +193,7 @@ jobs:
             fi
             echo "" >> GENERATION_REPORT.md
           done
-          
+
           # Convert total size to human readable
           if [ $total_size -gt 1073741824 ]; then
             total_size_hr="$(echo "scale=1; $total_size / 1073741824" | bc)GB"
@@ -204,14 +204,14 @@ jobs:
           else
             total_size_hr="${total_size}B"
           fi
-          
+
           echo "## 📊 Generation Statistics" >> GENERATION_REPORT.md
           echo "" >> GENERATION_REPORT.md
           echo "- **Total generators attempted:** $total" >> GENERATION_REPORT.md  
           echo "- **Successfully generated:** $successful" >> GENERATION_REPORT.md
           echo "- **Success rate:** $(echo "scale=1; $successful * 100 / $total" | bc)%" >> GENERATION_REPORT.md
           echo "- **Total size:** $total_size_hr" >> GENERATION_REPORT.md
-          
+
           echo "" >> GENERATION_REPORT.md
           echo "## 🔗 Usage" >> GENERATION_REPORT.md
           echo "" >> GENERATION_REPORT.md
@@ -219,26 +219,26 @@ jobs:
           echo "2. Extract the tarball: \`tar -xzf <generator>-sdk.tar.gz\`" >> GENERATION_REPORT.md
           echo "3. Follow the README instructions in the extracted directory" >> GENERATION_REPORT.md
           echo "4. Configure the client to use your API URL: \`${{ github.event.inputs.api_url || 'https://nah.pet' }}\`" >> GENERATION_REPORT.md
-          
+
           echo "" >> GENERATION_REPORT.md
           echo "---" >> GENERATION_REPORT.md
           echo "_Generated by [OpenAPI Generator](https://openapi-generator.tech/) v7.8.0_" >> GENERATION_REPORT.md
-          
+
           # Display the report
           echo "📋 Generation Report:"
           cat GENERATION_REPORT.md
-          
+
       - name: Upload generation report
         uses: actions/upload-artifact@v4
         with:
           name: 📋-generation-report
           path: GENERATION_REPORT.md
-          
+
       - name: Create SDK collection
         run: |
           mkdir -p sdk-collection
           cp artifacts/*.tar.gz sdk-collection/ 2>/dev/null || true
-          
+
           # Create index file
           echo "# 🚀 Complete SDK Collection" > sdk-collection/README.md
           echo "" >> sdk-collection/README.md
@@ -246,7 +246,7 @@ jobs:
           echo "" >> sdk-collection/README.md
           echo "## Available SDKs:" >> sdk-collection/README.md
           echo "" >> sdk-collection/README.md
-          
+
           for tarball in sdk-collection/*.tar.gz; do
             if [ -f "$tarball" ]; then
               basename=$(basename "$tarball" .tar.gz)
@@ -255,20 +255,20 @@ jobs:
               echo "- **$generator** - \`$(basename "$tarball")\` ($size)" >> sdk-collection/README.md
             fi
           done
-          
+
       - name: Upload complete SDK collection
         uses: actions/upload-artifact@v4
         with:
           name: 🎁-complete-sdk-collection
           path: sdk-collection/
           retention-days: 90
-          
+
       - name: Prepare release assets
         if: github.event_name == 'release'
         run: |
           # Copy all SDK archives to root for release upload
           cp sdk-collection/*.tar.gz . 2>/dev/null || true
-          
+
       - name: Upload to release assets
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2

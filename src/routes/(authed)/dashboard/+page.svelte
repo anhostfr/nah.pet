@@ -51,7 +51,8 @@
 		},
 		{
 			title: m.average_clicks(),
-			value: data.stats.totalLinks > 0 ? Math.round(data.stats.totalClicks / data.stats.totalLinks) : 0,
+			value:
+				data.stats.totalLinks > 0 ? Math.round(data.stats.totalClicks / data.stats.totalLinks) : 0,
 			icon: ChartBar,
 			color: 'purple',
 			badges: [{ content: m.per_link() }]
@@ -67,11 +68,15 @@
 					content: `✓ ${m.active_links_badge()}`,
 					class: 'border-green-200 text-green-700 dark:border-green-800 dark:text-green-300'
 				},
-				...(data.stats.expiredLinks > 0 ? [{
-					variant: 'outline' as const,
-					content: `${data.stats.expiredLinks} ${m.expired_links_badge()}`,
-					class: 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300'
-				}] : [])
+				...(data.stats.expiredLinks > 0
+					? [
+							{
+								variant: 'outline' as const,
+								content: `${data.stats.expiredLinks} ${m.expired_links_badge()}`,
+								class: 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300'
+							}
+						]
+					: [])
 			]
 		}
 	];
