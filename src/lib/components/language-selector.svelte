@@ -40,9 +40,10 @@
 	const languageNames = new Intl.DisplayNames([currentLang || 'en'], { type: 'language' });
 	const languages = locales.map((l) => {
 		const region = getRegionFromLocale(l);
+		const name = languageNames.of(l);
 		return {
 			value: l,
-			label: languageNames.of(l) ?? l.toUpperCase(),
+			label: name ? name.charAt(0).toUpperCase() + name.slice(1) : l.toUpperCase(),
 			flag: toFlag(region),
 			flagSrc: regionToTwemojiSvg(region)
 		};
@@ -56,7 +57,7 @@
 </script>
 
 <Select.Root type="single" value={currentLang} onValueChange={handleLanguageChange}>
-	<Select.Trigger class="h-8 flex items-center gap-2">
+	<Select.Trigger class="h-8 flex items-center gap-2 w-20">
 		<Languages class="w-4 h-4" />
 		{#if languages.find((lang) => lang.value === currentLang)?.flagSrc}
 			<img
