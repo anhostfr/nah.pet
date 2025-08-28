@@ -22,7 +22,7 @@
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { toast } from 'svelte-sonner';
 	import * as m from '$lib/paraglide/messages.js';
-	import StatCard from '$lib/components/stat-card.svelte';
+	import UnifiedCard from '$lib/components/unified-card.svelte';
 
 	let { data } = $props();
 
@@ -171,7 +171,7 @@
 		</Card.Root>
 
 		{#each simpleStatsCards as card}
-			<StatCard {...card} />
+			<UnifiedCard type="stat" {...card} />
 		{/each}
 	</div>
 

@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import LinksTable from '$lib/components/links-table.svelte';
 	import UrlShortenerForm from '$lib/components/url-shortener-form.svelte';
-	import StatCard, { type StatCardProps } from '$lib/components/stat-card.svelte';
+	import UnifiedCard from '$lib/components/unified-card.svelte';
 	import { Link, ChartBar, Eye, Calendar, Activity, Users, Globe } from 'lucide-svelte';
 	import { formatNumber } from '$lib/utils.js';
 	import * as m from '$lib/paraglide/messages.js';
@@ -32,7 +32,7 @@
 				).toFixed(1)
 			: 0;
 
-	const statsCards: StatCardProps[] = [
+	const statsCards = [
 		{
 			title: m.total_links(),
 			value: formatNumber(data.stats.totalLinks),
@@ -104,7 +104,7 @@
 
 	<div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 		{#each statsCards as card}
-			<StatCard {...card} />
+			<UnifiedCard type="stat" {...card} />
 		{/each}
 	</div>
 
