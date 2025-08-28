@@ -90,7 +90,7 @@
 		{ method: 'POST', path: '/api/v1/links/bulk' }
 	];
 
-	const sdks = ['TypeScript', 'Python', 'Go', 'Java'];
+	const sdks = ['TypeScript', 'Python', 'Go', 'Java', 'Etc...'];
 </script>
 
 <svelte:head>
