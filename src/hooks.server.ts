@@ -66,7 +66,8 @@ const authHandle: Handle = async ({ event, resolve }) => {
 			'/settings',
 			'/profile',
 			'/account',
-			'/api'
+			'/api',
+			'/dashboard'
 		];
 		const isSystemRoute = systemRoutes.some(
 			(route) => pathname === route || pathname.startsWith(route + '/')

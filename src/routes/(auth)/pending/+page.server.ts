@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	});
 
 	if (user?.isActive) {
-		throw redirect(302, '/');
+		throw redirect(302, '/dashboard');
 	}
 
 	const waitingDays = user

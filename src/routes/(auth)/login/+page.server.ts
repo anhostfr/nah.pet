@@ -11,7 +11,7 @@ import { actionFail, actionSuccess } from '$lib/server/response.js';
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
 		if (!locals.user.isAuthorized) throw redirect(302, '/pending');
-		throw redirect(302, '/');
+		throw redirect(302, '/dashboard');
 	}
 	return {};
 };
@@ -68,7 +68,7 @@ export const actions: Actions = {
 				...sessionCookie.attributes
 			});
 
-			return actionSuccess('auth.login_success', { redirectTo: '/' });
+			return actionSuccess('auth.login_success', { redirectTo: '/dashboard' });
 		} catch (error) {
 			if (error instanceof Response) {
 				throw error;

@@ -1,4 +1,4 @@
-import { redirect, fail, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db.js';
 import { generateUniqueSlug } from '$lib/server/slug-generator.js';

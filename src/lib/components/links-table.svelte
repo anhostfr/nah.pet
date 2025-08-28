@@ -4,7 +4,6 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Copy, ExternalLink, ChartBar, Trash2, Lock, Calendar } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
-	import { page } from '$app/state';
 	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
 	import { toast } from 'svelte-sonner';
 	import { enhance } from '$app/forms';

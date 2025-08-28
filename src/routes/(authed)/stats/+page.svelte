@@ -22,6 +22,7 @@
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import { toast } from 'svelte-sonner';
 	import * as m from '$lib/paraglide/messages.js';
+	import StatCard from '$lib/components/stat-card.svelte';
 
 	let { data } = $props();
 
@@ -59,6 +60,23 @@
 		if (growth < 0) return { icon: ArrowDownRight, color: 'text-red-500' };
 		return { icon: Minus, color: 'text-gray-500' };
 	};
+
+	const simpleStatsCards = [
+		{
+			title: m.total_clicks_all(),
+			value: formatNumber(data.stats.totalClicks),
+			icon: ChartBar,
+			color: 'purple',
+			badges: [{ content: m.all_your_links() }]
+		},
+		{
+			title: m.avg_per_link(),
+			value: formatNumber(data.stats.avgClicksPerLink),
+			icon: TrendingUp,
+			color: 'orange',
+			badges: [{ content: m.links_count({ count: data.stats.totalLinks }) }]
+		}
+	];
 </script>
 
 <svelte:head>
@@ -152,53 +170,9 @@
 			></div>
 		</Card.Root>
 
-		<Card.Root class="relative overflow-hidden">
-			<Card.Content class="p-6">
-				<div class="flex items-center justify-between">
-					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">
-							{m.total_clicks_all()}
-						</p>
-						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-							{formatNumber(data.stats.totalClicks)}
-						</p>
-						<Badge variant="secondary" class="text-xs">{m.all_your_links()}</Badge>
-					</div>
-					<div
-						class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center"
-					>
-						<ChartBar class="w-6 h-6 text-purple-600 dark:text-purple-400" />
-					</div>
-				</div>
-			</Card.Content>
-			<div
-				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-purple-600 to-purple-400"
-			></div>
-		</Card.Root>
-
-		<Card.Root class="relative overflow-hidden">
-			<Card.Content class="p-6">
-				<div class="flex items-center justify-between">
-					<div class="space-y-2">
-						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{m.avg_per_link()}</p>
-						<p class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-							{formatNumber(data.stats.avgClicksPerLink)}
-						</p>
-						<Badge variant="secondary" class="text-xs">
-							{m.links_count({ count: data.stats.totalLinks })}
-						</Badge>
-					</div>
-					<div
-						class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center"
-					>
-						<TrendingUp class="w-6 h-6 text-orange-600 dark:text-orange-400" />
-					</div>
-				</div>
-			</Card.Content>
-			<div
-				class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-orange-600 to-orange-400"
-			></div>
-		</Card.Root>
+		{#each simpleStatsCards as card}
+			<StatCard {...card} />
+		{/each}
 	</div>
 
 	<Card.Root class="overflow-x-auto">

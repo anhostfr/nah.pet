@@ -14,7 +14,7 @@
 	let mobileMenuOpen = $state(false);
 
 	const navItems = [
-		{ href: '/', label: m.dashboard(), icon: ChartBar, active: page.url.pathname === '/' },
+		{ href: '/dashboard', label: m.dashboard(), icon: ChartBar, active: page.url.pathname === '/dashboard' },
 		{
 			href: '/stats',
 			label: m.analytics(),
