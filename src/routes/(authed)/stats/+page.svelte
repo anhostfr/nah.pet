@@ -311,21 +311,21 @@
 					noItemsMessage={m.no_recent_clicks()}
 				>
 					{#snippet children(displayedClicks: any)}
-						<div class="space-y-4">
+						<div class="space-y-4 overflow-x-scroll">
 							{#each displayedClicks as click (click.id)}
 								<div
-									class="flex items-center justify-between p-3 border-border border-[1px] rounded-lg"
+									class="flex items-center justify-between p-3 border-border border-[1px] rounded-lg w-full"
 									animate:flip={{ duration: 300 }}
 								>
 									<div class="flex items-center space-x-3">
 										<div
-											class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+											class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center max-md:hidden"
 										>
 											<Eye class="w-4 h-4 text-blue-600 dark:text-blue-400" />
 										</div>
 										<div>
-											<div class="flex items-center space-x-2">
-												<code class="text-sm font-mono bg-secondary px-2 py-1 rounded">
+											<div class="flex items-center space-x-2 lg:space-y-1">
+												<code class="text-xs font-mono bg-secondary px-1 py-1 rounded">
 													{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click
 														.link.slug}
 												</code>
@@ -335,12 +335,12 @@
 													</span>
 												{/if}
 											</div>
-											<p class="text-xs text-gray-500 truncate max-w-[250px]">
+											<p class="text-xs text-gray-500 truncate max-w-36 text-ellipsis">
 												{click.link.originalUrl}
 											</p>
 										</div>
 									</div>
-									<div class="text-right">
+									<div class="text-right max-md:">
 										<p class="text-xs text-gray-500">
 											{formatRelativeTime(click.createdAt)}
 										</p>
