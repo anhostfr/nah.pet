@@ -67,7 +67,7 @@
 							</p>
 						</div>
 					</a>
-					<Badge variant="outline" class="text-xs font-medium hidden sm:inline-flex mr-2">
+					<Badge variant="outline" class="text-xs font-medium hidden sm:inline-flex mr-2" href="https://github.com/anhostfr/nah.pet">
 						<Globe class="w-3 h-3 mr-1" />
 						{m.open_source()}
 					</Badge>
