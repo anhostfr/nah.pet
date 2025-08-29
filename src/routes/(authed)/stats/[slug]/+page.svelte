@@ -25,7 +25,7 @@
 			<h1 class="text-2xl sm:text-3xl font-bold">{m.detailed_analytics()}</h1>
 			<p class="text-muted-foreground break-all">
 				{m.performance_analysis({
-					domain: data.link.customDomain ? `${data.link.customDomain.domain}/` : '/',
+					domain: data.link.customDomain ? `${data.link.customDomain.domain}` : '',
 					slug: data.link.slug
 				})}
 			</p>
