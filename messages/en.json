@@ -339,5 +339,10 @@
 	"footer_license": "MIT License • Built with ❤️ and SvelteKit • 🐾 Nah.pet",
 	"long_url_label": "Long URL:",
 	"short_url_label": "Short URL:",
-	"created_with_sveltekit": "Built with SvelteKit and TypeScript for optimal performance."
+	"created_with_sveltekit": "Built with SvelteKit and TypeScript for optimal performance.",
+	"search_placeholder": "Search...",
+	"no_items_found": "No items found",
+	"no_search_results_for": "No results found for",
+	"load_more": "Load more",
+	"remaining_items": "{count} remaining"
 }

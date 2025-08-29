@@ -8,6 +8,7 @@
 	import { toast } from 'svelte-sonner';
 	import { enhance } from '$app/forms';
 	import * as m from '$lib/paraglide/messages';
+	import SearchablePaginatedList from './searchable-paginated-list.svelte';
 
 	type Link = {
 		id: string;
@@ -47,26 +48,27 @@
 	}
 </script>
 
-{#if links.length === 0}
-	<div class="text-center py-8 text-muted-foreground">
-		<p>{m.no_links_created()}</p>
-		<p class="text-sm">{m.start_first_url()}</p>
-	</div>
-{:else}
-	<div class="rounded-md border mx-2 overflow-x-auto">
-		<Table.Root>
-			<Table.Header>
-				<Table.Row>
-					<Table.Head>{m.link_table_header()}</Table.Head>
-					<Table.Head class="hidden sm:table-cell">{m.original_url_header()}</Table.Head>
-					<Table.Head>{m.clicks_header()}</Table.Head>
-					<Table.Head class="hidden md:table-cell">{m.created_header()}</Table.Head>
-					<Table.Head class="hidden lg:table-cell">{m.status_header()}</Table.Head>
-					<Table.Head class="text-right">{m.actions_header()}</Table.Head>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{#each links as link (link.id)}
+<div class="mx-2">
+	<SearchablePaginatedList
+		items={links}
+		searchFields={['slug', 'title', 'originalUrl', 'customDomain.domain']}
+		noItemsMessage="{m.no_links_created()} - {m.start_first_url()}"
+	>
+		{#snippet children(displayedLinks: any)}
+			<div class="rounded-md border overflow-x-auto">
+				<Table.Root>
+					<Table.Header>
+						<Table.Row>
+							<Table.Head>{m.link_table_header()}</Table.Head>
+							<Table.Head class="hidden sm:table-cell">{m.original_url_header()}</Table.Head>
+							<Table.Head>{m.clicks_header()}</Table.Head>
+							<Table.Head class="hidden md:table-cell">{m.created_header()}</Table.Head>
+							<Table.Head class="hidden lg:table-cell">{m.status_header()}</Table.Head>
+							<Table.Head class="text-right">{m.actions_header()}</Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{#each displayedLinks as link (link.id)}
 					<Table.Row>
 						<Table.Cell>
 							<div class="space-y-1">
@@ -210,8 +212,10 @@
 							</div>
 						</Table.Cell>
 					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
-	</div>
-{/if}
+						{/each}
+					</Table.Body>
+				</Table.Root>
+			</div>
+		{/snippet}
+	</SearchablePaginatedList>
+</div>

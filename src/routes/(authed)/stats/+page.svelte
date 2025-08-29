@@ -6,14 +6,11 @@
 	import {
 		ChartBar,
 		TrendingUp,
-		TrendingDown,
 		Eye,
 		Link,
 		Calendar,
 		Activity,
-		Users,
 		Globe,
-		ExternalLink,
 		Copy,
 		ArrowUpRight,
 		ArrowDownRight,
@@ -23,6 +20,8 @@
 	import { toast } from 'svelte-sonner';
 	import * as m from '$lib/paraglide/messages.js';
 	import UnifiedCard from '$lib/components/unified-card.svelte';
+	import SearchablePaginatedList from '$lib/components/searchable-paginated-list.svelte';
+	import { flip } from 'svelte/animate';
 
 	let { data } = $props();
 
@@ -214,84 +213,86 @@
 					<Badge variant="secondary" class="ml-2">{m.most_clicked()}</Badge>
 				</Card.Title>
 			</Card.Header>
-			<Card.Content class="p-0">
-				{#if data.topLinks.length === 0}
-					<div class="text-center py-8">
-						<p class="text-gray-500 dark:text-gray-400">{m.no_links_yet()}</p>
-					</div>
-				{:else}
-					<div class="mx-6 overflow-x-auto">
-						<Table.Root>
-							<Table.Header>
-								<Table.Row>
-									<Table.Head class="w-[50px] hidden sm:table-cell">{m.name_column()}</Table.Head>
-									<Table.Head>{m.link_column()}</Table.Head>
-									<Table.Head class="text-center w-[80px]">{m.clicks_column_short()}</Table.Head>
-									<Table.Head class="w-[80px]">{m.action_column()}</Table.Head>
-								</Table.Row>
-							</Table.Header>
-							<Table.Body>
-								{#each data.topLinks as link, index (link.id)}
-									<Table.Row class="group">
-										<Table.Cell
-											class="font-mono text-sm text-secondary-foreground hidden sm:table-cell"
-										>
-											{#if link.title}
-												{link.title}
-											{:else}
-												-
-											{/if}
-										</Table.Cell>
-										<Table.Cell>
-											<div class="space-y-1">
-												<div class="flex items-center space-x-2">
-													<code class="text-sm bg-secondary px-2 py-1 rounded font-mono break-all">
-														{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
-													</code>
-												</div>
-												{#if link.title}
-													<p class="text-xs text-muted-foreground sm:hidden">{link.title}</p>
-												{/if}
-											</div>
-										</Table.Cell>
-										<Table.Cell class="text-center">
-											<Badge variant="outline" class="font-mono">
-												{formatNumber(link._count.clicks)}
-											</Badge>
-										</Table.Cell>
-										<Table.Cell>
-											<div class="flex items-center space-x-1">
-												<Button
-													href="/stats/{link.slug}{link.customDomain
-														? `?domain=${link.customDomain.domain}`
-														: ''}"
-													size="sm"
-													variant="ghost"
-													class="h-8 w-8 p-0"
-												>
-													<ChartBar class="w-4 h-4" />
-												</Button>
-												<Button
-													size="sm"
-													variant="ghost"
-													onclick={() => {
-														const url = link.customDomain
-															? `https://${link.customDomain.domain}/${link.slug}`
-															: `${window.location.origin}/${link.slug}`;
-														copyToClipboard(url, link.slug);
-													}}
-													class="h-8 w-8 p-0"
-												>
-													<Copy class="w-4 h-4" />
-												</Button>
-											</div>
-										</Table.Cell>
+			<Card.Content class="p-6">
+				<SearchablePaginatedList
+					items={data.topLinks}
+					searchFields={['slug', 'title', 'originalUrl', 'customDomain.domain']}
+					noItemsMessage={m.no_links_yet()}
+				>
+					{#snippet children(displayedLinks: any)}
+						<div class="overflow-x-auto">
+							<Table.Root>
+								<Table.Header>
+									<Table.Row>
+										<Table.Head class="w-[50px] hidden sm:table-cell">{m.name_column()}</Table.Head>
+										<Table.Head>{m.link_column()}</Table.Head>
+										<Table.Head class="text-center w-[80px]">{m.clicks_column_short()}</Table.Head>
+										<Table.Head class="w-[80px]">{m.action_column()}</Table.Head>
 									</Table.Row>
-								{/each}
-							</Table.Body>
-						</Table.Root>
-					</div>
-				{/if}
+								</Table.Header>
+								<Table.Body>
+									{#each displayedLinks as link (link.id)}
+										<Table.Row class="group">
+											<Table.Cell
+												class="font-mono text-sm text-secondary-foreground hidden sm:table-cell"
+											>
+												{#if link.title}
+													{link.title}
+												{:else}
+													-
+												{/if}
+											</Table.Cell>
+											<Table.Cell>
+												<div class="space-y-1">
+													<div class="flex items-center space-x-2">
+														<code class="text-sm bg-secondary px-2 py-1 rounded font-mono break-all">
+															{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
+														</code>
+													</div>
+													{#if link.title}
+														<p class="text-xs text-muted-foreground sm:hidden">{link.title}</p>
+													{/if}
+												</div>
+											</Table.Cell>
+											<Table.Cell class="text-center">
+												<Badge variant="outline" class="font-mono">
+													{formatNumber(link._count.clicks)}
+												</Badge>
+											</Table.Cell>
+											<Table.Cell>
+												<div class="flex items-center space-x-1">
+													<Button
+														href="/stats/{link.slug}{link.customDomain
+															? `?domain=${link.customDomain.domain}`
+															: ''}"
+														size="sm"
+														variant="ghost"
+														class="h-8 w-8 p-0"
+													>
+														<ChartBar class="w-4 h-4" />
+													</Button>
+													<Button
+														size="sm"
+														variant="ghost"
+														onclick={() => {
+															const url = link.customDomain
+																? `https://${link.customDomain.domain}/${link.slug}`
+																: `${window.location.origin}/${link.slug}`;
+															copyToClipboard(url, link.slug);
+														}}
+														class="h-8 w-8 p-0"
+													>
+														<Copy class="w-4 h-4" />
+													</Button>
+												</div>
+											</Table.Cell>
+										</Table.Row>
+									{/each}
+								</Table.Body>
+							</Table.Root>
+						</div>
+					{/snippet}
+				</SearchablePaginatedList>
 			</Card.Content>
 		</Card.Root>
 
@@ -304,48 +305,51 @@
 				</Card.Title>
 			</Card.Header>
 			<Card.Content class="p-6">
-				{#if data.recentClicks.length === 0}
-					<div class="text-center py-8">
-						<p class="text-gray-500 dark:text-gray-400">{m.no_recent_clicks()}</p>
-					</div>
-				{:else}
-					<div class="space-y-4">
-						{#each data.recentClicks as click (click.id)}
-							<div
-								class="flex items-center justify-between p-3 border-border border-[1px] rounded-lg"
-							>
-								<div class="flex items-center space-x-3">
-									<div
-										class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
-									>
-										<Eye class="w-4 h-4 text-blue-600 dark:text-blue-400" />
-									</div>
-									<div>
-										<div class="flex items-center space-x-2">
-											<code class="text-sm font-mono bg-secondary px-2 py-1 rounded">
-												{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click
-													.link.slug}
-											</code>
-											{#if click.link.title}
-												<span class="text-sm text-secondary-foreground">
-													{click.link.title}
-												</span>
-											{/if}
+				<SearchablePaginatedList
+					items={data.recentClicks}
+					searchFields={['link.slug', 'link.title', 'link.originalUrl', 'link.customDomain.domain']}
+					noItemsMessage={m.no_recent_clicks()}
+				>
+					{#snippet children(displayedClicks: any)}
+						<div class="space-y-4">
+							{#each displayedClicks as click (click.id)}
+								<div
+									class="flex items-center justify-between p-3 border-border border-[1px] rounded-lg"
+									animate:flip={{ duration: 300 }}
+								>
+									<div class="flex items-center space-x-3">
+										<div
+											class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center"
+										>
+											<Eye class="w-4 h-4 text-blue-600 dark:text-blue-400" />
 										</div>
-										<p class="text-xs text-gray-500 truncate max-w-[250px]">
-											{click.link.originalUrl}
+										<div>
+											<div class="flex items-center space-x-2">
+												<code class="text-sm font-mono bg-secondary px-2 py-1 rounded">
+													{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click
+														.link.slug}
+												</code>
+												{#if click.link.title}
+													<span class="text-sm text-secondary-foreground">
+														{click.link.title}
+													</span>
+												{/if}
+											</div>
+											<p class="text-xs text-gray-500 truncate max-w-[250px]">
+												{click.link.originalUrl}
+											</p>
+										</div>
+									</div>
+									<div class="text-right">
+										<p class="text-xs text-gray-500">
+											{formatRelativeTime(click.createdAt)}
 										</p>
 									</div>
 								</div>
-								<div class="text-right">
-									<p class="text-xs text-gray-500">
-										{formatRelativeTime(click.createdAt)}
-									</p>
-								</div>
-							</div>
-						{/each}
-					</div>
-				{/if}
+							{/each}
+						</div>
+					{/snippet}
+				</SearchablePaginatedList>
 			</Card.Content>
 		</Card.Root>
 	</div>
