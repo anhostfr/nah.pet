@@ -10,9 +10,16 @@
 	import { tKey } from '$lib/i18n';
 	import type { PageData, ActionData } from './$types';
 	import type { NormalizedActionData } from '$lib/types';
+	import { toast } from 'svelte-sonner';
 	let { data, form }: { data: PageData; form: ActionData & NormalizedActionData } = $props();
 	let password = $state('');
 	let isLoading = $state(false);
+	$effect(() => {
+		if (form && form.success === false) {
+			password = '';
+			toast.error(tKey(form.messageKey, form));
+		}
+	});
 </script>
 
 <svelte:head>
@@ -54,16 +61,13 @@
 							id="password"
 							name="password"
 							type="password"
+							class="mt-1"
 							placeholder={m.password_placeholder()}
 							bind:value={password}
 							required
 							autofocus
 						/>
 					</div>
-
-					{#if form && form.success === false}
-						<p class="text-sm text-destructive">{tKey(form.messageKey, form)}</p>
-					{/if}
 
 					<Button type="submit" disabled={isLoading || !password} class="w-full">
 						{#if isLoading}

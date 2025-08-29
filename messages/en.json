@@ -344,5 +344,7 @@
 	"no_items_found": "No items found",
 	"no_search_results_for": "No results found for",
 	"load_more": "Load more",
-	"remaining_items": "{count} remaining"
+	"remaining_items": "{count} remaining",
+	"password_incorrect": "The password is incorrect",
+	"too_many_attempts": "Too many incorrect attempts. Please try again later."
 }

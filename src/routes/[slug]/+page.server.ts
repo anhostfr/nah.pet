@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ params, request, getClientAddress, 
 
 	if (locals.isCustomDomain && locals.customDomain?.verified) {
 		if (isSlugReserved(slug)) {
-			throw error(404, 'Lien introuvable');
+			throw error(404, 'Not found');
 		}
 
 		link = await db.link.findFirst({
@@ -34,11 +34,11 @@ export const load: PageServerLoad = async ({ params, request, getClientAddress, 
 	}
 
 	if (!link) {
-		throw error(404, 'Lien introuvable');
+		throw error(404, 'Not found');
 	}
 
 	if (link.expiresAt && new Date() > new Date(link.expiresAt)) {
-		throw error(410, 'Ce lien a expiré');
+		throw error(410, 'expired_link');
 	}
 
 	if (link.password) {
@@ -75,7 +75,7 @@ export const actions: Actions = {
 
 		if (locals.isCustomDomain && locals.customDomain?.verified) {
 			if (isSlugReserved(slug!)) {
-				throw error(404, 'Lien introuvable');
+				throw error(404, '');
 			}
 
 			link = await db.link.findFirst({
@@ -95,7 +95,7 @@ export const actions: Actions = {
 		}
 
 		if (!link || !link.password) {
-			throw error(404, 'Lien introuvable');
+			throw error(404, 'Not found');
 		}
 
 		const ip =
@@ -103,18 +103,18 @@ export const actions: Actions = {
 		const rateLimitKey = `slug:${ip}:${slug}`;
 		if (isRateLimited(rateLimitKey)) {
 			await sleep(2000);
-			return actionFail(429, 'common.too_many_attempts');
+			return actionFail(429, 'too_many_attempts');
 		}
 
 		if (!password) {
-			return actionFail(400, 'links.password_required');
+			return actionFail(400, 'password_required');
 		}
 
 		const isValidPassword = await verify(link.password, password);
 
 		if (!isValidPassword) {
 			sleep(2000);
-			return actionFail(400, 'links.password_incorrect');
+			return actionFail(400, 'password_incorrect');
 		}
 
 		const userAgent = request.headers.get('user-agent') || '';

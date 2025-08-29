@@ -349,5 +349,9 @@
 	"no_items_found": "Aucun élément trouvé",
 	"no_search_results_for": "Aucun résultat trouvé pour",
 	"load_more": "Voir plus",
-	"remaining_items": "{count} restants"
+	"remaining_items": "{count} restants",
+	"password_required": "Mot de passe requis pour accéder à ce lien.",
+	"invalid_password": "Mot de passe invalide. Veuillez réessayer.",
+	"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
+	"password_incorrect": "Mot de passe incorrect"
 }
