@@ -191,11 +191,22 @@ OAUTH_CLIENT_SECRET=your_oauth_client_secret (optional)
 
 ### Screenshots
 
-<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: flex-start;">
-  <img src="static/screenshots-demo/dashboard.png" alt="Dashboard Screenshot" style="max-width: 32%; min-width: 250px; border-radius: 8px; box-shadow: 0 2px 8px #0001;" />
-  <img src="static/screenshots-demo/analytics.png" alt="Analytics Screenshot" style="max-width: 32%; min-width: 250px; border-radius: 8px; box-shadow: 0 2px 8px #0001;" />
-  <img src="static/screenshots-demo/analytics-slug.png" alt="Analytics Slug Screenshot" style="max-width: 32%; min-width: 250px; border-radius: 8px; box-shadow: 0 2px 8px #0001;" />
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <img src="static/screenshots-demo/dashboard.png" alt="Dashboard Screenshot" width="300"/><br/>
+      <sub>Dashboard</sub>
+    </td>
+    <td align="center">
+      <img src="static/screenshots-demo/analytics.png" alt="Analytics Screenshot" width="300"/><br/>
+      <sub>Analytics</sub>
+    </td>
+    <td align="center">
+      <img src="static/screenshots-demo/analytics-slug.png" alt="Analytics Slug Screenshot" width="300"/><br/>
+      <sub>Analytics (Slug)</sub>
+    </td>
+  </tr>
+</table>
 
 
 ## 🤝 Contributing
