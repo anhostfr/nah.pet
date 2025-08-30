@@ -280,7 +280,7 @@
 					{m.login()}
 				</Button>
 				<Button
-					href="https://github.com/your-repo/nah-pet"
+					href="https://github.com/anhostft/nah.pet"
 					variant="outline"
 					size="lg"
 					class="text-base px-8"
