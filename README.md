@@ -72,7 +72,7 @@ The `cat.` prefix bypasses CORS restrictions from Cloudflare and other CDNs by u
 ### 🐳 Docker Compose
 
 ```bash
-git clone <your-repo>
+git clone https://github.com/anhostfr/nah.pet
 cd link-shortener
 
 cp .env.example .env
