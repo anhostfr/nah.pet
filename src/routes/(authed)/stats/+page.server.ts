@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db.js';
-import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || !locals.user.isAuthorized) {
@@ -145,7 +145,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	);
 
 	const domainsStats = [
-		{ domain: PUBLIC_MAIN_DOMAIN, totalLinks: mainDomainLinks, totalClicks: mainDomainClicks },
+		{ domain: env.PUBLIC_MAIN_DOMAIN, totalLinks: mainDomainLinks, totalClicks: mainDomainClicks },
 		...customDomainsStats
 	];
 

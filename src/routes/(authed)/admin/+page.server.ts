@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db.js';
-import { ADMIN_EMAIL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { actionFail, actionSuccess } from '$lib/server/response.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		},
 		where: {
 			email: {
-				not: ADMIN_EMAIL
+				not: env.ADMIN_EMAIL
 			}
 		},
 		orderBy: {

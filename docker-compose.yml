@@ -1,31 +1,21 @@
 version: '3.8'
 services:
   nahpet-app:
-    build: .
+    image: ghcr.io/anhostfr/nah.pet:features-docker-image
     restart: always
     environment:
       NODE_ENV: 'production'
-      ORIGIN: 'https://${NAHPET_HOST}'
       HOST: '0.0.0.0'
-      PORT: '3000'
-      PROTOCOL_HEADER: 'x-forwarded-proto'
-      HOST_HEADER: 'x-forwarded-host'
-      MAIN_URL: 'https://${NAHPET_HOST}'
-      PUBLIC_URL: 'https://${NAHPET_HOST}'
+      PORT: ${PORT:-3000}
       DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@nahpet-postgres:5432/${DB_NAME}?schema=public'
-    volumes:
-      - nahpet-uploads:/uploads/
+      ADMIN_EMAIL: '${ADMIN_EMAIL}'
+      OAUTH_CLIENT_ID: '${OAUTH_CLIENT_ID}'
+      OAUTH_CLIENT_SECRET: '${OAUTH_CLIENT_SECRET}'
+      PUBLIC_MAIN_DOMAIN: '${PUBLIC_MAIN_DOMAIN}'
     depends_on:
       nahpet-postgres:
         condition: service_healthy
-    command: sh -c "bunx prisma migrate deploy && HOST=0.0.0.0 PORT=3000 bun run build/index.js"
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.nahpet.rule=HostRegexp(`.*`)'
-      - 'traefik.http.routers.nahpet.priority=1'
-      - 'traefik.http.services.nahpet.loadbalancer.server.port=3000'
-    networks:
-      - dokploy-network
+    command: sh -c "bunx prisma migrate deploy && bun run build/index.js"
   nahpet-postgres:
     image: postgres:16-alpine
     restart: always
@@ -40,11 +30,5 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    networks:
-      - dokploy-network
-networks:
-  dokploy-network:
-    external: true
 volumes:
   nahpet-postgres-data:
-  nahpet-uploads:
