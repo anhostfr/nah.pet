@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nahpet-app:
-    image: ghcr.io/anhostfr/nah.pet:latest
+    image: ghcr.io/anhostfr/nah.pet:main
     restart: always
     environment:
       NODE_ENV: 'production'
