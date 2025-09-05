@@ -1,6 +1,8 @@
 name: Create and publish a Docker image
 
 on:
+  push:
+    branches: ['features/docker-image']
   workflow_dispatch:
   release:
     types: [published]
