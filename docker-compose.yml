@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nahpet-app:
-    image: ghcr.io/anhostfr/nah.pet:features-docker-image
+    image: ghcr.io/anhostfr/nah.pet:latest
     restart: always
     environment:
       NODE_ENV: 'production'
