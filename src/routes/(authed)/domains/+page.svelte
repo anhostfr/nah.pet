@@ -13,7 +13,7 @@
 	import * as m from '$lib/paraglide/messages';
 	import { tKey } from '$lib/i18n';
 	import type { NormalizedActionData } from '$lib/types';
-	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 
 	const SYSTEM_RESERVED_SLUGS = [
 		'admin',
@@ -118,7 +118,7 @@
 			</p>
 			<ul class="list-disc list-inside space-y-1 text-sm">
 				<li>{m.custom_domain_access()}</li>
-				<li>{m.no_main_domain_access({ mainDomain: PUBLIC_MAIN_DOMAIN })}</li>
+				<li>{m.no_main_domain_access({ mainDomain: env.PUBLIC_MAIN_DOMAIN })}</li>
 				<li>{m.no_system_pages_access()}</li>
 				<li>
 					{m.forbidden_slugs({ slugs: SYSTEM_RESERVED_SLUGS.slice(0, 8).join(', ') })}
@@ -136,11 +136,11 @@
 		</Card.Header>
 		<Card.Content class="text-blue-600">
 			<p class="mb-3">
-				{@html m.after_verification_config({ mainDomain: PUBLIC_MAIN_DOMAIN })}
+				{@html m.after_verification_config({ mainDomain: env.PUBLIC_MAIN_DOMAIN })}
 			</p>
 			<div class="bg-blue-900/20 p-3 rounded-lg mb-3">
 				<p class="font-mono text-sm">
-					{m.cname_record_info({ mainDomain: PUBLIC_MAIN_DOMAIN })}<br />
+					{m.cname_record_info({ mainDomain: env.PUBLIC_MAIN_DOMAIN })}<br />
 				</p>
 			</div>
 			<p class="text-sm">

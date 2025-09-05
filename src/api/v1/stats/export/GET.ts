@@ -2,7 +2,7 @@ import { Endpoint, z, error, type RouteConfig } from 'sveltekit-api';
 import { apiAuth, requirePermission } from '$lib/api/apiAuthMiddleware';
 import { API_PERMISSIONS } from '$lib/server/api-auth.js';
 import { db } from '$lib/server/db.js';
-import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const Query = z.object({
 	format: z.enum(['json', 'csv']).optional().default('json').describe('Export format'),
@@ -85,7 +85,7 @@ export default new Endpoint({ Query, Output, Error, Modifier }).handle(async (in
 			title: link.title,
 			shortUrl: (link as any).customDomain
 				? `https://${(link as any).customDomain.domain}/${link.slug}`
-				: `https://${PUBLIC_MAIN_DOMAIN}/${link.slug}`,
+				: `https://${env.PUBLIC_MAIN_DOMAIN}/${link.slug}`,
 			domain: (link as any).customDomain?.domain || null,
 			totalClicks: (link as any)._count.clicks,
 			clicksInPeriod: (link as any).clicks.length,

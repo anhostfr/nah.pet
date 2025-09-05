@@ -21,7 +21,7 @@
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
 	import { page } from '$app/state';
-	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { tKey } from '$lib/i18n';
 	import type { NormalizedActionData } from '$lib/types';
 
@@ -180,13 +180,13 @@
 					<Select.Trigger class="h-12">
 						<span>
 							{selectedDomainValue === ''
-								? `${PUBLIC_MAIN_DOMAIN} (${m.primary_domain()})`
+								? `${env.PUBLIC_MAIN_DOMAIN} (${m.primary_domain()})`
 								: customDomains.find((d: any) => d.id === selectedDomainValue)?.domain}
 						</span>
 					</Select.Trigger>
 					<Select.Content>
-						<Select.Item value="" label={PUBLIC_MAIN_DOMAIN + ' (' + m.primary_domain() + ')'}>
-							{PUBLIC_MAIN_DOMAIN} ({m.primary_domain()})
+						<Select.Item value="" label={env.PUBLIC_MAIN_DOMAIN + ' (' + m.primary_domain() + ')'}>
+							{env.PUBLIC_MAIN_DOMAIN} ({m.primary_domain()})
 							<Badge variant="outline" class="ml-2 text-xs">{m.default_badge()}</Badge>
 						</Select.Item>
 						{#each customDomains as domain}

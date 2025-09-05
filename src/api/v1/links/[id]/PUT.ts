@@ -5,7 +5,7 @@ import { db } from '$lib/server/db.js';
 import { isValidUrl } from '$lib/utils';
 import { sanitizeTitle, validateExpiresAt } from '$lib/utils/sanitize';
 import { hash } from '@node-rs/argon2';
-import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const Param = z.object({
 	id: z.string().describe('Link ID')
@@ -121,7 +121,7 @@ export default new Endpoint({ Param, Input, Output, Error, Modifier }).handle(
 				title: updatedLink.title,
 				shortUrl: updatedLink.customDomain
 					? `https://${updatedLink.customDomain.domain}/${updatedLink.slug}`
-					: `https://${PUBLIC_MAIN_DOMAIN}/${updatedLink.slug}`,
+					: `https://${env.PUBLIC_MAIN_DOMAIN}/${updatedLink.slug}`,
 				domain: updatedLink.customDomain?.domain || null,
 				expiresAt: updatedLink.expiresAt?.toISOString() || null,
 				updatedAt: updatedLink.updatedAt.toISOString()

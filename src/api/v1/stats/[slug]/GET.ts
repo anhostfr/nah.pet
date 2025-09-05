@@ -2,7 +2,7 @@ import { Endpoint, z, error, type RouteConfig } from 'sveltekit-api';
 import { apiAuth, requirePermission } from '$lib/api/apiAuthMiddleware';
 import { API_PERMISSIONS } from '$lib/server/api-auth.js';
 import { db } from '$lib/server/db.js';
-import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const Param = z.object({
 	slug: z.string().describe('Link slug')
@@ -193,7 +193,7 @@ export default new Endpoint({ Param, Query, Output, Error, Modifier }).handle(
 					title: link.title,
 					shortUrl: link.customDomain
 						? `https://${link.customDomain.domain}/${link.slug}`
-						: `https://${PUBLIC_MAIN_DOMAIN}/${link.slug}`,
+						: `https://${env.PUBLIC_MAIN_DOMAIN}/${link.slug}`,
 					totalClicks: link._count.clicks,
 					createdAt: link.createdAt.toISOString()
 				},

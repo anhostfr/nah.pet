@@ -6,7 +6,7 @@
 	import { ChartBar, Eye, Calendar, ExternalLink, ArrowLeft } from 'lucide-svelte';
 	import { formatDate, formatNumber } from '$lib/utils.js';
 	import * as m from '$lib/paraglide/messages.js';
-	import { PUBLIC_MAIN_DOMAIN } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 
 	let { data } = $props();
 </script>
@@ -47,7 +47,7 @@
 						<code class="text-sm bg-muted px-2 py-1 rounded break-all">
 							{data.link.customDomain
 								? `https://${data.link.customDomain.domain}/${data.link.slug}`
-								: `${PUBLIC_MAIN_DOMAIN}/${data.link.slug}`}
+								: `${env.PUBLIC_MAIN_DOMAIN}/${data.link.slug}`}
 						</code>
 						<Button
 							variant="ghost"
