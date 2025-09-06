@@ -57,6 +57,14 @@
 		}
 		customSlug = result;
 	};
+
+	// Utilisé pour afficher/coller le lien court avec le bon domaine
+	function getShortBase(form: any) {
+		if (form?.link && form.link.domain) {
+			return `https://${form.link.domain}`;
+		}
+		return window.location.origin;
+	}
 </script>
 
 <div class="space-y-6">
@@ -88,14 +96,14 @@
 						>
 							<Link class="w-4 h-4 text-green-600" />
 							<code class="flex-1 text-sm font-mono text-gray-900 dark:text-white">
-								{form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`}
+								{form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`}
 							</code>
 							<Button
 								size="sm"
 								variant="ghost"
 								onclick={() =>
 									copyToClipboard(
-										form.shortUrl || `${window.location.origin}/${(form.link as any).slug}`
+										form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`
 									)}
 								class="h-8 w-8 p-0"
 							>
@@ -106,7 +114,7 @@
 								{/if}
 							</Button>
 							<Button
-								href={form.shortUrl || `/${(form.link as any).slug}`}
+								href={form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`}
 								target="_blank"
 								size="sm"
 								variant="ghost"
