@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --frozen-lockfile
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 
