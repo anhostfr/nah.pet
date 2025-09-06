@@ -2,17 +2,19 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+RUN npm install -g pnpm
 
-RUN npm ci --legacy-peer-deps
+COPY package.json ./
+
+RUN pnpm install
 
 COPY . .
 
 RUN apk add --no-cache openssl
 
-RUN npx prisma generate
+RUN pnpm dlx prisma generate
 
-RUN npm run build
+RUN pnpm run build
 
 EXPOSE 3000
 
