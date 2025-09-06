@@ -4,6 +4,8 @@ import { generateApiKey } from '$lib/server/api-auth.js';
 import { randomBytes } from 'crypto';
 import type { PageServerLoad, Actions } from './$types';
 import { actionFail, actionSuccess } from '$lib/server/response.js';
+import { verifyDomainOwnership } from '$lib/server/domain-verification';
+import { isRateLimited } from '$lib/server/rateLimit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {
@@ -51,7 +53,7 @@ export const actions: Actions = {
 		const permissions = data.getAll('permissions') as string[];
 
 		if (!name || name.length < 3) {
-			return actionFail(400, 'settings.api_key_name_too_short');
+			return actionFail(400, 'settings_res.api_key_name_too_short');
 		}
 
 		const key = generateApiKey();
@@ -65,7 +67,7 @@ export const actions: Actions = {
 			}
 		});
 
-		return actionSuccess('settings.api_key_created', { key });
+		return actionSuccess('settings_res.api_key_created', { key });
 	},
 
 	deleteApiKey: async ({ locals, request }) => {
@@ -83,7 +85,7 @@ export const actions: Actions = {
 			}
 		});
 
-		return actionSuccess('settings.api_key_deleted');
+		return actionSuccess('settings_res.api_key_deleted');
 	},
 
 	updateProfile: async ({ locals, request }) => {
@@ -95,7 +97,7 @@ export const actions: Actions = {
 		const email = data.get('email') as string;
 
 		if (!email) {
-			return actionFail(400, 'settings.email_required');
+			return actionFail(400, 'settings_res.email_required');
 		}
 
 		await db.user.update({
@@ -103,7 +105,7 @@ export const actions: Actions = {
 			data: { email }
 		});
 
-		return actionSuccess('settings.profile_updated');
+		return actionSuccess('settings_res.profile_updated');
 	},
 
 	addDomain: async ({ locals, request }) => {
@@ -119,13 +121,11 @@ export const actions: Actions = {
 			return actionFail(400, 'domains.domain_and_method_required');
 		}
 
-		// Validation du domaine
 		const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 		if (!domainRegex.test(domain)) {
 			return actionFail(400, 'domains.invalid_format');
 		}
 
-		// Vérifier si le domaine existe déjà
 		const existingDomain = await db.customDomain.findFirst({
 			where: { domain }
 		});
@@ -149,34 +149,57 @@ export const actions: Actions = {
 		return actionSuccess('domains.added');
 	},
 
-	verifyDomain: async ({ locals, request }) => {
+	verifyDomain: async ({ request, locals, getClientAddress }) => {
 		if (!locals.user) {
 			throw redirect(302, '/login');
 		}
 
-		const data = await request.formData();
-		const domainId = data.get('domainId') as string;
+		const ip = request.headers.get('x-forwarded-for') || 'unknown';
+		const rateLimitKey = `verify_domain:${ip}:${locals.user.id}`;
+		if (isRateLimited(rateLimitKey, 10, 300)) {
+			return actionFail(429, 'common.too_many_attempts');
+		}
+
+		const formData = await request.formData();
+		const domainId = formData.get('domainId') as string;
 
 		if (!domainId) {
-			return actionFail(400, 'domains.domain_id_required');
+			return actionFail(400, 'domains_res.domain_id_required');
 		}
 
-		const domain = await db.customDomain.findFirst({
-			where: { id: domainId, userId: locals.user.id }
+		const customDomain = await db.customDomain.findFirst({
+			where: {
+				id: domainId,
+				userId: locals.user.id,
+				verified: false
+			}
 		});
 
-		if (!domain) {
-			return actionFail(404, 'domains.not_found');
+		if (!customDomain) {
+			return actionFail(404, 'domains_res.not_found_or_already_verified');
 		}
 
-		// Simulation de la vérification
-		// Dans un vrai projet, il faudrait implémenter la vérification DNS/fichier
-		await db.customDomain.update({
-			where: { id: domainId },
-			data: { verified: true }
-		});
+		try {
+			const result = await verifyDomainOwnership(
+				customDomain.domain,
+				customDomain.verificationToken,
+				customDomain.verificationMethod as 'dns' | 'file'
+			);
 
-		return actionSuccess('domains.verified');
+			if (result.success) {
+				await db.customDomain.update({
+					where: { id: domainId },
+					data: { verified: true }
+				});
+
+				return actionSuccess('verified');
+			} else {
+				return actionFail(400, 'domains_res.verification_failed');
+			}
+		} catch (error) {
+			console.error('Error verifying domain:', error);
+			return actionFail(500, 'domains_res.verify_failed');
+		}
 	},
 
 	deleteDomain: async ({ locals, request }) => {

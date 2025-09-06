@@ -353,5 +353,62 @@
 	"password_required": "Mot de passe requis pour accéder à ce lien.",
 	"invalid_password": "Mot de passe invalide. Veuillez réessayer.",
 	"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
-	"password_incorrect": "Mot de passe incorrect"
+	"password_incorrect": "Mot de passe incorrect",
+	"sign_up_link": "Inscrivez-vous",
+	"invalid_crendentials": "Identifiants invalides. Veuillez réessayer.",
+
+	"auth": {
+		"invalid_crendentials": "Identifiants invalides",
+		"invalid_credentials": "Identifiants invalides",
+		"invalid_data": "Données invalides",
+		"login_success": "Connexion réussie",
+		"email_already_exists": "L'email existe déjà",
+		"register_success": "Inscription réussie. Veuillez vérifier votre email pour valider votre compte.",
+		"passwords_do_not_match": "Les mots de passe ne correspondent pas",
+		"oauth_url_failed": "Échec de la récupération de l'URL OAuth"
+	},
+	"link": {
+		"not_found": "Lien introuvable"
+	},
+	"common": {
+		"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
+		"server_error": "Erreur du serveur. Veuillez réessayer plus tard."
+	},
+	"domains_res": {
+		"domain_id_required": "L'identifiant du domaine est requis.",
+		"not_found_or_already_verified": "Domaine introuvable ou déjà vérifié.",
+		"verification_failed": "Échec de la vérification du domaine. Veuillez vérifier votre configuration et réessayer.",
+		"verify_failed": "Une erreur est survenue lors de la vérification du domaine. Veuillez réessayer plus tard.",
+		"deleted_with_links": "Domaine supprimé avec succès. Les liens associés ont également été supprimés.",
+		"delete_failed": "Échec de la suppression du domaine. Veuillez réessayer.",
+		"domain_required": "Le domaine est requis.",
+		"invalid_format": "Format de domaine invalide.",
+		"not_allowed": "Ce domaine n'est pas autorisé.",
+		"invalid_verification_method": "Méthode de vérification invalide.",
+		"limit_reached": "Vous avez atteint le nombre maximal de domaines personnalisés.",
+		"already_registered": "Ce domaine est déjà enregistré.",
+		"add_failed": "Échec de l'ajout du domaine. Veuillez réessayer.",
+		"added": "Domaine ajouté avec succès. Veuillez compléter le processus de vérification."
+	},
+	"admin": {
+		"admin_rights_granted": "Droits administrateur accordés.",
+		"admin_rights_revoked": "Droits administrateur révoqués.",
+		"cannot_change_own_admin_rights": "Vous ne pouvez pas modifier vos propres droits administrateur.",
+		"user_not_found": "Utilisateur introuvable.",
+		"user_id_required": "L'identifiant utilisateur est requis.",
+		"not_authorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+		"not_logged_in": "Vous devez être connecté pour effectuer cette action.",
+		"user_activated": "Utilisateur activé.",
+		"user_deactivated": "Utilisateur désactivé.",
+		"cannot_toggle_self_status": "Vous ne pouvez pas modifier votre propre statut.",
+		"user_deleted": "Utilisateur supprimé avec succès.",
+		"cannot_delete_self": "Vous ne pouvez pas supprimer votre propre compte."
+	},
+	"settings_res": {
+		"api_key_name_too_short": "Le nom de la clé API est trop court.",
+		"api_key_created": "Clé API créée avec succès.",
+		"api_key_deleted": "Clé API supprimée avec succès.",
+		"email_required": "L'email est requis.",
+		"profile_updated": "Profil mis à jour avec succès."
+	}
 }

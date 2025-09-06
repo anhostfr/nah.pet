@@ -8,9 +8,9 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { authClient } from '$lib/auth-client.js';
 	import * as m from '$lib/paraglide/messages.js';
-	import { tKey } from '$lib/i18n';
 	import type { ActionData } from './$types';
 	import type { NormalizedActionData } from '$lib/types';
+	import { tKey } from '$lib/i18n';
 
 	let { form }: { form: ActionData & NormalizedActionData } = $props();
 	let email = $state('');
@@ -85,7 +85,7 @@
 					</div>
 
 					{#if form && form.success === false}
-						<p class="text-sm text-destructive">{tKey(form.messageKey, form)}</p>
+						<p class="text-sm text-destructive">{tKey(form.messageKey)}</p>
 					{/if}
 
 					<Button type="submit" disabled={isLoading || !email || !password} class="w-full">
@@ -125,7 +125,7 @@
 			<div class="mt-6 text-center text-sm">
 				<p class="text-muted-foreground">
 					{m.no_account()}
-					<a href="/register" class="text-primary hover:underline">{m.sign_in_link()}</a>
+					<a href="/register" class="text-primary hover:underline">{m.sign_up_link()}</a>
 				</p>
 			</div>
 

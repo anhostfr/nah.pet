@@ -56,10 +56,10 @@
 
 	$effect(() => {
 		if (form?.success) {
-			toast.success(tKey(form.messageKey, form));
+			toast.success(tKey(form.messageKey));
 			invalidateAll();
 		} else if (form && form.success === false) {
-			toast.error(tKey(form.messageKey, form));
+			toast.error(tKey(form.messageKey));
 		}
 	});
 

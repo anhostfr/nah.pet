@@ -22,9 +22,10 @@ export const actions: Actions = {
 		const email = formData.get('email');
 		const password = formData.get('password');
 
+		// TODO: Add specific traduction and error for each field later
 		const schema = z.object({
-			email: z.string().email({ message: 'Email invalide' }),
-			password: z.string().min(1, { message: 'Mot de passe requis' })
+			email: z.string().email(),
+			password: z.string().min(1)
 		});
 
 		const parseResult = schema.safeParse({ email, password });

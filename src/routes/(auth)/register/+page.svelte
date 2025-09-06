@@ -86,7 +86,7 @@
 					</div>
 
 					{#if form && form.success === false}
-						<p class="text-sm text-destructive">{tKey(form.messageKey, form)}</p>
+						<p class="text-sm text-destructive">{tKey(form.messageKey)}</p>
 					{/if}
 
 					<Button
