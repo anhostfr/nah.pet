@@ -347,5 +347,34 @@
 	"remaining_items": "{count} remaining",
 	"password_incorrect": "The password is incorrect",
 	"too_many_attempts": "Too many incorrect attempts. Please try again later.",
-	"sign_up_link": "Sign Up"
+	"sign_up_link": "Sign Up",
+	"auth": {
+		"invalid_credentials": "Invalid credentials",
+		"invalid_data": "Invalid data",
+		"login_success": "Login successful",
+		"email_already_exists": "Email already exists",
+		"register_success": "Registration successful. Please check your email to verify your account.",
+		"passwords_do_not_match": "Passwords do not match"
+	},
+	"common": {
+		"too_many_attempts": "Too many attempts. Please try again later.",
+		"server_error": "Server error. Please try again later."
+	},
+
+	"domains_res": {
+		"domain_id_required": "Domain ID is required.",
+		"not_found_or_already_verified": "Domain not found or already verified.",
+		"verification_failed": "Domain verification failed. Please check your setup and try again.",
+		"verify_failed": "An error occurred during domain verification. Please try again later.",
+		"deleted_with_links": "Domain deleted successfully. {linkCount} associated links were also removed.",
+		"delete_failed": "Failed to delete the domain. Please try again.",
+		"domain_required": "Domain is required.",
+		"invalid_format": "Invalid domain format.",
+		"not_allowed": "This domain is not allowed.",
+		"invalid_verification_method": "Invalid verification method.",
+		"limit_reached": "You have reached the maximum number of custom domains.",
+		"already_registered": "This domain is already registered.",
+		"add_failed": "Failed to add the domain. Please try again.",
+		"added": "Domain added successfully. Please complete the verification process."
+	}
 }

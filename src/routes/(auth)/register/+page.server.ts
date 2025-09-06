@@ -25,7 +25,7 @@ export const actions: Actions = {
 		const confirmPassword = formData.get('confirmPassword');
 
 		const schema = z.object({
-			email: z.string().email({ message: 'Email invalide' }),
+			email: z.string().email({ message: 'Email invalid' }),
 			password: z
 				.string()
 				.min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' }),

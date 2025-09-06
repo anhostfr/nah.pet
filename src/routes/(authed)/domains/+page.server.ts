@@ -1,4 +1,4 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
 import { actionFail, actionSuccess } from '$lib/server/response.js';
@@ -49,35 +49,35 @@ export const actions: Actions = {
 		const verificationMethod = formData.get('method') as 'dns' | 'file';
 
 		if (!domain) {
-			return actionFail(400, 'domains.domain_required');
+			return actionFail(400, 'domains_res.domain_required');
 		}
 
 		if (!validateDomainFormat(domain)) {
-			return actionFail(400, 'domains.invalid_format');
+			return actionFail(400, 'domains_res.invalid_format');
 		}
 
 		if (!isDomainAllowed(domain)) {
-			return actionFail(400, 'domains.not_allowed');
+			return actionFail(400, 'domains_res.not_allowed');
 		}
 
 		if (!['dns', 'file'].includes(verificationMethod)) {
-			return actionFail(400, 'domains.invalid_verification_method');
+			return actionFail(400, 'domains_res.invalid_verification_method');
 		}
 
 		const domainCount = await db.customDomain.count({
 			where: { userId: locals.user.id }
 		});
 
-		if (domainCount >= MAX_DOMAINS_PER_USER) {
-			return actionFail(400, 'domains.limit_reached');
-		}
+		/* if (domainCount >= MAX_DOMAINS_PER_USER) {
+			return actionFail(400, 'domains_res.limit_reached');
+		} */
 
 		const existingDomain = await db.customDomain.findUnique({
 			where: { domain }
 		});
 
 		if (existingDomain) {
-			return actionFail(400, 'domains.already_registered');
+			return actionFail(400, 'domains_res.already_registered');
 		}
 
 		const verificationToken = generateVerificationToken();
@@ -93,14 +93,14 @@ export const actions: Actions = {
 				}
 			});
 
-			return actionSuccess('domains.added', {
+			return actionSuccess('domains_res.added', {
 				verificationToken,
 				verificationMethod,
 				domain
 			});
 		} catch (error) {
 			console.error('Error adding domain:', error);
-			return actionFail(500, 'domains.add_failed');
+			return actionFail(500, 'domains_res.add_failed');
 		}
 	},
 
@@ -119,7 +119,7 @@ export const actions: Actions = {
 		const domainId = formData.get('domainId') as string;
 
 		if (!domainId) {
-			return actionFail(400, 'domains.domain_id_required');
+			return actionFail(400, 'domains_res.domain_id_required');
 		}
 
 		const customDomain = await db.customDomain.findFirst({
@@ -131,7 +131,7 @@ export const actions: Actions = {
 		});
 
 		if (!customDomain) {
-			return actionFail(404, 'domains.not_found_or_already_verified');
+			return actionFail(404, 'domains_res.not_found_or_already_verified');
 		}
 
 		try {
@@ -147,13 +147,13 @@ export const actions: Actions = {
 					data: { verified: true }
 				});
 
-				return actionSuccess('domains.verified');
+				return actionSuccess('verified');
 			} else {
-				return actionFail(400, 'domains.verification_failed');
+				return actionFail(400, 'domains_res.verification_failed');
 			}
 		} catch (error) {
 			console.error('Error verifying domain:', error);
-			return actionFail(500, 'domains.verify_failed');
+			return actionFail(500, 'domains_res.verify_failed');
 		}
 	},
 
@@ -166,7 +166,7 @@ export const actions: Actions = {
 		const domainId = formData.get('domainId') as string;
 
 		if (!domainId) {
-			return actionFail(400, 'domains.domain_id_required');
+			return actionFail(400, 'domains_res.domain_id_required');
 		}
 
 		const customDomain = await db.customDomain.findFirst({
@@ -180,7 +180,7 @@ export const actions: Actions = {
 		});
 
 		if (!customDomain) {
-			return actionFail(404, 'domains.not_found');
+			return actionFail(404, 'domains_res.not_found');
 		}
 
 		try {
@@ -190,10 +190,10 @@ export const actions: Actions = {
 				where: { id: domainId }
 			});
 
-			return actionSuccess('domains.deleted_with_links', { linkCount });
+			return actionSuccess('domains_res.deleted_with_links', { linkCount });
 		} catch (error) {
 			console.error('Error deleting domain:', error);
-			return actionFail(500, 'domains.delete_failed');
+			return actionFail(500, 'domains_res.delete_failed');
 		}
 	}
 };
