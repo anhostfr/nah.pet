@@ -24,11 +24,12 @@ export const actions: Actions = {
 		const password = formData.get('password');
 		const confirmPassword = formData.get('confirmPassword');
 
+		// TODO: Add specific traduction and error for each field later
 		const schema = z.object({
-			email: z.string().email({ message: 'Email invalid' }),
+			email: z.string().email(),
 			password: z
 				.string()
-				.min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' }),
+				.min(8),
 			confirmPassword: z.string()
 		});
 
