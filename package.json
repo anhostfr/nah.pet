@@ -42,6 +42,7 @@
 		"@lucia-auth/adapter-prisma": "^4.0.1",
 		"@node-rs/argon2": "^2.0.2",
 		"@prisma/client": "^6.15.0",
+		"@sveltejs/adapter-node": "^5.3.1",
 		"@types/qrcode": "^1.5.5",
 		"@types/swagger-ui": "^5.21.1",
 		"isomorphic-dompurify": "^2.26.0",
@@ -50,7 +51,6 @@
 		"nanoid": "^5.1.5",
 		"prisma": "^6.15.0",
 		"qrcode": "^1.5.4",
-		"svelte-adapter-bun": "^0.5.2",
 		"sveltekit-api": "^0.6.1",
 		"swagger-ui": "5.10.0",
 		"zod": "^3.25.76"
