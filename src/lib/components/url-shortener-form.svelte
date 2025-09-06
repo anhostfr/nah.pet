@@ -58,7 +58,6 @@
 		customSlug = result;
 	};
 
-	// Utilisé pour afficher/coller le lien court avec le bon domaine
 	function getShortBase(form: any) {
 		if (form?.link && form.link.domain) {
 			return `https://${form.link.domain}`;
