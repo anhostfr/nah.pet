@@ -125,7 +125,7 @@
 			<div class="mt-6 text-center text-sm">
 				<p class="text-muted-foreground">
 					{m.no_account()}
-					<a href="/register" class="text-primary hover:underline">{m.sign_in_link()}</a>
+					<a href="/register" class="text-primary hover:underline">{m.sign_up_link()}</a>
 				</p>
 			</div>
 

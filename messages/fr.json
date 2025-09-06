@@ -353,5 +353,6 @@
 	"password_required": "Mot de passe requis pour accéder à ce lien.",
 	"invalid_password": "Mot de passe invalide. Veuillez réessayer.",
 	"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
-	"password_incorrect": "Mot de passe incorrect"
+	"password_incorrect": "Mot de passe incorrect",
+	"sign_up_link": "Inscrivez-vous"
 }
