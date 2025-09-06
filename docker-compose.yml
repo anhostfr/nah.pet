@@ -15,7 +15,7 @@ services:
     depends_on:
       nahpet-postgres:
         condition: service_healthy
-    command: sh -c "npx prisma migrate deploy && npm run build/index.js"
+    command: sh -c "npx prisma migrate deploy && node build/index.js"
   nahpet-postgres:
     image: postgres:16-alpine
     restart: always
