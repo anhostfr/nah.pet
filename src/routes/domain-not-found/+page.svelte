@@ -22,7 +22,7 @@
 			</div>
 			<h1 class="text-2xl font-bold text-white mb-2 text-center">{m.domain_not_found_title()}</h1>
 			<p class="text-gray-400 text-center">
-				{m.domain_not_configured({ domain })}
+				{@html m.domain_not_configured({ domain })}
 			</p>
 		</div>
 
@@ -31,7 +31,7 @@
 			<ul class="text-sm text-gray-400 space-y-1 text-left">
 				<li>{m.check_domain_config()}</li>
 				<li>{m.contact_domain_admin()}</li>
-				<li>{m.use_nahpet_directly({ domain: env.PUBLIC_MAIN_DOMAIN })}</li>
+				<li>{m.use_nahpet_directly({ domain: env.PUBLIC_MAIN_DOMAIN! })}</li>
 			</ul>
 		</div>
 
