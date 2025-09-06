@@ -1,19 +1,19 @@
-FROM oven/bun:latest
+FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+COPY package.json package-lock.json ./
 
-RUN bun install --frozen-lockfile
+RUN npm ci --frozen-lockfile
 
 COPY . .
 
-RUN apt-get update -y && apt-get install -y openssl
+RUN apk add --no-cache openssl
 
-RUN bunx prisma generate
+RUN npx prisma generate
 
-RUN bun run build
+RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "bun", "./build/index.js" ]
+CMD [ "node", "./build/index.js" ]
