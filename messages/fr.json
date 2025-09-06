@@ -355,33 +355,9 @@
 	"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
 	"password_incorrect": "Mot de passe incorrect",
 	"sign_up_link": "Inscrivez-vous",
-	"auth": {
-		"invalid_credentials": "Identifiants invalides. Veuillez réessayer.",
-		"invalid_data": "Données invalides. Veuillez vérifier et réessayer.",
-		"login_success": "Connexion réussie. Redirection...",
-		"email_already_exists": "Cet email est déjà utilisé. Veuillez vous connecter.",
-		"register_success": "Inscription réussie. Redirection...",
-		"passwords_do_not_match": "Les mots de passe ne correspondent pas."
-	},
-	"common": {
-		"too_many_attempts": "Trop de tentatives. Veuillez réessayer plus tard.",
-		"server_error": "Erreur serveur. Veuillez réessayer plus tard."
-	},
+	"invalid_crendentials": "Identifiants invalides. Veuillez réessayer.",
 
-	"domains_res": {
-		"domain_id_required": "L'identifiant du domaine est requis.",
-		"not_found_or_already_verified": "Domaine introuvable ou déjà vérifié.",
-		"verification_failed": "Échec de la vérification du domaine. Veuillez vérifier votre configuration et réessayer.",
-		"verify_failed": "Une erreur est survenue lors de la vérification du domaine. Veuillez réessayer plus tard.",
-		"deleted_with_links": "Domaine supprimé avec succès. {linkCount} liens associés ont également été supprimés.",
-		"delete_failed": "Échec de la suppression du domaine. Veuillez réessayer.",
-		"domain_required": "Le domaine est requis.",
-		"invalid_format": "Format de domaine invalide.",
-		"not_allowed": "Ce domaine n'est pas autorisé.",
-		"invalid_verification_method": "Méthode de vérification invalide.",
-		"limit_reached": "Vous avez atteint le nombre maximal de domaines personnalisés.",
-		"already_registered": "Ce domaine est déjà enregistré.",
-		"add_failed": "Échec de l'ajout du domaine. Veuillez réessayer.",
-		"added": "Domaine ajouté avec succès. Veuillez compléter le processus de vérification."
+	"link": {
+		"not_found": "Link not found"
 	}
 }

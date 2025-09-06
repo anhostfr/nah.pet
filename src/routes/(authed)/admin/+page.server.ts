@@ -114,7 +114,7 @@ export const actions: Actions = {
 				userId
 			});
 		} catch (err) {
-			console.error('Erreur lors de la mise à jour:', err);
+			console.error('Error:', err);
 			return actionFail(500, 'common.server_error');
 		}
 	},
