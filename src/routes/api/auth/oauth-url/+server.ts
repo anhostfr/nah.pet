@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		return json({ success: true, url: result.data?.url });
 	} catch (err) {
-		console.error('Erreur génération URL OAuth:', err);
+		console.error('Error:', err);
 		return json({ success: false, messageKey: 'common.server_error' }, { status: 500 });
 	}
 };

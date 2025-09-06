@@ -355,7 +355,8 @@
 		"login_success": "Login successful",
 		"email_already_exists": "Email already exists",
 		"register_success": "Registration successful. Please check your email to verify your account.",
-		"passwords_do_not_match": "Passwords do not match"
+		"passwords_do_not_match": "Passwords do not match",
+		"oauth_url_failed": "Failed to get OAuth URL"
 	},
 	"link": {
 		"not_found": "Link not found"
@@ -369,7 +370,7 @@
 		"not_found_or_already_verified": "Domain not found or already verified.",
 		"verification_failed": "Domain verification failed. Please check your setup and try again.",
 		"verify_failed": "An error occurred during domain verification. Please try again later.",
-		"deleted_with_links": "Domain deleted successfully. {linkCount} associated links were also removed.",
+		"deleted_with_links": "Domain deleted successfully. Associated links were also removed.",
 		"delete_failed": "Failed to delete the domain. Please try again.",
 		"domain_required": "Domain is required.",
 		"invalid_format": "Invalid domain format.",
