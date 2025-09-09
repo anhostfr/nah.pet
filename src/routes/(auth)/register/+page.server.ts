@@ -27,9 +27,7 @@ export const actions: Actions = {
 		// TODO: Add specific traduction and error for each field later
 		const schema = z.object({
 			email: z.string().email(),
-			password: z
-				.string()
-				.min(8),
+			password: z.string().min(8),
 			confirmPassword: z.string()
 		});
 

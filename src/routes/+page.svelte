@@ -95,10 +95,7 @@
 
 <svelte:head>
 	<title>🐾 {m.nahpet()} - {m.url_shortener_tagline()}</title>
-	<meta
-		name="description"
-		content="{m.nahpet()} - {m.url_shortener_tagline()}"
-	/>
+	<meta name="description" content="{m.nahpet()} - {m.url_shortener_tagline()}" />
 </svelte:head>
 
 <div class="space-y-16 sm:space-y-20">

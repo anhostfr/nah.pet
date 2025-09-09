@@ -208,7 +208,6 @@ OAUTH_CLIENT_SECRET=your_oauth_client_secret (optional)
   </tr>
 </table>
 
-
 ## 🤝 Contributing
 
 ### Translations

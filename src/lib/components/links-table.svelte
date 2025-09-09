@@ -69,149 +69,149 @@
 					</Table.Header>
 					<Table.Body>
 						{#each displayedLinks as link (link.id)}
-					<Table.Row>
-						<Table.Cell>
-							<div class="space-y-1">
-								<div class="flex items-center gap-2 flex-wrap">
-									<code class="text-sm bg-muted px-2 py-1 rounded break-all">
-										{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
-									</code>
-									{#if link.password}
-										<Lock class="h-3 w-3 text-muted-foreground" />
-									{/if}
-									{#if link.expiresAt}
-										<Calendar class="h-3 w-3 text-muted-foreground" />
-									{/if}
-								</div>
-								{#if link.title}
-									<p class="text-sm text-muted-foreground truncate">{link.title}</p>
-								{/if}
-								<div class="sm:hidden space-y-1 mt-2">
+							<Table.Row>
+								<Table.Cell>
+									<div class="space-y-1">
+										<div class="flex items-center gap-2 flex-wrap">
+											<code class="text-sm bg-muted px-2 py-1 rounded break-all">
+												{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
+											</code>
+											{#if link.password}
+												<Lock class="h-3 w-3 text-muted-foreground" />
+											{/if}
+											{#if link.expiresAt}
+												<Calendar class="h-3 w-3 text-muted-foreground" />
+											{/if}
+										</div>
+										{#if link.title}
+											<p class="text-sm text-muted-foreground truncate">{link.title}</p>
+										{/if}
+										<div class="sm:hidden space-y-1 mt-2">
+											<a
+												href={link.originalUrl}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="text-blue-600 hover:underline text-xs truncate block"
+											>
+												{link.originalUrl}
+											</a>
+											<div class="flex items-center gap-2 text-xs text-muted-foreground">
+												<span>{formatDate(link.createdAt)}</span>
+												{#if isExpired(link.expiresAt)}
+													<span class="text-red-600">• {m.expired()}</span>
+												{:else if link.expiresAt}
+													<span>• {m.expires_on()} {formatDate(link.expiresAt)}</span>
+												{:else}
+													<span class="text-green-600">• {m.active()}</span>
+												{/if}
+											</div>
+										</div>
+									</div>
+								</Table.Cell>
+								<Table.Cell class="hidden sm:table-cell">
 									<a
 										href={link.originalUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="text-blue-600 hover:underline text-xs truncate block"
+										class="text-blue-600 hover:underline max-w-xs truncate block"
 									>
 										{link.originalUrl}
 									</a>
-									<div class="flex items-center gap-2 text-xs text-muted-foreground">
-										<span>{formatDate(link.createdAt)}</span>
-										{#if isExpired(link.expiresAt)}
-											<span class="text-red-600">• {m.expired()}</span>
-										{:else if link.expiresAt}
-											<span>• {m.expires_on()} {formatDate(link.expiresAt)}</span>
-										{:else}
-											<span class="text-green-600">• {m.active()}</span>
-										{/if}
+								</Table.Cell>
+								<Table.Cell>
+									<div class="flex items-center gap-2">
+										<span class="font-medium">{formatNumber(link._count.clicks)}</span>
+										<Button
+											variant="ghost"
+											size="sm"
+											href="/stats/{link.slug}{link.customDomain
+												? `?domain=${link.customDomain.domain}`
+												: ''}"
+										>
+											<ChartBar class="h-3 w-3" />
+										</Button>
 									</div>
-								</div>
-							</div>
-						</Table.Cell>
-						<Table.Cell class="hidden sm:table-cell">
-							<a
-								href={link.originalUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="text-blue-600 hover:underline max-w-xs truncate block"
-							>
-								{link.originalUrl}
-							</a>
-						</Table.Cell>
-						<Table.Cell>
-							<div class="flex items-center gap-2">
-								<span class="font-medium">{formatNumber(link._count.clicks)}</span>
-								<Button
-									variant="ghost"
-									size="sm"
-									href="/stats/{link.slug}{link.customDomain
-										? `?domain=${link.customDomain.domain}`
-										: ''}"
-								>
-									<ChartBar class="h-3 w-3" />
-								</Button>
-							</div>
-						</Table.Cell>
-						<Table.Cell class="text-sm text-muted-foreground hidden md:table-cell">
-							{formatDate(new Date(link.createdAt))}
-						</Table.Cell>
-						<Table.Cell class="hidden lg:table-cell">
-							{#if isExpired(link.expiresAt)}
-								<Badge variant="destructive">{m.expired()}</Badge>
-							{:else if link.expiresAt}
-								<Badge variant="secondary">
-									{m.expires_on()}
-									{formatDate(link.expiresAt)}
-								</Badge>
-							{:else}
-								<Badge variant="default">{m.active()}</Badge>
-							{/if}
-						</Table.Cell>
-						<Table.Cell class="text-right">
-							<div class="flex items-center justify-end gap-1">
-								<Button variant="ghost" size="sm" onclick={() => copyToClipboard(link)}>
-									<Copy class="h-3 w-3" />
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									href={link.customDomain
-										? `https://${link.customDomain.domain}/${link.slug}`
-										: `/${link.slug}`}
-									target="_blank"
-								>
-									<ExternalLink class="h-3 w-3" />
-								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									href="/stats/{link.slug}{link.customDomain
-										? `?domain=${link.customDomain.domain}`
-										: ''}"
-									class="hidden sm:inline-flex"
-								>
-									<ChartBar class="h-3 w-3" />
-								</Button>
-								<form
-									method="POST"
-									action="?/delete"
-									class="inline"
-									use:enhance={() => {
-										if (!confirm(m.delete_link_confirm())) {
-											return () => {};
-										}
-										deletingLinkId = link.id;
-										return async ({ result, update }) => {
-											if (result.type === 'success') {
-												toast.success(m.link_deleted_success());
-											} else {
-												toast.error(m.link_delete_error());
-											}
-											await update();
-											deletingLinkId = null;
-										};
-									}}
-								>
-									<input type="hidden" name="linkId" value={link.id} />
-									<Button
-										type="submit"
-										variant="ghost"
-										size="sm"
-										disabled={deletingLinkId === link.id}
-										class="text-destructive hover:text-destructive"
-									>
-										{#if deletingLinkId === link.id}
-											<div
-												class="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin"
-											></div>
-										{:else}
-											<Trash2 class="h-3 w-3" />
-										{/if}
-									</Button>
-								</form>
-							</div>
-						</Table.Cell>
-					</Table.Row>
+								</Table.Cell>
+								<Table.Cell class="text-sm text-muted-foreground hidden md:table-cell">
+									{formatDate(new Date(link.createdAt))}
+								</Table.Cell>
+								<Table.Cell class="hidden lg:table-cell">
+									{#if isExpired(link.expiresAt)}
+										<Badge variant="destructive">{m.expired()}</Badge>
+									{:else if link.expiresAt}
+										<Badge variant="secondary">
+											{m.expires_on()}
+											{formatDate(link.expiresAt)}
+										</Badge>
+									{:else}
+										<Badge variant="default">{m.active()}</Badge>
+									{/if}
+								</Table.Cell>
+								<Table.Cell class="text-right">
+									<div class="flex items-center justify-end gap-1">
+										<Button variant="ghost" size="sm" onclick={() => copyToClipboard(link)}>
+											<Copy class="h-3 w-3" />
+										</Button>
+										<Button
+											variant="ghost"
+											size="sm"
+											href={link.customDomain
+												? `https://${link.customDomain.domain}/${link.slug}`
+												: `/${link.slug}`}
+											target="_blank"
+										>
+											<ExternalLink class="h-3 w-3" />
+										</Button>
+										<Button
+											variant="ghost"
+											size="sm"
+											href="/stats/{link.slug}{link.customDomain
+												? `?domain=${link.customDomain.domain}`
+												: ''}"
+											class="hidden sm:inline-flex"
+										>
+											<ChartBar class="h-3 w-3" />
+										</Button>
+										<form
+											method="POST"
+											action="?/delete"
+											class="inline"
+											use:enhance={() => {
+												if (!confirm(m.delete_link_confirm())) {
+													return () => {};
+												}
+												deletingLinkId = link.id;
+												return async ({ result, update }) => {
+													if (result.type === 'success') {
+														toast.success(m.link_deleted_success());
+													} else {
+														toast.error(m.link_delete_error());
+													}
+													await update();
+													deletingLinkId = null;
+												};
+											}}
+										>
+											<input type="hidden" name="linkId" value={link.id} />
+											<Button
+												type="submit"
+												variant="ghost"
+												size="sm"
+												disabled={deletingLinkId === link.id}
+												class="text-destructive hover:text-destructive"
+											>
+												{#if deletingLinkId === link.id}
+													<div
+														class="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin"
+													></div>
+												{:else}
+													<Trash2 class="h-3 w-3" />
+												{/if}
+											</Button>
+										</form>
+									</div>
+								</Table.Cell>
+							</Table.Row>
 						{/each}
 					</Table.Body>
 				</Table.Root>

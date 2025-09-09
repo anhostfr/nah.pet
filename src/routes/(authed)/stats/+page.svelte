@@ -245,7 +245,9 @@
 											<Table.Cell>
 												<div class="space-y-1">
 													<div class="flex items-center space-x-2">
-														<code class="text-sm bg-secondary px-2 py-1 rounded font-mono break-all">
+														<code
+															class="text-sm bg-secondary px-2 py-1 rounded font-mono break-all"
+														>
 															{link.customDomain ? `${link.customDomain.domain}/` : '/'}{link.slug}
 														</code>
 													</div>
@@ -326,8 +328,9 @@
 										<div>
 											<div class="flex items-center space-x-2 lg:space-y-1">
 												<code class="text-xs font-mono bg-secondary px-1 py-1 rounded">
-													{click.link.customDomain ? `${click.link.customDomain.domain}/` : '/'}{click
-														.link.slug}
+													{click.link.customDomain
+														? `${click.link.customDomain.domain}/`
+														: '/'}{click.link.slug}
 												</code>
 												{#if click.link.title}
 													<span class="text-sm text-secondary-foreground">

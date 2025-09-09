@@ -17,15 +17,17 @@
 	let searchQuery = $state('');
 	let displayedItemsCount = $state(itemsPerPage);
 
-	let filteredItems = $derived(items.filter((item: any) => {
-		if (!searchQuery) return true;
-		const searchLower = searchQuery.toLowerCase();
-		
-		return searchFields.some((field: string) => {
-			const value = field.split('.').reduce((obj, key) => obj?.[key], item);
-			return value && value.toString().toLowerCase().includes(searchLower);
-		});
-	}));
+	let filteredItems = $derived(
+		items.filter((item: any) => {
+			if (!searchQuery) return true;
+			const searchLower = searchQuery.toLowerCase();
+
+			return searchFields.some((field: string) => {
+				const value = field.split('.').reduce((obj, key) => obj?.[key], item);
+				return value && value.toString().toLowerCase().includes(searchLower);
+			});
+		})
+	);
 
 	let displayedItems = $derived(filteredItems.slice(0, displayedItemsCount));
 
@@ -47,11 +49,7 @@
 	<div class="mb-4">
 		<div class="relative">
 			<Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-			<Input
-				bind:value={searchQuery}
-				placeholder={searchPlaceholder}
-				class="pl-10"
-			/>
+			<Input bind:value={searchQuery} placeholder={searchPlaceholder} class="pl-10" />
 		</div>
 	</div>
 
@@ -65,11 +63,13 @@
 		</div>
 	{:else}
 		{@render children(displayedItems)}
-		
+
 		{#if displayedItems.length < filteredItems.length}
 			<div class="text-center mt-6">
 				<Button variant="outline" onclick={loadMore}>
-					{m.load_more()} ({m.remaining_items({ count: filteredItems.length - displayedItems.length })})
+					{m.load_more()} ({m.remaining_items({
+						count: filteredItems.length - displayedItems.length
+					})})
 				</Button>
 			</div>
 		{/if}

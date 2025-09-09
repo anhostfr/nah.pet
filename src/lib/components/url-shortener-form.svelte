@@ -95,15 +95,12 @@
 						>
 							<Link class="w-4 h-4 text-green-600" />
 							<code class="flex-1 text-sm font-mono text-gray-900 dark:text-white">
-								{form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`}
+								{`${getShortBase(form)}/${(form.link as any).slug}`}
 							</code>
 							<Button
 								size="sm"
 								variant="ghost"
-								onclick={() =>
-									copyToClipboard(
-										form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`
-									)}
+								onclick={() => copyToClipboard(`${getShortBase(form)}/${(form.link as any).slug}`)}
 								class="h-8 w-8 p-0"
 							>
 								{#if copied}
@@ -113,7 +110,7 @@
 								{/if}
 							</Button>
 							<Button
-								href={form.shortUrl || `${getShortBase(form)}/${(form.link as any).slug}`}
+								href={`${getShortBase(form)}/${(form.link as any).slug}`}
 								target="_blank"
 								size="sm"
 								variant="ghost"
