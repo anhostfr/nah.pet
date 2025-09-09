@@ -20,7 +20,6 @@
 	} from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
-	import { page } from '$app/state';
 	import { env } from '$env/dynamic/public';
 	import { tKey } from '$lib/i18n';
 	import type { NormalizedActionData } from '$lib/types';
@@ -62,7 +61,7 @@
 		if (form?.link && form.link.domain) {
 			return `https://${form.link.domain}`;
 		}
-		return window.location.origin;
+		return env.PUBLIC_MAIN_DOMAIN;
 	}
 </script>
 
