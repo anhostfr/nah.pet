@@ -15,6 +15,7 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		host &&
 		!host.includes('localhost') &&
 		!host.includes('127.0.0.1') &&
+		!host.startsWith('192.168.') &&
 		!host.includes('0.0.0.0') &&
 		host !== env.PUBLIC_MAIN_DOMAIN &&
 		!host.startsWith(env.PUBLIC_MAIN_DOMAIN + ':') &&

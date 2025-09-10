@@ -6,6 +6,7 @@ import { sleep } from '$lib/utils';
 import { isRateLimited } from '$lib/server/rateLimit';
 import { isSlugReserved } from '$lib/server/domain-verification';
 import { actionFail } from '$lib/server/response.js';
+import { generateDeepLink } from '$lib/server/deeplink-detector.js';
 
 export const load: PageServerLoad = async ({ params, request, getClientAddress, locals }) => {
 	const { slug } = params;
@@ -61,6 +62,17 @@ export const load: PageServerLoad = async ({ params, request, getClientAddress, 
 			userAgent
 		}
 	});
+
+	const deepLink = generateDeepLink(link.originalUrl, userAgent);
+	if (deepLink) {
+		return {
+			isDeepLink: true,
+			originalUrl: link.originalUrl,
+			deepLink,
+			title: link.title,
+			slug: link.slug
+		};
+	}
 
 	throw redirect(302, link.originalUrl);
 };
@@ -126,6 +138,19 @@ export const actions: Actions = {
 				userAgent
 			}
 		});
+
+		const deepLink = generateDeepLink(link.originalUrl, userAgent);
+
+		if (deepLink) {
+			return {
+				success: true,
+				isDeepLink: true,
+				originalUrl: link.originalUrl,
+				deepLink,
+				title: link.title,
+				slug: link.slug
+			};
+		}
 
 		throw redirect(302, link.originalUrl);
 	}
