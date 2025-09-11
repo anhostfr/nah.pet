@@ -59,7 +59,7 @@
 
 	function getShortBase(form: any) {
 		if (form?.link && form.link.domain) {
-			return `https://${form.link.domain}`;
+			return `${form.link.domain}`;
 		}
 		return env.PUBLIC_MAIN_DOMAIN;
 	}
@@ -109,7 +109,7 @@
 								{/if}
 							</Button>
 							<Button
-								href={`${getShortBase(form)}/${(form.link as any).slug}`}
+								href={`https://${getShortBase(form)}/${(form.link as any).slug}`}
 								target="_blank"
 								size="sm"
 								variant="ghost"
