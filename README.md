@@ -82,6 +82,8 @@ cp .env.example .env
 # ADMIN_EMAIL=admin@example.com
 # OAUTH_CLIENT_ID=your_oauth_id (optional)
 # OAUTH_CLIENT_SECRET=your_oauth_secret (optional)
+# PUBLIC_DOC=false (set to 'true' for public API docs)
+# PUBLIC_ALLOW_REGISTRATION=false (set to 'false' to disable registration)
 
 docker-compose up -d
 ```
@@ -185,6 +187,10 @@ PUBLIC_MAIN_DOMAIN=localhost:5173
 ADMIN_EMAIL=admin@example.com
 OAUTH_CLIENT_ID=your_oauth_client_id (optional)
 OAUTH_CLIENT_SECRET=your_oauth_client_secret (optional)
+
+# Access control (optional)
+PUBLIC_DOC=false                      # Set to 'true' to make API docs public
+PUBLIC_ALLOW_REGISTRATION=true        # Set to 'false' to disable registration
 ```
 
 ---

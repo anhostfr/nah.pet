@@ -12,6 +12,8 @@ services:
       OAUTH_CLIENT_ID: '${OAUTH_CLIENT_ID}'
       OAUTH_CLIENT_SECRET: '${OAUTH_CLIENT_SECRET}'
       PUBLIC_MAIN_DOMAIN: '${PUBLIC_MAIN_DOMAIN}'
+      PUBLIC_DOC: '${PUBLIC_DOC:-false}'
+      PUBLIC_ALLOW_REGISTRATION: '${PUBLIC_ALLOW_REGISTRATION:-true}'
     depends_on:
       nahpet-postgres:
         condition: service_healthy
