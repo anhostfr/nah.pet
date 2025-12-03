@@ -8,17 +8,27 @@ import { isRateLimited } from '$lib/server/rateLimit';
 import { z } from 'zod';
 import { sleep } from '$lib/utils';
 import { actionFail, actionSuccess } from '$lib/server/response.js';
+import { allowRegistration } from '$lib/config';
 
 export const load: PageServerLoad = async ({ locals }) => {
+	if (!allowRegistration) {
+		throw redirect(302, '/login');
+	}
+
 	if (locals.user) {
 		if (!locals.user.isAuthorized) throw redirect(302, '/pending');
 		throw redirect(302, '/dashboard');
 	}
+
 	return {};
 };
 
 export const actions: Actions = {
 	default: async ({ request, cookies }) => {
+		if (!allowRegistration) {
+			return actionFail(403, 'auth.registration_disabled');
+		}
+
 		const formData = await request.formData();
 		const email = formData.get('email');
 		const password = formData.get('password');

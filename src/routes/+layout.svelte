@@ -9,6 +9,7 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import LanguageSelector from '$lib/components/language-selector.svelte';
 	import { slide } from 'svelte/transition';
+	import { allowRegistration } from '$lib/config';
 
 	let { children, data } = $props();
 	let mobileMenuOpen = $state(false);
@@ -128,7 +129,9 @@
 					{:else}
 						<div class="flex items-center space-x-2 sm:space-x-3">
 							<Button href="/login" variant="ghost" size="sm" class="text-sm">{m.login()}</Button>
-							<Button href="/register" size="sm" class="text-sm">{m.get_started()}</Button>
+							{#if allowRegistration}
+								<Button href="/register" size="sm" class="text-sm">{m.get_started()}</Button>
+							{/if}
 						</div>
 					{/if}
 				</div>
