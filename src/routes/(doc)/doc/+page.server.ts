@@ -1,10 +1,8 @@
 import { redirect } from '@sveltejs/kit';
-import { env } from '$env/dynamic/public';
+import { publicDoc } from '$lib/config';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const publicDoc = env.PUBLIC_DOC === 'true';
-
 	if (publicDoc) {
 		return {};
 	}
