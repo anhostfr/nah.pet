@@ -362,7 +362,6 @@
 	"password_incorrect": "Mot de passe incorrect",
 	"sign_up_link": "Inscrivez-vous",
 	"invalid_crendentials": "Identifiants invalides. Veuillez réessayer.",
-
 	"auth": {
 		"invalid_crendentials": "Identifiants invalides",
 		"invalid_credentials": "Identifiants invalides",
@@ -371,7 +370,8 @@
 		"email_already_exists": "L'email existe déjà",
 		"register_success": "Inscription réussie. Veuillez vérifier votre email pour valider votre compte.",
 		"passwords_do_not_match": "Les mots de passe ne correspondent pas",
-		"oauth_url_failed": "Échec de la récupération de l'URL OAuth"
+		"oauth_url_failed": "Échec de la récupération de l'URL OAuth",
+		"registration_disabled": "L'inscription est désactivée"
 	},
 	"link": {
 		"not_found": "Lien introuvable"
