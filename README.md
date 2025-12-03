@@ -83,7 +83,7 @@ cp .env.example .env
 # OAUTH_CLIENT_ID=your_oauth_id (optional)
 # OAUTH_CLIENT_SECRET=your_oauth_secret (optional)
 # PUBLIC_DOC=false (set to 'true' for public API docs)
-# PUBLIC_ALLOW_REGISTRATION=false (set to 'false' to disable registration)
+# PUBLIC_ALLOW_REGISTRATION=true (set to 'false' to disable registration)
 
 docker-compose up -d
 ```
