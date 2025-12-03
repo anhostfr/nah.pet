@@ -342,7 +342,7 @@
   "report_bug_link": "🐛 报告错误",
   "versions_link": "🏷️ 版本",
   "footer_tagline": "“伙计，我们说不”——但对于开源，我们说是！",
-	"footer_license": "MIT License • Built with ❤️ and SvelteKit • 🐾 Nah.pet",
+  "footer_license": "MIT License • Built with ❤️ and SvelteKit • 🐾 Nah.pet",
   "long_url_label": "长 URL：",
   "short_url_label": "短 URL：",
   "created_with_sveltekit": "使用 SvelteKit 和 TypeScript 构建，以实现最佳性能。",
