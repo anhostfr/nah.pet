@@ -83,7 +83,7 @@
   "refreshing": "正在刷新...",
   "refresh_status": "刷新状态",
   "back_to_home": "返回主页",
-	"copyright_pending": "© {year} Nah.pet — Pet-redirect-as-a-Service since forever.",
+  "copyright_pending": "© {year} Nah.pet — Pet-redirect-as-a-Service since forever.",
   "pending_account_title": "待处理账户 - Nah.pet",
   "admin_zone": "管理区",
   "disabled_status": "已禁用",
