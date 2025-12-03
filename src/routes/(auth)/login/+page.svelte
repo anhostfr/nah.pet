@@ -11,6 +11,7 @@
 	import type { ActionData } from './$types';
 	import type { NormalizedActionData } from '$lib/types';
 	import { tKey } from '$lib/i18n';
+	import { allowRegistration } from '$lib/config';
 
 	let { form }: { form: ActionData & NormalizedActionData } = $props();
 	let email = $state('');
@@ -123,10 +124,12 @@
 			</div>
 
 			<div class="mt-6 text-center text-sm">
-				<p class="text-muted-foreground">
-					{m.no_account()}
-					<a href="/register" class="text-primary hover:underline">{m.sign_up_link()}</a>
-				</p>
+				{#if allowRegistration}
+					<p class="text-muted-foreground">
+						{m.no_account()}
+						<a href="/register" class="text-primary hover:underline">{m.sign_up_link()}</a>
+					</p>
+				{/if}
 			</div>
 
 			<hr class="my-6 border-t border-gray-200 dark:border-gray-700" />

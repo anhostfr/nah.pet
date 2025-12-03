@@ -19,6 +19,7 @@
 		ExternalLink
 	} from 'lucide-svelte';
 	import * as m from '$lib/paraglide/messages.js';
+	import { allowRegistration } from '$lib/config';
 
 	let { data } = $props();
 
@@ -159,10 +160,12 @@
 					<ArrowRight class="w-4 h-4 ml-2" />
 				</Button>
 			{:else}
-				<Button href="/register" size="lg" class="text-base px-8">
-					{m.get_started()}
-					<ArrowRight class="w-4 h-4 ml-2" />
-				</Button>
+				{#if allowRegistration}
+					<Button href="/register" size="lg" class="text-base px-8">
+						{m.get_started()}
+						<ArrowRight class="w-4 h-4 ml-2" />
+					</Button>
+				{/if}
 				<Button href="/login" variant="outline" size="lg" class="text-base px-8">
 					{m.login()}
 				</Button>
@@ -269,10 +272,12 @@
 			</div>
 
 			<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-				<Button href="/register" size="lg" class="text-base px-8">
-					{m.start_with_nahpet()}
-					<ArrowRight class="w-4 h-4 ml-2" />
-				</Button>
+				{#if allowRegistration}
+					<Button href="/register" size="lg" class="text-base px-8">
+						{m.start_with_nahpet()}
+						<ArrowRight class="w-4 h-4 ml-2" />
+					</Button>
+				{/if}
 				<Button href="/login" variant="outline" size="lg" class="text-base px-8">
 					{m.login()}
 				</Button>

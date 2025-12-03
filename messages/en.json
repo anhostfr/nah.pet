@@ -362,7 +362,8 @@
 		"email_already_exists": "Email already exists",
 		"register_success": "Registration successful. Please check your email to verify your account.",
 		"passwords_do_not_match": "Passwords do not match",
-		"oauth_url_failed": "Failed to get OAuth URL"
+		"oauth_url_failed": "Failed to get OAuth URL",
+		"registration_disabled": "Registration is disabled"
 	},
 	"link": {
 		"not_found": "Link not found"
