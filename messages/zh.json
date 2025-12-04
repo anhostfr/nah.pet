@@ -352,7 +352,7 @@
   "load_more": "加载更多",
   "remaining_items": "还剩 {count} 个",
   "password_incorrect": "密码不正确",
-  "too_many_attempts": "尝试次数过多。请稍后重试。",
+  "too_many_attempts": "尝试次数过多，请稍后重试。",
   "sign_up_link": "注册",
   "auth": {
     "invalid_crendentials": "无效的凭据",
@@ -362,7 +362,8 @@
     "email_already_exists": "邮箱已存在",
     "register_success": "注册成功，请检查您的邮箱以验证您的账户。",
     "passwords_do_not_match": "密码不匹配",
-    "oauth_url_failed": "获取 OAuth URL 失败"
+    "oauth_url_failed": "获取 OAuth URL 失败",
+		"registration_disabled": "已关闭注册"
   },
   "link": {
     "not_found": "未找到链接"
@@ -378,34 +379,34 @@
     "verify_failed": "域名验证过程中发生错误，请稍后重试。",
     "deleted_with_links": "域名删除成功，相关联的链接也已移除。",
     "delete_failed": "删除域名失败，请重试。",
-    "domain_required": "需要域名",
-    "invalid_format": "域名格式无效",
-    "not_allowed": "此域名不允许使用",
-    "invalid_verification_method": "验证方法无效",
-    "limit_reached": "您已达到自定义域名的最大数量",
-    "already_registered": "此域名已注册",
-    "add_failed": "添加域名失败，请重试",
+    "domain_required": "需要域名。",
+    "invalid_format": "域名格式无效。",
+    "not_allowed": "此域名不允许使用。",
+    "invalid_verification_method": "验证方法无效。",
+    "limit_reached": "您已达到自定义域名的最大数量。",
+    "already_registered": "此域名已注册。",
+    "add_failed": "添加域名失败，请重试。",
     "added": "域名添加成功，请完成验证过程。"
   },
   "admin": {
     "admin_rights_granted": "管理员权限已授予",
     "admin_rights_revoked": "管理员权限已撤销",
-    "cannot_change_own_admin_rights": "您不能更改自己的管理员权限",
-    "user_not_found": "未找到用户",
-    "user_id_required": "需要用户 ID",
-    "not_authorized": "您未被授权执行此操作",
-    "not_logged_in": "您必须登录才能执行此操作",
-    "user_activated": "用户已激活",
-    "user_deactivated": "用户已禁用",
-    "cannot_toggle_self_status": "您不能更改自己的状态",
-    "user_deleted": "用户删除成功",
-    "cannot_delete_self": "您不能删除自己的账户"
+    "cannot_change_own_admin_rights": "您不能更改自己的管理员权限。",
+    "user_not_found": "未找到用户。",
+    "user_id_required": "需要用户 ID。",
+    "not_authorized": "您未被授权执行此操作。",
+    "not_logged_in": "您必须登录才能执行此操作。",
+    "user_activated": "用户已激活。",
+    "user_deactivated": "用户已禁用。",
+    "cannot_toggle_self_status": "您不能更改自己的状态。",
+    "user_deleted": "用户删除成功。",
+    "cannot_delete_self": "您不能删除自己的账户。"
   },
   "settings_res": {
-    "api_key_name_too_short": "API 密钥名称太短",
-    "api_key_created": "API 密钥创建成功",
-    "api_key_deleted": "API 密钥删除成功",
-    "email_required": "邮箱是必需的",
-    "profile_updated": "个人资料更新成功"
+    "api_key_name_too_short": "API 密钥名称太短。",
+    "api_key_created": "API 密钥创建成功。",
+    "api_key_deleted": "API 密钥删除成功。",
+    "email_required": "邮箱是必需的。",
+    "profile_updated": "个人资料更新成功。"
   }
 }
