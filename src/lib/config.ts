@@ -1,4 +1,4 @@
-import { PUBLIC_ALLOW_REGISTRATION, PUBLIC_DOC } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
-export const allowRegistration = PUBLIC_ALLOW_REGISTRATION !== 'false';
-export const publicDoc = PUBLIC_DOC === 'true';
+export const allowRegistration = env.PUBLIC_ALLOW_REGISTRATION !== 'false';
+export const publicDoc = env.PUBLIC_DOC === 'true';
