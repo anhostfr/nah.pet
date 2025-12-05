@@ -12,6 +12,10 @@ COPY . .
 
 RUN apk add --no-cache openssl
 
+# Provide a placeholder DATABASE_URL for prisma generate (doesn't need real connection)
+ARG DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN pnpm dlx prisma generate
 
 RUN pnpm run build
